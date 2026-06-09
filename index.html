@@ -1,0 +1,2229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>FaithOn — Never face a difficult day alone</title>
+<meta name="description" content="A spiritual companion in your pocket. Prayer, encouragement, and biblical wisdom delivered through text messages — anytime, anywhere." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..900,30..100;1,9..144,300..900,30..100&family=DM+Sans:opsz,wght@9..40,300..700&family=Cormorant+Garamond:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+<style>
+  /* =========================================================
+     FAITHON — Editorial Sanctuary · v2
+     Aesthetic: warm cream paper, deep ink, candlelight gold.
+     Fraunces + Cormorant Garamond + DM Sans. Generous editorial
+     spacing. Subtle grain. Scripture-as-ornament. Cinematic.
+     ========================================================= */
+
+  :root{
+    --paper:        #F4ECDF;
+    --paper-soft:   #FBF6EC;
+    --paper-deep:   #EBE0CC;
+    --paper-dark:   #DFD2B8;
+    --ink:          #1A1714;
+    --ink-soft:     #3A332C;
+    --ink-mute:     #6E6358;
+    --gold:         #B98238;
+    --gold-warm:    #C99A55;
+    --gold-deep:    #8E5F22;
+    --gold-glow:    #E9C887;
+    --sage:         #6F8470;
+    --bubble-gray:  #ECE5D7;
+    --bubble-blue:  #1F8FFF;
+    --line:         rgba(26,23,20,0.12);
+    --line-strong:  rgba(26,23,20,0.28);
+    --shadow-sm:    0 1px 2px rgba(26,23,20,.04), 0 2px 8px rgba(26,23,20,.04);
+    --shadow-md:    0 6px 24px rgba(26,23,20,.06), 0 2px 8px rgba(26,23,20,.04);
+    --shadow-lg:    0 30px 80px -20px rgba(26,23,20,.18), 0 10px 30px -10px rgba(26,23,20,.10);
+    --serif:        'Fraunces', 'Cormorant Garamond', Georgia, serif;
+    --serif-soft:   'Cormorant Garamond', 'Fraunces', Georgia, serif;
+    --sans:         'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    --maxw: 1240px;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size:17px;
+    line-height:1.55;
+    letter-spacing:-0.005em;
+    overflow-x:hidden;
+    cursor: none;
+  }
+  @media (hover: none){ body{ cursor: auto; } }
+
+  /* Paper grain overlay */
+  body::before{
+    content:""; position:fixed; inset:0;
+    pointer-events:none; z-index:1; opacity:.55;
+    mix-blend-mode:multiply;
+    background-image:
+      radial-gradient(rgba(120,90,50,.06) 1px, transparent 1px),
+      radial-gradient(rgba(120,90,50,.04) 1px, transparent 1px);
+    background-size: 3px 3px, 7px 7px;
+    background-position: 0 0, 1px 2px;
+  }
+  body::after{
+    content:""; position:fixed; inset:0;
+    pointer-events:none; z-index:1;
+    background:
+      radial-gradient(120% 80% at 50% -10%, rgba(201,154,85,.18), transparent 60%),
+      radial-gradient(70% 50% at 0% 110%, rgba(111,132,112,.10), transparent 70%);
+  }
+
+  a{color:inherit;text-decoration:none}
+  img{display:block;max-width:100%}
+  button{font:inherit;color:inherit;background:none;border:none;cursor:none}
+
+  /* Custom cursor */
+  .cursor{
+    position:fixed; pointer-events:none; z-index: 9999;
+    width: 36px; height: 36px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(201,154,85,.55), rgba(201,154,85,0) 70%);
+    mix-blend-mode: multiply;
+    transform: translate(-50%,-50%);
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), width .35s, height .35s, background .35s;
+    will-change: transform;
+  }
+  .cursor::after{
+    content:""; position:absolute; inset:0; margin:auto;
+    width:5px;height:5px;border-radius:50%;
+    background: var(--ink);
+  }
+  .cursor.hover{
+    width: 64px; height: 64px;
+    background: radial-gradient(circle, rgba(201,154,85,.35), rgba(201,154,85,0) 70%);
+  }
+  @media (hover: none){ .cursor{ display:none; } }
+
+  .wrap{
+    max-width: var(--maxw);
+    margin: 0 auto;
+    padding: 0 28px;
+    position:relative;
+    z-index:2;
+  }
+
+  /* Side-rail decorative verse */
+  .side-rail{
+    position: fixed;
+    left: 24px; top: 50%;
+    transform: translateY(-50%) rotate(-90deg);
+    transform-origin: left center;
+    font-family: var(--serif-soft);
+    font-style: italic;
+    font-weight: 400;
+    font-size: 11px;
+    letter-spacing: 0.42em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    z-index: 3;
+    pointer-events: none;
+    white-space: nowrap;
+    opacity: .65;
+  }
+  .side-rail::before{
+    content:""; display:inline-block; vertical-align:middle;
+    width: 28px; height: 1px; background: var(--gold);
+    margin: 0 14px 2px 0;
+  }
+  @media (max-width: 1200px){ .side-rail{ display:none; } }
+
+  /* ============== TYPOGRAPHY ============== */
+  .display{
+    font-family: var(--serif);
+    font-weight: 380;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    letter-spacing: -0.035em;
+    line-height: 0.92;
+  }
+  .display em{
+    font-style: italic;
+    font-weight: 320;
+    font-variation-settings: "opsz" 144, "SOFT" 100;
+    color: var(--gold-deep);
+  }
+  .eyebrow{
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .eyebrow .dot{
+    display:inline-block; width:6px;height:6px;border-radius:50%;
+    background:var(--gold);
+    vertical-align:middle;
+    margin: -2px 10px 0 0;
+    box-shadow: 0 0 0 3px rgba(185,130,56,.12);
+  }
+  h2.section-title{
+    font-family: var(--serif);
+    font-weight: 380;
+    font-variation-settings: "opsz" 144, "SOFT" 50;
+    font-size: clamp(40px, 5.4vw, 76px);
+    line-height: 0.95;
+    letter-spacing: -0.03em;
+    max-width: 22ch;
+  }
+  h2.section-title em{
+    font-family: var(--serif-soft);
+    font-style:italic;
+    color: var(--gold-deep);
+    font-weight: 400;
+  }
+  .lede{
+    font-family: var(--sans);
+    font-size: clamp(17px, 1.4vw, 20px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    max-width: 56ch;
+  }
+
+  /* ============== BUTTONS ============== */
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding: 16px 22px;
+    border-radius: 999px;
+    font-weight:500;
+    font-size: 15px;
+    letter-spacing:-0.01em;
+    transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
+    white-space:nowrap;
+    cursor: none;
+    position:relative;
+  }
+  .btn-primary{
+    background: var(--ink);
+    color: var(--paper-soft);
+    box-shadow: 0 8px 24px -10px rgba(26,23,20,.45);
+    overflow:hidden;
+  }
+  .btn-primary::before{
+    content:""; position:absolute; inset:0;
+    background: linear-gradient(120deg, transparent 30%, rgba(201,154,85,.35), transparent 70%);
+    transform: translateX(-120%);
+    transition: transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .btn-primary:hover::before{ transform: translateX(120%); }
+  .btn-primary:hover{ transform: translateY(-2px); box-shadow: 0 14px 30px -10px rgba(26,23,20,.45); background:#000; }
+  .btn-primary .pulse{
+    width:8px; height:8px; border-radius:50%;
+    background: var(--gold-warm);
+    box-shadow: 0 0 0 0 rgba(201,154,85,.55);
+    animation: pulse 2.2s infinite;
+    position: relative; z-index: 1;
+  }
+  .btn-primary > *{ position:relative; z-index:1; }
+  @keyframes pulse{
+    0%{ box-shadow: 0 0 0 0 rgba(201,154,85,.55);}
+    70%{ box-shadow: 0 0 0 10px rgba(201,154,85,0);}
+    100%{ box-shadow: 0 0 0 0 rgba(201,154,85,0);}
+  }
+  .btn-ghost{
+    color: var(--ink);
+    border: 1px solid var(--line-strong);
+    background: transparent;
+  }
+  .btn-ghost:hover{ background: var(--paper-soft); }
+
+  /* ============== NAV ============== */
+  nav.top{
+    position: sticky; top:0; z-index: 100;
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    background: rgba(244,236,223,0.72);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding: 18px 0;
+  }
+  .logo{
+    display:flex; align-items:center; gap:10px;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-variation-settings: "opsz" 60;
+    font-size: 22px;
+    letter-spacing: -0.02em;
+  }
+  .logo .mark{
+    width:34px;height:34px;border-radius:50%;
+    background: var(--paper-deep);
+    display:grid; place-items:center;
+    position:relative;
+    box-shadow: inset 0 0 0 1px rgba(26,23,20,.08);
+  }
+  .logo .mark svg{ width:18px; height:18px; }
+  .logo .on{ font-weight:700; }
+  nav ul{
+    display:flex; gap:28px; list-style:none;
+    font-size: 14px; color: var(--ink-soft);
+  }
+  nav ul a{ position:relative; }
+  nav ul a:hover{ color: var(--ink); }
+  nav ul a::after{
+    content:""; position:absolute; left:0; right:0; bottom:-6px; height:1px;
+    background: var(--gold); transform: scaleX(0); transform-origin:left;
+    transition: transform .35s cubic-bezier(.2,.7,.2,1);
+  }
+  nav ul a:hover::after{ transform: scaleX(1); }
+  .nav-cta{ display:flex; align-items:center; gap:14px; }
+  @media (max-width: 880px){ nav ul{ display:none; } }
+
+  /* ============== HERO ============== */
+  .hero{
+    padding: clamp(60px, 9vw, 130px) 0 clamp(50px, 7vw, 100px);
+    position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: center;
+    position: relative;
+  }
+  @media (max-width: 980px){ .hero-grid{ grid-template-columns: 1fr; } }
+
+  /* Verse badge */
+  .verse-badge{
+    display:inline-flex; align-items:center; gap: 12px;
+    padding: 8px 16px 8px 8px;
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 28px;
+  }
+  .verse-badge .tick{
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--ink); color: var(--gold-warm);
+    display:grid; place-items:center;
+    font-family: var(--serif); font-style:italic;
+    font-size: 14px;
+  }
+  .verse-badge em{
+    font-family: var(--serif-soft);
+    font-style: italic;
+    color: var(--gold-deep);
+  }
+
+  .hero h1.display{ font-size: clamp(56px, 8.4vw, 126px); }
+  .hero h1 .line{ display:block; position:relative; }
+  .hero h1 .alone{
+    display:inline-block;
+    position:relative;
+    font-family: var(--serif-soft);
+    font-style:italic;
+    font-weight: 400;
+    color: var(--gold-deep);
+    padding-right: 0.3em;
+  }
+  .hero h1 .alone::after{
+    content:"";
+    position:absolute;
+    left: -2%; right: -2%;
+    bottom: 12%;
+    height: 18%;
+    background: linear-gradient(100deg, transparent, rgba(201,154,85,.45), transparent);
+    border-radius: 60%;
+    z-index:-1;
+    filter: blur(3px);
+  }
+  /* small handwriting flourish under "alone" */
+  .hero h1 .alone .swoosh{
+    position:absolute; left: 0; bottom: -8px; width: 100%; height: 14px;
+    color: var(--gold);
+    opacity: .8;
+  }
+
+  .hero .lede{ margin-top: 32px; }
+  .hero .cta-row{
+    display:flex; gap: 14px; align-items:center; flex-wrap:wrap;
+    margin-top: 36px;
+  }
+  .hero .meta{
+    display:flex; align-items:center; gap:16px;
+    margin-top: 44px; padding-top:24px;
+    border-top: 1px solid var(--line);
+    color: var(--ink-mute);
+    font-size: 13px;
+    flex-wrap:wrap;
+  }
+  .hero .meta .stars{ color: var(--gold); letter-spacing: 2px; }
+  .hero .meta .divider{ width:1px; height:14px; background:var(--line-strong); }
+
+  /* Phone mockup */
+  .phone-wrap{
+    position:relative;
+    display:grid; place-items:center;
+    padding: 20px;
+  }
+  .phone-wrap::before{
+    content:""; position:absolute; inset: 0% 0%;
+    background: radial-gradient(60% 55% at 50% 35%, rgba(233,200,135,.55), transparent 70%);
+    filter: blur(50px);
+    z-index:0;
+    animation: glow 6s ease-in-out infinite alternate;
+  }
+  @keyframes glow{
+    from{ opacity:.6; transform: scale(.95); }
+    to{ opacity:1; transform: scale(1.08); }
+  }
+  /* Decorative concentric rings */
+  .phone-wrap::after{
+    content:""; position:absolute;
+    width: 92%; aspect-ratio:1;
+    border: 1px dashed rgba(185,130,56,.25);
+    border-radius: 50%;
+    pointer-events:none;
+    z-index:0;
+    animation: spin 60s linear infinite;
+  }
+  @keyframes spin{ to{ transform: rotate(360deg); } }
+
+  .phone{
+    position:relative;
+    width: min(360px, 92%);
+    aspect-ratio: 9/19.2;
+    background: #1A1714;
+    border-radius: 50px;
+    padding: 14px;
+    box-shadow:
+      0 60px 120px -30px rgba(26,23,20,.5),
+      0 20px 50px -20px rgba(26,23,20,.4),
+      inset 0 0 0 1px rgba(255,255,255,.08);
+    z-index:1;
+    transform: rotate(-2deg);
+    transition: transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .phone:hover{ transform: rotate(0deg) translateY(-6px); }
+  .phone::before{
+    content:""; position:absolute; top:18px; left:50%; transform:translateX(-50%);
+    width:110px; height:32px; border-radius: 100px;
+    background: #0d0b09;
+    z-index: 3;
+  }
+  .phone-screen{
+    width:100%; height:100%;
+    background: #FAF6EE;
+    border-radius: 38px;
+    overflow:hidden;
+    position:relative;
+    display:flex; flex-direction:column;
+  }
+  .status-bar{
+    height: 54px; display:flex; align-items:flex-end; justify-content:space-between;
+    padding: 0 28px 4px; font-size: 13px; font-weight:600;
+    color: var(--ink);
+  }
+  .status-bar .right{ display:flex; gap:6px; align-items:center; }
+  .status-bar svg{ width:16px; height:11px; }
+  .chat-header{
+    padding: 18px 14px 14px;
+    border-bottom: 1px solid rgba(0,0,0,.06);
+    display:flex; flex-direction:column; align-items:center;
+    gap:6px;
+  }
+  .chat-header .avatar{
+    width:44px;height:44px;border-radius:50%;
+    background: var(--paper-deep);
+    display:grid; place-items:center;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.05);
+  }
+  .chat-header .avatar svg{ width:22px; height:22px; }
+  .chat-header .name{
+    font-size: 12px; font-weight:600; color: var(--ink);
+    display:flex; align-items:center; gap:6px;
+  }
+  .chat-header .name::after{
+    content:""; display:inline-block; width:6px; height:6px; border-radius:50%;
+    background: #2BC275; box-shadow: 0 0 0 2px rgba(43,194,117,.18);
+  }
+  .chat-header .sub{ font-size: 10px; color: var(--ink-mute); }
+  .chat{
+    flex:1; padding: 14px 12px 16px;
+    display:flex; flex-direction:column; gap: 6px;
+    overflow:hidden;
+  }
+  .timestamp{
+    text-align:center; font-size:10px; color: var(--ink-mute);
+    margin: 4px 0 8px; letter-spacing: .04em;
+  }
+  .timestamp b{ color: var(--ink); font-weight:600; }
+  .bubble{
+    max-width: 78%;
+    padding: 9px 13px;
+    border-radius: 18px;
+    font-size: 13.5px;
+    line-height: 1.35;
+    letter-spacing:-0.005em;
+    animation: rise .8s cubic-bezier(.2,.7,.2,1) both;
+  }
+  @keyframes rise{
+    from{ opacity:0; transform: translateY(8px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+  .bubble.them{
+    background: var(--bubble-gray);
+    color: var(--ink);
+    align-self:flex-start;
+    border-bottom-left-radius: 6px;
+  }
+  .bubble.me{
+    background: var(--bubble-blue);
+    color:#fff;
+    align-self:flex-end;
+    border-bottom-right-radius: 6px;
+  }
+  .bubble.them .verse{
+    display:block;
+    font-family: var(--serif-soft);
+    font-style:italic;
+    color: var(--gold-deep);
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  .typing{
+    align-self:flex-start;
+    background: var(--bubble-gray);
+    border-radius: 18px;
+    border-bottom-left-radius: 6px;
+    padding: 12px 14px;
+    display:flex; gap:4px;
+  }
+  .typing span{
+    width:6px; height:6px; border-radius:50%;
+    background: var(--ink-mute);
+    animation: blink 1.4s infinite both;
+  }
+  .typing span:nth-child(2){ animation-delay: .2s; }
+  .typing span:nth-child(3){ animation-delay: .4s; }
+  @keyframes blink{
+    0%, 60%, 100%{ opacity:.25; transform: translateY(0); }
+    30%{ opacity:1; transform: translateY(-2px); }
+  }
+
+  /* Floating tags around phone */
+  .tag{
+    position:absolute; z-index:2;
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    box-shadow: var(--shadow-md);
+    display:flex; align-items:center; gap:8px;
+    animation: float 7s ease-in-out infinite;
+    backdrop-filter: blur(6px);
+  }
+  .tag .ico{ width:14px; height:14px; color: var(--gold); }
+  .tag-1{ top: 6%; left: -6%; animation-delay: 0s; }
+  .tag-2{ bottom: 16%; right: -8%; animation-delay: 1.5s; }
+  .tag-3{ top: 38%; right: -10%; animation-delay: 3s; }
+  @keyframes float{
+    0%, 100%{ transform: translateY(0); }
+    50%{ transform: translateY(-8px); }
+  }
+  @media (max-width: 720px){
+    .tag-1, .tag-2, .tag-3{ display:none; }
+  }
+
+  /* ============== TRUST STRIP ============== */
+  .trust{
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 24px 0;
+  }
+  .trust-inner{
+    display:flex; justify-content:space-between; align-items:center; gap:24px;
+    flex-wrap:wrap;
+  }
+  .trust-item{
+    display:flex; align-items:center; gap:10px;
+    font-size: 12px; color: var(--ink-soft);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .trust-item svg{ width:18px; height:18px; color: var(--gold); }
+  .trust-item em{
+    font-family: var(--serif-soft);
+    font-style: italic;
+    color: var(--gold-deep);
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 400;
+    font-size: 15px;
+  }
+
+  /* ============== MARQUEE ============== */
+  .marquee{
+    background: var(--paper-deep);
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    overflow: hidden;
+    padding: 28px 0;
+    position: relative;
+  }
+  .marquee-track{
+    display:flex; gap: 60px; width: max-content;
+    animation: scroll 60s linear infinite;
+    font-family: var(--serif-soft);
+    font-style: italic;
+    font-size: clamp(22px, 2.6vw, 36px);
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+  .marquee-track span{ display:flex; align-items:center; gap: 60px; white-space:nowrap; }
+  .marquee-track span::after{
+    content: "✦";
+    color: var(--gold);
+    font-style: normal;
+    font-size: .6em;
+  }
+  @keyframes scroll{
+    from{ transform: translateX(0); }
+    to{ transform: translateX(-50%); }
+  }
+
+  /* ============== SECTIONS ============== */
+  section.s{ padding: clamp(80px, 11vw, 160px) 0; position:relative; }
+  .s-head{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    align-items: end;
+    margin-bottom: 64px;
+  }
+  @media (max-width: 880px){
+    .s-head{ grid-template-columns: 1fr; gap: 24px; }
+  }
+
+  /* ============== EMOTIONAL PROBLEM ============== */
+  .emo{
+    background: var(--paper-deep);
+    border-radius: 32px;
+    margin: 0 14px;
+    padding: clamp(60px, 8vw, 120px) clamp(28px, 5vw, 80px);
+    position:relative;
+    overflow:hidden;
+  }
+  .emo .quote-mark{
+    position:absolute; top: -40px; right: 20px;
+    font-family: var(--serif);
+    font-size: 360px;
+    line-height:1;
+    color: var(--paper);
+    pointer-events:none;
+    font-style:italic;
+  }
+  .emo h2{ font-size: clamp(40px, 5.6vw, 80px); position:relative;}
+  .emo .lines{
+    margin-top: 48px;
+    display:flex; flex-direction:column; gap: 14px;
+    font-family: var(--serif-soft);
+    font-style: italic;
+    font-size: clamp(24px, 2.6vw, 36px);
+    line-height: 1.3;
+    color: var(--ink-soft);
+    font-weight: 300;
+    position:relative;
+  }
+  .emo .lines span{ display:flex; align-items:baseline; gap: 18px; }
+  .emo .lines span::before{
+    content:""; width: 14px; height:1px; background: var(--gold);
+    flex: none; margin-top: .8em;
+  }
+  .emo .closing{
+    margin-top: 48px;
+    font-size: 18px; max-width: 56ch; color: var(--ink-soft);
+    line-height: 1.65;
+    position:relative;
+  }
+  .emo .closing::first-letter{
+    font-family: var(--serif);
+    font-weight: 380;
+    font-size: 5.6em;
+    line-height: 0.85;
+    float: left;
+    color: var(--gold-deep);
+    margin: 6px 14px -6px 0;
+    font-style: italic;
+  }
+  .emo .closing strong{ color: var(--ink); font-weight: 600; }
+
+  /* ============== SEASONS OF A DAY (new) ============== */
+  .seasons{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow:hidden;
+  }
+  @media (max-width: 880px){ .seasons{ grid-template-columns: repeat(2, 1fr); } }
+  .season{
+    background: var(--paper-soft);
+    padding: 36px 28px 32px;
+    position: relative;
+    overflow:hidden;
+    min-height: 320px;
+    display:flex; flex-direction:column;
+    transition: background .35s ease;
+  }
+  .season:hover{ background: #fff; }
+  .season .sky{
+    position:absolute; inset: 0 0 50% 0;
+    z-index:0; opacity: .85;
+  }
+  .season.dawn .sky{ background: linear-gradient(180deg, #F8DCB5 0%, #FBF6EC 90%); }
+  .season.noon .sky{ background: linear-gradient(180deg, #DCE9F0 0%, #FBF6EC 90%); }
+  .season.dusk .sky{ background: linear-gradient(180deg, #D8B89A 0%, #FBF6EC 90%); }
+  .season.night .sky{ background: linear-gradient(180deg, #2A2620 0%, #FBF6EC 95%); }
+  .season .orb{
+    position:absolute; z-index:1;
+    width: 56px; height: 56px; border-radius: 50%;
+    top: 36px; right: 32px;
+  }
+  .season.dawn .orb{ background: radial-gradient(circle, #FFCD7E, #E69E3A 80%); box-shadow: 0 0 40px rgba(230,158,58,.6); }
+  .season.noon .orb{ background: radial-gradient(circle, #FFF0BB, #FFCB57 80%); box-shadow: 0 0 50px rgba(255,203,87,.5); }
+  .season.dusk .orb{ background: radial-gradient(circle, #FFB783, #C56A3B 80%); box-shadow: 0 0 40px rgba(197,106,59,.5); }
+  .season.night .orb{ background: radial-gradient(circle, #F5EFE4, #C9C1AE 80%); box-shadow: 0 0 40px rgba(245,239,228,.4); }
+  .season.night .stars{
+    position:absolute; inset: 0 0 60% 0; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1px 1px at 60% 50%, rgba(255,255,255,.7), transparent),
+      radial-gradient(1.2px 1.2px at 80% 20%, rgba(255,255,255,.9), transparent),
+      radial-gradient(1px 1px at 40% 70%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1.4px 1.4px at 10% 60%, rgba(255,255,255,.85), transparent);
+  }
+  .season .when{
+    position:relative; z-index:2;
+    margin-top: 130px;
+    font-family: var(--sans);
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    font-weight: 500;
+  }
+  .season h4{
+    position:relative; z-index:2;
+    font-family: var(--serif);
+    font-weight: 420;
+    font-variation-settings: "opsz" 90;
+    font-size: 26px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-top: 10px;
+    margin-bottom: 10px;
+  }
+  .season p{
+    position:relative; z-index:2;
+    font-size: 14.5px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .season .quote{
+    position:relative; z-index:2;
+    margin-top:auto;
+    padding-top: 18px;
+    border-top: 1px dashed var(--line);
+    font-family: var(--serif-soft);
+    font-style: italic;
+    font-size: 13px;
+    color: var(--gold-deep);
+  }
+
+  /* ============== HOW IT WORKS ============== */
+  .steps{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    position:relative;
+  }
+  .steps::before{
+    content:""; position:absolute; top: 70px; left: 8%; right: 8%;
+    height: 1px;
+    background-image: linear-gradient(90deg, var(--gold) 50%, transparent 50%);
+    background-size: 10px 1px;
+    z-index: 0;
+    opacity: .4;
+  }
+  @media (max-width: 880px){
+    .steps{ grid-template-columns: 1fr; }
+    .steps::before{ display:none; }
+  }
+  .step{
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 40px 32px;
+    position:relative;
+    transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+    z-index: 1;
+  }
+  .step:hover{ transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: var(--gold-warm); }
+  .step .num-circle{
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: var(--paper);
+    border: 1px solid var(--gold-warm);
+    display:grid; place-items:center;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 360;
+    font-size: 28px;
+    color: var(--gold-deep);
+    line-height: 1;
+    margin-bottom: 24px;
+  }
+  .step h3{
+    font-family: var(--serif);
+    font-weight: 420;
+    font-size: 28px;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .step p{ color: var(--ink-soft); font-size: 15px; }
+  .step .chip{
+    display:inline-block; margin-top: 20px;
+    font-family: 'SF Mono', ui-monospace, monospace;
+    font-size: 12px;
+    padding: 6px 12px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 999px;
+    letter-spacing: 0.08em;
+  }
+
+  /* ============== FEATURES ============== */
+  .features{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    overflow:hidden;
+  }
+  @media (max-width: 1040px){ .features{ grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px){ .features{ grid-template-columns: 1fr; } }
+  .feat{
+    background: var(--paper-soft);
+    padding: 36px 28px;
+    transition: background .3s ease;
+    min-height: 230px;
+    display:flex; flex-direction:column;
+    position:relative;
+  }
+  .feat::after{
+    content:""; position:absolute; left:28px; right:28px; bottom: 0; height: 1px;
+    background: var(--gold);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .feat:hover{ background: #fff; }
+  .feat:hover::after{ transform: scaleX(1); }
+  .feat .ic{
+    width: 36px; height: 36px;
+    color: var(--gold-deep);
+    margin-bottom: 22px;
+    transition: transform .5s cubic-bezier(.2,.7,.2,1);
+  }
+  .feat:hover .ic{ transform: rotate(-6deg) scale(1.05); }
+  .feat h4{
+    font-family: var(--serif);
+    font-weight: 420;
+    font-variation-settings: "opsz" 90;
+    font-size: 22px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    margin-bottom: 10px;
+  }
+  .feat p{ color: var(--ink-soft); font-size: 14.5px; line-height:1.5; }
+  .feat .tag-small{
+    margin-top:auto;
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    padding-top: 18px;
+    font-family: var(--serif-soft);
+    font-style: italic;
+    letter-spacing: 0.06em;
+    text-transform: none;
+    font-size: 13px;
+    color: var(--gold-deep);
+  }
+
+  /* ============== LIVE DEMO ============== */
+  .demos{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  @media (max-width: 980px){ .demos{ grid-template-columns: 1fr; } }
+  .demo-card{
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 28px 22px 26px;
+    box-shadow: var(--shadow-sm);
+    transition: transform .4s ease, box-shadow .4s ease;
+  }
+  .demo-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow-md); }
+  .demo-card .head{
+    display:flex; align-items:center; justify-content:space-between;
+    padding-bottom: 14px;
+    border-bottom: 1px dashed var(--line);
+    margin-bottom: 18px;
+  }
+  .demo-card .head .label{
+    font-family: var(--serif-soft); font-style:italic;
+    color: var(--gold-deep); font-size: 15px;
+  }
+  .demo-card .head .time{
+    font-size: 11px; color: var(--ink-mute); letter-spacing:.06em;
+    font-family: ui-monospace, monospace;
+  }
+  .demo-card .conv{
+    display:flex; flex-direction:column; gap: 8px;
+  }
+  .demo-card .bubble{
+    font-size: 13.5px; max-width: 86%;
+  }
+
+  /* ============== TESTIMONIALS ============== */
+  .testi-grid{
+    display:grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 980px){ .testi-grid{ grid-template-columns: 1fr; } }
+  .testi{
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 36px 30px;
+    display:flex; flex-direction:column;
+    position:relative;
+    transition: transform .4s ease;
+  }
+  .testi:hover{ transform: translateY(-3px); }
+  .testi.feature{
+    background: var(--ink);
+    color: var(--paper);
+    border-color: transparent;
+    position:relative;
+    overflow:hidden;
+  }
+  .testi.feature::before{
+    content:""; position:absolute; right:-40%; bottom:-60%;
+    width: 100%; aspect-ratio: 1;
+    background: radial-gradient(circle, rgba(201,154,85,.22), transparent 70%);
+    pointer-events:none;
+  }
+  .testi.feature::after{
+    content:"❝"; position:absolute; top:8px; left:18px;
+    font-family: var(--serif); font-style:italic;
+    color: rgba(201,154,85,.18);
+    font-size: 160px; line-height: 1;
+    pointer-events:none;
+  }
+  .testi .stars{ color: var(--gold); letter-spacing: 3px; font-size: 14px; margin-bottom: 18px; position:relative;}
+  .testi.feature .stars{ color: var(--gold-warm); }
+  .testi blockquote{
+    font-family: var(--serif);
+    font-weight: 360;
+    font-size: clamp(20px, 2vw, 26px);
+    line-height: 1.3;
+    letter-spacing: -0.015em;
+    flex:1;
+    position:relative;
+  }
+  .testi.feature blockquote{ font-size: clamp(26px, 2.6vw, 36px); font-weight: 380; }
+  .testi blockquote em{ font-family: var(--serif-soft); font-style:italic; color: var(--gold-deep); font-weight: 500;}
+  .testi.feature blockquote em{ color: var(--gold-warm); }
+  .testi .who{
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid var(--line);
+    display:flex; align-items:center; gap:14px;
+    position:relative;
+  }
+  .testi.feature .who{ border-top-color: rgba(255,255,255,.12); }
+  .testi .ava{
+    width:42px; height:42px; border-radius:50%;
+    background: var(--paper-deep);
+    display:grid; place-items:center;
+    font-family: var(--serif); font-style:italic;
+    font-size: 18px;
+    color: var(--gold-deep);
+  }
+  .testi.feature .ava{ background: rgba(255,255,255,.08); color: var(--gold-warm); }
+  .testi .who div b{ font-weight: 600; font-size: 14px; }
+  .testi .who div small{ display:block; font-size: 12px; color: var(--ink-mute); margin-top: 2px; }
+  .testi.feature .who div small{ color: rgba(244,236,223,.6); }
+
+  /* ============== PRICING ============== */
+  .pricing-wrap{ position:relative; }
+  .pricing-wrap::before{
+    content:""; position:absolute;
+    inset: -10% 30% -10% 30%;
+    background: radial-gradient(60% 70% at 70% 50%, rgba(233,200,135,.45), transparent 70%);
+    filter: blur(60px);
+    pointer-events:none; z-index:0;
+  }
+  .pricing{
+    display:grid;
+    grid-template-columns: 1fr 1.05fr;
+    gap: 28px;
+    position:relative; z-index: 1;
+  }
+  @media (max-width: 880px){ .pricing{ grid-template-columns: 1fr; } }
+  .plan{
+    background: var(--paper-soft);
+    border: 1px solid var(--line);
+    border-radius: 28px;
+    padding: 40px 36px;
+    position:relative;
+    display:flex; flex-direction:column;
+  }
+  .plan.pro{
+    background: var(--ink);
+    color: var(--paper-soft);
+    border-color: transparent;
+    box-shadow: 0 30px 80px -20px rgba(26,23,20,.35), 0 0 0 1px rgba(201,154,85,.25);
+  }
+  .plan .badge{
+    position:absolute; top: 20px; right: 20px;
+    font-size: 10px; letter-spacing: 0.22em;
+    text-transform:uppercase;
+    background: var(--gold);
+    color: var(--ink);
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-weight: 600;
+  }
+  .plan h3{
+    font-family: var(--serif);
+    font-weight: 420;
+    font-size: 28px;
+    letter-spacing: -0.02em;
+    margin-bottom: 6px;
+  }
+  .plan .sub{ font-size: 14px; color: var(--ink-mute); margin-bottom: 28px; }
+  .plan.pro .sub{ color: rgba(244,236,223,.6); }
+  .plan .price{
+    display:flex; align-items:baseline; gap: 6px;
+    font-family: var(--serif);
+    margin-bottom: 4px;
+  }
+  .plan .price .num{ font-size: 68px; font-weight: 380; line-height:1; letter-spacing:-0.04em; }
+  .plan .price .per{ font-size: 16px; color: var(--ink-mute); font-family: var(--sans); }
+  .plan.pro .price .per{ color: rgba(244,236,223,.6); }
+  .plan .note{ font-size:13px; color: var(--ink-mute); margin-bottom: 32px; font-family: var(--serif-soft); font-style:italic; }
+  .plan.pro .note{ color: var(--gold-warm); }
+  .plan ul{ list-style:none; display:flex; flex-direction:column; gap: 12px; flex:1; }
+  .plan ul li{ display:flex; gap:12px; font-size: 15px; align-items:flex-start; }
+  .plan ul li svg{
+    width:18px; height:18px; flex:none; margin-top: 2px;
+    color: var(--gold);
+  }
+  .plan .btn{ margin-top: 32px; justify-content:center; }
+  .plan.pro .btn-primary{ background: var(--paper-soft); color: var(--ink); }
+  .plan.pro .btn-primary:hover{ background: #fff; }
+
+  /* ============== WHY SMS ============== */
+  .why-sms{
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 32px;
+    margin: 0 14px;
+    padding: clamp(60px, 8vw, 110px) clamp(28px, 5vw, 80px);
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+    align-items: center;
+    position:relative;
+    overflow:hidden;
+  }
+  @media (max-width: 880px){ .why-sms{ grid-template-columns: 1fr; } }
+  .why-sms::after{
+    content:""; position:absolute;
+    inset:auto -10% -50% auto;
+    width: 60%; aspect-ratio:1;
+    background: radial-gradient(circle, rgba(201,154,85,.28), transparent 65%);
+    pointer-events:none;
+  }
+  .why-sms h2{ font-size: clamp(40px, 5.2vw, 72px); position:relative;}
+  .why-sms h2 em{ color: var(--gold-warm); }
+  .why-sms ul{
+    list-style:none;
+    display:grid; gap: 4px;
+    position:relative;
+  }
+  .why-sms ul li{
+    padding: 18px 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    display:flex; align-items:center; gap: 18px;
+    font-size: 18px;
+    transition: padding .35s ease, color .35s ease;
+  }
+  .why-sms ul li:last-child{ border-bottom:none; }
+  .why-sms ul li:hover{ padding-left: 12px; color: var(--gold-warm); }
+  .why-sms ul li .n{
+    font-family: var(--serif-soft);
+    font-style: italic;
+    color: var(--gold-warm);
+    font-size: 18px;
+    width: 28px;
+  }
+
+  /* ============== FAQ ============== */
+  .faq{
+    display:flex; flex-direction:column;
+    border-top: 1px solid var(--line);
+  }
+  .faq details{
+    border-bottom: 1px solid var(--line);
+    padding: 28px 0;
+  }
+  .faq summary{
+    list-style:none;
+    cursor:none;
+    display:flex; align-items:center; justify-content:space-between;
+    font-family: var(--serif);
+    font-weight: 400;
+    font-size: clamp(22px, 2.2vw, 30px);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    transition: color .3s ease;
+  }
+  .faq summary::-webkit-details-marker{ display:none; }
+  .faq summary:hover{ color: var(--gold-deep); }
+  .faq summary .plus{
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--line-strong);
+    display:grid; place-items:center;
+    transition: transform .35s ease, background .35s ease, color .35s ease;
+    flex:none;
+    margin-left: 16px;
+  }
+  .faq details[open] summary .plus{
+    transform: rotate(45deg);
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .faq summary .plus svg{ width: 14px; height: 14px; }
+  .faq .ans{
+    margin-top: 18px;
+    color: var(--ink-soft);
+    font-size: 16px;
+    max-width: 70ch;
+    line-height: 1.6;
+  }
+
+  /* ============== FINAL CTA ============== */
+  .final-cta{
+    text-align:center;
+    padding: clamp(100px, 14vw, 200px) 0;
+    position:relative;
+  }
+  .final-cta::before{
+    content:""; position:absolute;
+    inset: 20% 10% 20% 10%;
+    background: radial-gradient(60% 50% at 50% 50%, rgba(233,200,135,.45), transparent 70%);
+    filter: blur(80px);
+    z-index:0;
+  }
+  /* candle flame in final cta */
+  .candle{
+    position:absolute;
+    left: 50%; top: 6%;
+    transform: translateX(-50%);
+    z-index: 1;
+    pointer-events: none;
+  }
+  .candle .flame{
+    width: 28px; height: 50px;
+    background: radial-gradient(ellipse at center 80%, #FFCD7E 0%, #E69E3A 50%, rgba(201,154,85,0) 80%);
+    border-radius: 50% 50% 40% 40%;
+    margin: 0 auto;
+    animation: flicker 1.4s ease-in-out infinite alternate;
+    filter: blur(1px);
+  }
+  .candle .body{
+    width: 6px; height: 100px;
+    background: linear-gradient(180deg, var(--paper-soft), var(--paper-deep));
+    margin: -8px auto 0;
+    border-radius: 2px;
+    box-shadow: 0 4px 18px rgba(26,23,20,.1);
+  }
+  @keyframes flicker{
+    from{ transform: scale(.95) translateY(0); opacity:.85; }
+    to{ transform: scale(1.05) translateY(-2px); opacity:1; }
+  }
+  .final-cta > *{ position:relative; z-index:2; }
+  .final-cta h2{
+    font-family: var(--serif);
+    font-weight: 360;
+    font-size: clamp(48px, 7.4vw, 116px);
+    line-height: 0.95;
+    letter-spacing: -0.035em;
+    max-width: 16ch;
+    margin: 16px auto 0;
+  }
+  .final-cta h2 em{
+    font-family: var(--serif-soft);
+    font-style:italic;
+    color: var(--gold-deep);
+    font-weight: 400;
+  }
+  .final-cta p{
+    margin: 28px auto 0;
+    max-width: 50ch;
+    color: var(--ink-soft);
+    font-size: 18px;
+  }
+  .final-cta .cta-row{ margin-top: 40px; justify-content:center; display:flex; gap: 12px; flex-wrap:wrap; }
+  .final-cta .signature{
+    margin-top: 80px;
+    font-family: var(--serif-soft);
+    font-style:italic;
+    font-weight: 400;
+    color: var(--ink-mute);
+    font-size: 17px;
+  }
+  .final-cta .signature::before, .final-cta .signature::after{
+    content: "·";
+    color: var(--gold);
+    margin: 0 14px;
+    font-size: 28px;
+    vertical-align: middle;
+  }
+
+  /* ============== FOOTER ============== */
+  footer{
+    border-top: 1px solid var(--line);
+    padding: 60px 0 40px;
+    position:relative;
+  }
+  .foot-grid{
+    display:grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 60px;
+  }
+  @media (max-width: 880px){ .foot-grid{ grid-template-columns: 1fr 1fr; } }
+  .foot-brand .logo{ margin-bottom: 18px; }
+  .foot-brand p{ color: var(--ink-mute); font-size: 14px; max-width: 36ch; }
+  .foot-col h5{
+    font-size: 11px; letter-spacing: 0.2em; text-transform:uppercase;
+    color: var(--ink-mute); margin-bottom: 18px;
+  }
+  .foot-col ul{ list-style:none; display:flex; flex-direction:column; gap:10px; }
+  .foot-col ul a{ font-size: 14px; color: var(--ink-soft); }
+  .foot-col ul a:hover{ color: var(--ink); }
+  .foot-bottom{
+    border-top: 1px solid var(--line);
+    padding-top: 26px;
+    display:flex; justify-content:space-between; align-items:center;
+    font-size: 12px; color: var(--ink-mute);
+    flex-wrap:wrap; gap: 18px;
+  }
+  .verse{
+    font-family: var(--serif-soft);
+    font-style: italic;
+    font-size: 14px;
+    color: var(--gold-deep);
+  }
+
+  /* Reveal on scroll */
+  .reveal{ opacity:0; transform: translateY(20px); transition: opacity .9s ease, transform .9s ease; }
+  .reveal.in{ opacity:1; transform: none; }
+
+  /* Section divider with center medallion */
+  .divider-orn{
+    display:flex; align-items:center; justify-content:center;
+    margin: 8px auto 8px;
+    color: var(--gold);
+    font-family: var(--serif); font-style:italic;
+    font-size: 18px;
+    gap: 18px;
+  }
+  .divider-orn::before, .divider-orn::after{
+    content:""; height: 1px; width: clamp(40px, 14vw, 120px);
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+</style>
+</head>
+<body>
+
+  <div class="cursor" id="cursor" aria-hidden="true"></div>
+  <div class="side-rail">faith · on · since the first prayer</div>
+
+  <!-- ========== NAV ========== -->
+  <nav class="top">
+    <div class="wrap nav-inner">
+      <a href="#" class="logo">
+        <span class="mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v6"/>
+            <path d="M10.5 3.5l-.5 1.5"/>
+            <path d="M13.5 3.5l.5 1.5"/>
+            <path d="M9 4.2l-.7 1.3"/>
+            <path d="M15 4.2l.7 1.3"/>
+            <path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/>
+            <path d="M9 10v6"/>
+            <path d="M15 10v6"/>
+          </svg>
+        </span>
+        <span>faith<span class="on">on</span></span>
+      </a>
+      <ul>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#stories">Stories</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="#faq">FAQ</a></li>
+      </ul>
+      <div class="nav-cta">
+        <a href="#start" class="btn btn-primary">
+          <span class="pulse"></span>
+          Text PRAY to start
+        </a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== HERO ========== -->
+  <header class="hero">
+    <div class="wrap hero-grid">
+
+      <div class="hero-copy reveal">
+        <div class="verse-badge">
+          <span class="tick">✦</span>
+          <span>Today's word: <em>“Be still, and know.”</em></span>
+        </div>
+        <h1 class="display">
+          <span class="line">Never face</span>
+          <span class="line">a difficult day</span>
+          <span class="line"><span class="alone">alone.
+            <svg class="swoosh" viewBox="0 0 300 14" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 10 C 60 0, 160 16, 298 4"/></svg>
+          </span></span>
+        </h1>
+        <p class="lede">
+          Prayer, biblical wisdom, devotionals, and gentle encouragement — delivered as text messages, in the quiet moments when you need them most.
+        </p>
+        <div class="cta-row">
+          <a href="#start" class="btn btn-primary">
+            <span class="pulse"></span>
+            Text PRAY to start
+          </a>
+          <a href="#how" class="btn btn-ghost">
+            See how it works
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+          </a>
+        </div>
+        <div class="meta">
+          <span class="stars">★★★★★</span>
+          <span>“Felt like a warm hand on my shoulder.”</span>
+          <span class="divider"></span>
+          <span>Thousands of quiet conversations</span>
+        </div>
+      </div>
+
+      <!-- Phone -->
+      <div class="phone-wrap reveal">
+        <span class="tag tag-1"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> 24/7 available</span>
+        <span class="tag tag-2"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z"/></svg> Private &amp; gentle</span>
+        <span class="tag tag-3"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg> SMS · no app</span>
+
+        <div class="phone">
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span>9:41</span>
+              <span class="right">
+                <svg viewBox="0 0 18 12" fill="currentColor"><path d="M1 9h2v2H1zM5 7h2v4H5zM9 5h2v6H9zM13 3h2v8h-2z"/></svg>
+                <svg viewBox="0 0 20 12" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="1" y="2.5" width="15" height="7" rx="2"/><rect x="3" y="4.5" width="11" height="3" fill="currentColor"/><path d="M17.5 5v2"/></svg>
+              </span>
+            </div>
+            <div class="chat-header">
+              <div class="avatar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#8E5F22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v6"/><path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/>
+                  <path d="M9 10v6"/><path d="M15 10v6"/>
+                </svg>
+              </div>
+              <div class="name">FaithOn</div>
+              <div class="sub">Companion · responds in seconds</div>
+            </div>
+            <div class="chat">
+              <div class="timestamp"><b>Today</b> · 6:42 AM</div>
+              <div class="bubble them" style="animation-delay:.1s">
+                Good morning, Sarah. Here is a quiet thought for today:
+                <span class="verse">“Be still, and know that I am God.” — Psalm 46:10</span>
+              </div>
+              <div class="bubble me" style="animation-delay:.4s">I'm anxious about the meeting today 😔</div>
+              <div class="bubble them" style="animation-delay:.9s">
+                Take a breath. You are not carrying this alone. Would you like a short prayer for peace before you walk in?
+              </div>
+              <div class="bubble me" style="animation-delay:1.4s">Yes please.</div>
+              <div class="typing" style="opacity:0; animation: rise .6s 1.8s cubic-bezier(.2,.7,.2,1) forwards"><span></span><span></span><span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========== TRUST STRIP ========== -->
+  <section class="trust">
+    <div class="wrap trust-inner">
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 24/7</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Private</div>
+      <div class="trust-item"><em>—  faith should be easy to reach  —</em></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7l9 5 9-5-9-5z"/><path d="M3 12l9 5 9-5"/></svg> Scripture‑rooted</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> No app</div>
+    </div>
+  </section>
+
+  <!-- ========== VERSE MARQUEE ========== -->
+  <section class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>Be still, and know that I am God.</span>
+      <span>The Lord is my shepherd; I shall not want.</span>
+      <span>Cast all your anxiety on him because he cares for you.</span>
+      <span>Do not be afraid; I am with you.</span>
+      <span>The light shines in the darkness.</span>
+      <span>Be still, and know that I am God.</span>
+      <span>The Lord is my shepherd; I shall not want.</span>
+      <span>Cast all your anxiety on him because he cares for you.</span>
+      <span>Do not be afraid; I am with you.</span>
+      <span>The light shines in the darkness.</span>
+    </div>
+  </section>
+
+  <!-- ========== EMOTIONAL PROBLEM ========== -->
+  <section class="s">
+    <div class="emo reveal">
+      <div class="quote-mark">”</div>
+      <div class="eyebrow"><span class="dot"></span>Some Days Don't Wait</div>
+      <h2 class="section-title" style="margin-top:20px">Life doesn't always wait <em>until Sunday.</em></h2>
+      <div class="lines">
+        <span>Some days bring anxiety.</span>
+        <span>Some days bring uncertainty.</span>
+        <span>Some days bring quiet gratitude.</span>
+      </div>
+      <p class="closing">
+        FaithOn is here for every season. Whether you need a prayer to slow your breathing, a verse to hold onto, or someone to celebrate a small mercy with — help is one text away. <strong>No appointments. No waiting rooms. No noise.</strong>
+      </p>
+    </div>
+  </section>
+
+  <!-- ========== SEASONS OF A DAY ========== -->
+  <section class="s" style="padding-top:0">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>Every Hour, A Welcome</div>
+          <h2 class="section-title" style="margin-top:20px">The seasons <em>of a day.</em></h2>
+        </div>
+        <p class="lede">Different hours bring different weights. From the first cup of coffee to the prayer whispered before sleep — FaithOn meets you where you are.</p>
+      </div>
+
+      <div class="seasons reveal">
+        <div class="season dawn">
+          <div class="sky"></div>
+          <div class="orb"></div>
+          <div class="when">06:30 · Dawn</div>
+          <h4>A devotional with your coffee.</h4>
+          <p>The first words of the day shape the rest of it. A verse, a thought, an invitation to begin slowly.</p>
+          <div class="quote">“Joy comes in the morning.”</div>
+        </div>
+        <div class="season noon">
+          <div class="sky"></div>
+          <div class="orb"></div>
+          <div class="when">12:42 · Midday</div>
+          <h4>A breath between meetings.</h4>
+          <p>For the email that ruined your morning. For the lunch you ate alone. For the moment you needed someone.</p>
+          <div class="quote">“My grace is sufficient.”</div>
+        </div>
+        <div class="season dusk">
+          <div class="sky"></div>
+          <div class="orb"></div>
+          <div class="when">18:15 · Dusk</div>
+          <h4>A reflection on the day.</h4>
+          <p>What did you carry? What can you set down? A few words to close the day with gratitude or honesty.</p>
+          <div class="quote">“This is the day.”</div>
+        </div>
+        <div class="season night">
+          <div class="sky"></div>
+          <div class="stars"></div>
+          <div class="orb"></div>
+          <div class="when">02:14 · Night</div>
+          <h4>A prayer in the dark hours.</h4>
+          <p>For the anxiety that wakes you. For the doubt that visits at 3 a.m. There is no shift on which we close.</p>
+          <div class="quote">“He gives to his beloved sleep.”</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== HOW IT WORKS ========== -->
+  <section class="s" id="how">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>How It Works</div>
+          <h2 class="section-title" style="margin-top:20px">Three steps, <em>that's all.</em></h2>
+        </div>
+        <p class="lede">No downloads. No accounts to set up. Just the messaging app that's already on your phone — and a companion that listens.</p>
+      </div>
+
+      <div class="steps reveal">
+        <div class="step">
+          <div class="num-circle">i</div>
+          <h3>Text PRAY</h3>
+          <p>Send a single word from any phone. We'll meet you there, gently.</p>
+          <span class="chip">SEND TO 1 (954) 795‑0686</span>
+        </div>
+        <div class="step">
+          <div class="num-circle">ii</div>
+          <h3>Share your heart</h3>
+          <p>Tell us what you're carrying today — a worry, a hope, a question, a thank you. Anything.</p>
+          <span class="chip">PRIVATE &amp; SECURE</span>
+        </div>
+        <div class="step">
+          <div class="num-circle">iii</div>
+          <h3>Receive what you need</h3>
+          <p>Scripture, prayer, encouragement, or simply a steady presence — written just for this moment.</p>
+          <span class="chip">RESPONDS IN SECONDS</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FEATURES ========== -->
+  <section class="s" id="features" style="padding-top:0">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>What FaithOn Offers</div>
+          <h2 class="section-title" style="margin-top:20px">A companion for <em>the whole life.</em></h2>
+        </div>
+        <p class="lede">From the first quiet moment of the morning to the prayer whispered before sleep — every season of the day, FaithOn is there.</p>
+      </div>
+
+      <div class="features reveal">
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 4h12a4 4 0 0 1 4 4v12"/><path d="M4 4v16h12"/><path d="M8 9h8M8 13h6"/></svg>
+          <h4>Daily Devotionals</h4>
+          <p>Short, personal reflections delivered each morning — written for the life you're actually living.</p>
+          <span class="tag-small">— every morning</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/><path d="M9 10v6"/><path d="M15 10v6"/></svg>
+          <h4>Prayer Companion</h4>
+          <p>Guided prayers written for you — for peace, courage, grief, gratitude, or a quiet moment.</p>
+          <span class="tag-small">— anytime you ask</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 5l9-2 9 2v14l-9-2-9 2V5z"/><path d="M12 3v18"/></svg>
+          <h4>Biblical Wisdom</h4>
+          <p>Scripture-rooted guidance — never preachy, always grounded in the Word.</p>
+          <span class="tag-small">— rooted in scripture</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          <h4>Difficult Day Support</h4>
+          <p>For anxiety, grief, fear, or loneliness — a steady voice that doesn't flinch from the hard parts.</p>
+          <span class="tag-small">— when you need it most</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
+          <h4>Celebration Moments</h4>
+          <p>Share the good news — a baby, a job, an answered prayer — and receive reflections that hold the joy with you.</p>
+          <span class="tag-small">— small &amp; big victories</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/><circle cx="12" cy="12" r="3"/></svg>
+          <h4>Spiritual Growth</h4>
+          <p>Gentle rhythms that build over time — reading plans, reflections, and a relationship that deepens.</p>
+          <span class="tag-small">— walk further</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+          <h4>Available 24/7</h4>
+          <p>3 a.m. doubts. Lunch‑break worries. Sunday‑morning gratitude. We're always here.</p>
+          <span class="tag-small">— always on</span>
+        </div>
+        <div class="feat">
+          <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M11 18h2"/></svg>
+          <h4>SMS Simplicity</h4>
+          <p>No app store. No password. No new home‑screen icon. Just the messages app you already use.</p>
+          <span class="tag-small">— already on your phone</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== DIVIDER ORNAMENT ========== -->
+  <div class="wrap"><div class="divider-orn">✦</div></div>
+
+  <!-- ========== LIVE DEMO ========== -->
+  <section class="s" style="padding-top:60px">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>Quiet Conversations</div>
+          <h2 class="section-title" style="margin-top:20px">What it actually <em>feels like.</em></h2>
+        </div>
+        <p class="lede">Real moments — anxiety, intercession, a morning devotional — answered with patience, scripture, and presence.</p>
+      </div>
+
+      <div class="demos reveal">
+        <div class="demo-card">
+          <div class="head">
+            <span class="label">Anxious morning</span>
+            <span class="time">07:14</span>
+          </div>
+          <div class="conv">
+            <div class="bubble me">I feel anxious about tomorrow.</div>
+            <div class="bubble them">
+              Remember Matthew 6:34 — tomorrow has enough worries of its own. Would you like a short prayer for peace today?
+              <span class="verse">— Matthew 6:34</span>
+            </div>
+            <div class="bubble me">Yes please.</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <div class="head">
+            <span class="label">Praying for family</span>
+            <span class="time">12:42</span>
+          </div>
+          <div class="conv">
+            <div class="bubble me">Please pray for my family.</div>
+            <div class="bubble them">
+              Let's pray together. May your family be surrounded by peace, wisdom, protection, and love — today and through the week ahead.
+            </div>
+            <div class="bubble me">Thank you 🙏</div>
+          </div>
+        </div>
+
+        <div class="demo-card">
+          <div class="head">
+            <span class="label">Today's devotional</span>
+            <span class="time">06:30</span>
+          </div>
+          <div class="conv">
+            <div class="bubble me">Send today's devotional.</div>
+            <div class="bubble them">
+              Today's reminder: God's timing is perfect even when we cannot see the full picture. Patience is a quiet kind of faith.
+              <span class="verse">— Ecclesiastes 3:11</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== TESTIMONIALS ========== -->
+  <section class="s" id="stories" style="padding-top:0">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>Stories From Real Lives</div>
+          <h2 class="section-title" style="margin-top:20px">The hand on the <em>shoulder.</em></h2>
+        </div>
+        <p class="lede">From students in dorm rooms to nurses on long shifts to retirees walking the dog — FaithOn finds people in the middle of their days.</p>
+      </div>
+
+      <div class="testi-grid reveal">
+        <div class="testi feature">
+          <div class="stars">★★★★★</div>
+          <blockquote>
+            “I had a panic attack at 2 a.m. and didn't want to wake my husband. I texted FaithOn and within seconds had a prayer to read out loud. By the third sentence I was <em>breathing again.</em>”
+          </blockquote>
+          <div class="who">
+            <div class="ava">R</div>
+            <div><b>Rachel M.</b><small>Nurse · Charlotte, NC</small></div>
+          </div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <blockquote>“My quiet time was getting lost in the noise. Now I get a verse with my coffee and it <em>sets the tone</em> of my whole day.”</blockquote>
+          <div class="who">
+            <div class="ava">M</div>
+            <div><b>Marcus T.</b><small>Father of three · Austin, TX</small></div>
+          </div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <blockquote>“On deployment, I couldn't always make it to chapel. Texting FaithOn felt like <em>keeping the door open.</em>”</blockquote>
+          <div class="who">
+            <div class="ava">D</div>
+            <div><b>David L.</b><small>U.S. Navy</small></div>
+          </div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <blockquote>“It's never judgmental. It just listens, prays with me, and points me back to the Bible.”</blockquote>
+          <div class="who">
+            <div class="ava">E</div>
+            <div><b>Emily R.</b><small>College student · Boston, MA</small></div>
+          </div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <blockquote>“At 74, the last thing I want is another app. A text message I can do. This has <em>become part of how I pray.</em>”</blockquote>
+          <div class="who">
+            <div class="ava">G</div>
+            <div><b>Gloria H.</b><small>Retired teacher · Phoenix, AZ</small></div>
+          </div>
+        </div>
+        <div class="testi">
+          <div class="stars">★★★★★</div>
+          <blockquote>“I asked for a prayer for my mom's surgery. The one I got was the one I <em>would've written if I'd had the words.</em>”</blockquote>
+          <div class="who">
+            <div class="ava">J</div>
+            <div><b>Jordan P.</b><small>Designer · Brooklyn, NY</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== PRICING ========== -->
+  <section class="s" id="pricing" style="padding-top:0">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>Pricing</div>
+          <h2 class="section-title" style="margin-top:20px">Accessible support <em>for everyone.</em></h2>
+        </div>
+        <p class="lede">Faith should never be behind a paywall. Start free, forever. Upgrade only when you want a deeper rhythm.</p>
+      </div>
+
+      <div class="pricing-wrap">
+        <div class="pricing reveal">
+          <div class="plan">
+            <h3>Free</h3>
+            <div class="sub">For the quiet beginning.</div>
+            <div class="price"><span class="num">$0</span><span class="per">/ month, forever</span></div>
+            <div class="note">No card. No commitment.</div>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Daily devotional, every morning</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Verse of the day</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Submit prayer requests anytime</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> 5 conversations per day</li>
+            </ul>
+            <a href="#start" class="btn btn-ghost">Start free</a>
+          </div>
+
+          <div class="plan pro">
+            <span class="badge">Most loved</span>
+            <h3>FaithOn Plus</h3>
+            <div class="sub">For a deeper, daily rhythm.</div>
+            <div class="price"><span class="num">$0.99</span><span class="per">/ month</span></div>
+            <div class="note">— less than a cup of coffee —</div>
+            <ul>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Unlimited conversations</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Personalized devotionals</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Personalized prayer support</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Spiritual growth plans</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Bible study guidance</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Saved conversation history</li>
+            </ul>
+            <button id="plusBtn" class="btn btn-primary" type="button"><span class="pulse"></span> Start FaithOn Plus</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== WHY SMS ========== -->
+  <section class="s">
+    <div class="why-sms reveal">
+      <div>
+        <div class="eyebrow" style="color:rgba(244,236,223,.7)"><span class="dot"></span>Why Text Messages</div>
+        <h2 class="section-title" style="margin-top:20px; color:var(--paper)">Because faith should be <em>easy to reach.</em></h2>
+        <p style="margin-top:24px; color:rgba(244,236,223,.7); max-width:48ch; font-size:17px; line-height:1.65">
+          The fastest path to a quiet moment isn't a new app — it's the messaging app you've used since you were a teenager. We meet you exactly where you already are.
+        </p>
+      </div>
+      <ul>
+        <li><span class="n">i.</span> No downloads, ever.</li>
+        <li><span class="n">ii.</span> Works on every phone — flip phones included.</li>
+        <li><span class="n">iii.</span> Available everywhere you have signal.</li>
+        <li><span class="n">iv.</span> Simple, familiar, no learning curve.</li>
+        <li><span class="n">v.</span> Instant access when it matters most.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========== FAQ ========== -->
+  <section class="s" id="faq" style="padding-top:0">
+    <div class="wrap">
+      <div class="s-head reveal">
+        <div>
+          <div class="eyebrow"><span class="dot"></span>Honest Answers</div>
+          <h2 class="section-title" style="margin-top:20px">Things people often <em>wonder.</em></h2>
+        </div>
+        <p class="lede">If you're considering FaithOn, you probably have one of these on your mind. Here's what we'd want a friend to know.</p>
+      </div>
+
+      <div class="faq reveal">
+        <details>
+          <summary>Is FaithOn a real person?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">FaithOn is a thoughtful spiritual companion you reach by text. Real people — pastors, theologians, and writers — shape its voice. Real scripture grounds every word. Think of it like a thoughtful friend who is always available and always rooted in the Bible.</div>
+        </details>
+        <details>
+          <summary>Is FaithOn based on the Bible?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">Yes — every devotional, prayer, and reflection draws from Scripture. Verses are cited when shared. You're always welcome to ask for the passage behind a thought.</div>
+        </details>
+        <details>
+          <summary>Can I use FaithOn anytime?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">Yes. Day or night, holiday or Sunday, FaithOn responds in seconds. There is no sabbath on which we close.</div>
+        </details>
+        <details>
+          <summary>Do I need an app?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">No. FaithOn is a text-message service. If you can send a text, you can use it. No downloads, accounts, or passwords required.</div>
+        </details>
+        <details>
+          <summary>Are conversations private?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">Yes. Conversations are private and encrypted. We do not sell or share what you write. You can request that everything be permanently deleted at any time.</div>
+        </details>
+        <details>
+          <summary>Can FaithOn pray with me?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">Yes — that's one of the most common requests. Ask for a prayer for peace, courage, healing, gratitude, or any specific situation, and FaithOn will write one with you to read together.</div>
+        </details>
+        <details>
+          <summary>Can FaithOn help me during difficult moments?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">Yes. Anxiety, grief, fear, loneliness, doubt — these are exactly the moments FaithOn is built for. We respond with care, not clichés.</div>
+        </details>
+        <details>
+          <summary>Does FaithOn replace church or counseling?
+            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          </summary>
+          <div class="ans">No, and we'd never want to. FaithOn is a companion alongside your community, your pastor, and — when needed — your therapist or doctor. In a true emergency, we'll point you to the right kind of help right away.</div>
+        </details>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== FINAL CTA ========== -->
+  <section class="final-cta" id="start">
+    <div class="candle" aria-hidden="true">
+      <div class="flame"></div>
+      <div class="body"></div>
+    </div>
+    <div class="wrap">
+      <div class="eyebrow reveal" style="margin-top:120px"><span class="dot"></span>Begin Anytime</div>
+      <h2 class="reveal">Your next message could change <em>your day.</em></h2>
+      <p class="reveal">Prayer, encouragement, and biblical wisdom are one text away. Try it now — your first conversation is free.</p>
+      <div class="cta-row reveal">
+        <a href="#" class="btn btn-primary">
+          <span class="pulse"></span>
+          Text PRAY to 1 (954) 795‑0686
+        </a>
+        <a href="#how" class="btn btn-ghost">
+          How it works
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+      <div class="signature reveal">Peace be with you. Always.</div>
+    </div>
+  </section>
+
+  <!-- ========== FOOTER ========== -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-grid">
+        <div class="foot-brand">
+          <a href="#" class="logo">
+            <span class="mark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v6"/><path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/>
+                <path d="M9 10v6"/><path d="M15 10v6"/>
+              </svg>
+            </span>
+            <span>faith<span class="on">on</span></span>
+          </a>
+          <p>A spiritual companion in your pocket — prayer, encouragement, and biblical wisdom delivered through text messages, anytime.</p>
+          <p class="verse" style="margin-top:18px">“Cast all your anxiety on him because he cares for you.” — 1 Peter 5:7</p>
+        </div>
+        <div class="foot-col">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Our Beliefs</a></li>
+            <li><a href="#">Contact</a></li>
+            <li><a href="#">Blog</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Library</h5>
+          <ul>
+            <li><a href="#">Devotionals</a></li>
+            <li><a href="#">Prayer Library</a></li>
+            <li><a href="#">Reading Plans</a></li>
+            <li><a href="#">Verse of the Day</a></li>
+          </ul>
+        </div>
+        <div class="foot-col">
+          <h5>Trust</h5>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Pastoral Council</a></li>
+            <li><a href="#">Emergency Resources</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="foot-bottom">
+        <div>© 2026 FaithOn — a SIMPLIX LLC company · Made with reverence.</div>
+        <div>Available wherever you have signal · 1 (954) 795‑0686</div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========== CHECKOUT MODAL ========== -->
+  <div class="cx-modal" id="cxModal" aria-hidden="true">
+    <div class="cx-backdrop" data-cx-close></div>
+    <div class="cx-card" role="dialog" aria-labelledby="cxTitle">
+      <button class="cx-x" data-cx-close aria-label="Close">×</button>
+      <div class="eyebrow"><span class="dot"></span>Begin FaithOn Plus</div>
+      <h3 id="cxTitle">One number. <em>One quiet rhythm.</em></h3>
+      <p class="cx-lede">Enter the phone number you want to receive FaithOn messages on. We'll start your subscription at <b>$0.99/month</b> — cancel anytime.</p>
+      <label class="cx-label" for="cxPhone">Mobile number</label>
+      <div class="cx-phone-row">
+        <span class="cx-cc">🇺🇸 +1</span>
+        <input id="cxPhone" type="tel" inputmode="tel" placeholder="(555) 123‑4567" autocomplete="tel" />
+      </div>
+      <div class="cx-err" id="cxErr" role="alert"></div>
+      <button class="btn btn-primary cx-go" id="cxGo">
+        <span class="pulse"></span>
+        Continue to secure checkout
+      </button>
+      <div class="cx-trust">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Secured by <b>Stripe</b> · No data stored beyond your phone &amp; subscription status
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== STATUS BANNER ========== -->
+  <div class="cx-banner" id="cxBanner" hidden></div>
+
+  <style>
+    /* ===== Checkout modal ===== */
+    .cx-modal{
+      position: fixed; inset:0; z-index: 200;
+      display:none;
+      align-items: center; justify-content:center;
+      padding: 24px;
+    }
+    .cx-modal.open{ display:flex; animation: cx-fade .35s ease both; }
+    @keyframes cx-fade{ from{opacity:0} to{opacity:1} }
+    .cx-backdrop{
+      position:absolute; inset:0;
+      background: radial-gradient(80% 60% at 50% 30%, rgba(26,23,20,.55), rgba(26,23,20,.85));
+      backdrop-filter: blur(8px);
+    }
+    .cx-card{
+      position:relative;
+      width: min(480px, 100%);
+      background: var(--paper-soft);
+      border-radius: 28px;
+      padding: 40px 36px 32px;
+      box-shadow: 0 40px 100px -20px rgba(0,0,0,.45);
+      animation: cx-rise .5s cubic-bezier(.2,.7,.2,1) both;
+    }
+    @keyframes cx-rise{
+      from{ transform: translateY(20px); opacity:0; }
+      to{ transform: none; opacity:1; }
+    }
+    .cx-x{
+      position:absolute; top: 16px; right: 16px;
+      width: 36px; height: 36px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+      font-size: 22px; line-height: 1;
+      display:grid; place-items:center;
+      cursor: none;
+      transition: background .2s;
+    }
+    .cx-x:hover{ background: var(--paper-deep); }
+    .cx-card h3{
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: 34px;
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin: 18px 0 12px;
+    }
+    .cx-card h3 em{
+      font-family: var(--serif-soft);
+      font-style: italic; color: var(--gold-deep); font-weight: 500;
+    }
+    .cx-lede{
+      color: var(--ink-soft);
+      font-size: 15px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .cx-lede b{ color: var(--ink); font-weight: 600; }
+    .cx-label{
+      display:block;
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+      margin-bottom: 8px;
+      font-weight: 500;
+    }
+    .cx-phone-row{
+      display:flex; align-items:stretch;
+      gap: 0;
+      border: 1px solid var(--line-strong);
+      border-radius: 14px;
+      overflow:hidden;
+      background: #fff;
+      transition: border-color .25s ease, box-shadow .25s ease;
+    }
+    .cx-phone-row:focus-within{
+      border-color: var(--gold);
+      box-shadow: 0 0 0 4px rgba(185,130,56,.15);
+    }
+    .cx-cc{
+      padding: 14px 14px;
+      background: var(--paper-deep);
+      font-size: 15px;
+      font-weight: 500;
+      color: var(--ink);
+      border-right: 1px solid var(--line);
+      display:flex; align-items:center;
+      letter-spacing: -0.01em;
+    }
+    .cx-phone-row input{
+      flex:1;
+      border: none; outline: none;
+      padding: 14px 16px;
+      font: 500 17px/1 var(--sans);
+      color: var(--ink);
+      background: transparent;
+      letter-spacing: 0.01em;
+    }
+    .cx-phone-row input::placeholder{ color: #B0A595; font-weight: 400; }
+    .cx-err{
+      color: #B5392B;
+      font-size: 13px;
+      min-height: 18px;
+      margin-top: 8px;
+      font-family: var(--serif-soft);
+      font-style: italic;
+    }
+    .cx-go{
+      width: 100%;
+      margin-top: 12px;
+      justify-content: center;
+    }
+    .cx-go[disabled]{ opacity: .6; cursor: wait; }
+    .cx-trust{
+      margin-top: 20px;
+      display:flex; align-items:center; gap: 10px;
+      font-size: 12px; color: var(--ink-mute);
+      letter-spacing: 0.02em;
+      padding-top: 18px;
+      border-top: 1px dashed var(--line);
+    }
+    .cx-trust svg{ width: 16px; height: 16px; color: var(--gold); }
+    .cx-trust b{ color: var(--ink); font-weight: 600; }
+
+    /* ===== Status banner (success / cancel) ===== */
+    .cx-banner{
+      position: fixed; top: 88px; left: 50%;
+      transform: translateX(-50%);
+      z-index: 90;
+      background: var(--paper-soft);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      padding: 14px 24px 14px 18px;
+      display:flex; align-items:center; gap: 12px;
+      font-size: 14px;
+      box-shadow: var(--shadow-md);
+      animation: cx-rise .5s cubic-bezier(.2,.7,.2,1) both;
+      max-width: calc(100% - 48px);
+    }
+    .cx-banner .ico{
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      display:grid; place-items:center;
+      font-family: var(--serif); font-style:italic;
+      flex:none;
+    }
+    .cx-banner.ok .ico{ background: #E9F4EA; color: #4A7C50; }
+    .cx-banner.cancel .ico{ background: var(--paper-deep); color: var(--ink-soft); }
+    .cx-banner b{ color: var(--ink); font-weight: 600; }
+    .cx-banner em{ font-family: var(--serif-soft); font-style: italic; color: var(--gold-deep); }
+  </style>
+
+  <script>
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add('in');
+          io.unobserve(e.target);
+        }
+      }
+    }, { threshold: 0.12 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Single-open FAQ
+    document.querySelectorAll('.faq details').forEach(d => {
+      d.addEventListener('toggle', () => {
+        if (d.open) {
+          document.querySelectorAll('.faq details').forEach(o => {
+            if (o !== d) o.open = false;
+          });
+        }
+      });
+    });
+
+    // Custom cursor with smoothing
+    const cursor = document.getElementById('cursor');
+    let cx = window.innerWidth/2, cy = window.innerHeight/2;
+    let tx = cx, ty = cy;
+    document.addEventListener('mousemove', e => {
+      tx = e.clientX; ty = e.clientY;
+    });
+    function tick(){
+      cx += (tx - cx) * 0.18;
+      cy += (ty - cy) * 0.18;
+      cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+      requestAnimationFrame(tick);
+    }
+    tick();
+    const hoverables = 'a, button, summary, .demo-card, .feat, .step, .plan, .testi, .season, .phone';
+    document.querySelectorAll(hoverables).forEach(el => {
+      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+    });
+
+    // ============== Checkout flow ==============
+    const cxModal = document.getElementById('cxModal');
+    const cxPhone = document.getElementById('cxPhone');
+    const cxErr   = document.getElementById('cxErr');
+    const cxGo    = document.getElementById('cxGo');
+    const plusBtn = document.getElementById('plusBtn');
+
+    function cxOpen(){
+      cxModal.classList.add('open');
+      cxModal.setAttribute('aria-hidden', 'false');
+      setTimeout(() => cxPhone.focus(), 250);
+    }
+    function cxClose(){
+      cxModal.classList.remove('open');
+      cxModal.setAttribute('aria-hidden', 'true');
+      cxErr.textContent = '';
+    }
+    if (plusBtn) plusBtn.addEventListener('click', cxOpen);
+    document.querySelectorAll('[data-cx-close]').forEach(el =>
+      el.addEventListener('click', cxClose)
+    );
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && cxModal.classList.contains('open')) cxClose();
+    });
+
+    // Light phone formatting as user types (US-style)
+    cxPhone?.addEventListener('input', e => {
+      const d = e.target.value.replace(/\D/g, '').slice(0, 10);
+      let f = d;
+      if (d.length > 6) f = `(${d.slice(0,3)}) ${d.slice(3,6)}‑${d.slice(6)}`;
+      else if (d.length > 3) f = `(${d.slice(0,3)}) ${d.slice(3)}`;
+      else if (d.length > 0) f = `(${d}`;
+      e.target.value = f;
+    });
+
+    cxGo?.addEventListener('click', async () => {
+      const digits = cxPhone.value.replace(/\D/g, '');
+      if (digits.length < 10) {
+        cxErr.textContent = 'Please enter a 10-digit US mobile number.';
+        return;
+      }
+      cxErr.textContent = '';
+      cxGo.disabled = true;
+      const original = cxGo.innerHTML;
+      cxGo.innerHTML = '<span class="pulse"></span> Redirecting to Stripe…';
+      try {
+        const r = await fetch('/api/create-checkout-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ phone: '+1' + digits }),
+        });
+        const data = await r.json();
+        if (!r.ok || !data.url) throw new Error(data.error || 'Checkout failed.');
+        window.location.href = data.url;
+      } catch (err) {
+        cxErr.textContent = err.message;
+        cxGo.disabled = false;
+        cxGo.innerHTML = original;
+      }
+    });
+
+    // Status banner from ?checkout=success|cancel
+    const params = new URLSearchParams(location.search);
+    const status = params.get('checkout');
+    if (status === 'success' || status === 'cancel') {
+      const banner = document.getElementById('cxBanner');
+      banner.hidden = false;
+      if (status === 'success') {
+        banner.classList.add('ok');
+        banner.innerHTML = `<span class="ico">✦</span><span><b>Welcome to FaithOn Plus.</b> Your first message is on its way — <em>peace be with you.</em></span>`;
+      } else {
+        banner.classList.add('cancel');
+        banner.innerHTML = `<span class="ico">·</span><span>No charge made. <b>You can begin anytime</b> — the door is always open.</span>`;
+      }
+      // Clean URL
+      history.replaceState({}, '', location.pathname);
+      setTimeout(() => { banner.style.opacity = '0'; banner.style.transition = 'opacity .8s ease'; }, 8000);
+    }
+  </script>
+</body>
+</html>
