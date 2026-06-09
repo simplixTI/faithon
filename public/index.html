@@ -52,9 +52,7 @@
     line-height:1.55;
     letter-spacing:-0.005em;
     overflow-x:hidden;
-    cursor: none;
   }
-  @media (hover: none){ body{ cursor: auto; } }
 
   /* Paper grain overlay */
   body::before{
@@ -77,28 +75,7 @@
 
   a{color:inherit;text-decoration:none}
   img{display:block;max-width:100%}
-  button{font:inherit;color:inherit;background:none;border:none;cursor:none}
-
-  /* Custom cursor */
-  .cursor{
-    position:fixed; pointer-events:none; z-index: 9999;
-    width: 36px; height: 36px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(201,154,85,.55), rgba(201,154,85,0) 70%);
-    mix-blend-mode: multiply;
-    transform: translate(-50%,-50%);
-    transition: transform .35s cubic-bezier(.2,.7,.2,1), width .35s, height .35s, background .35s;
-    will-change: transform;
-  }
-  .cursor::after{
-    content:""; position:absolute; inset:0; margin:auto;
-    width:5px;height:5px;border-radius:50%;
-    background: var(--ink);
-  }
-  .cursor.hover{
-    width: 64px; height: 64px;
-    background: radial-gradient(circle, rgba(201,154,85,.35), rgba(201,154,85,0) 70%);
-  }
-  @media (hover: none){ .cursor{ display:none; } }
+  button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
 
   .wrap{
     max-width: var(--maxw);
@@ -195,7 +172,7 @@
     letter-spacing:-0.01em;
     transition: transform .25s ease, box-shadow .25s ease, background .25s ease, color .25s ease;
     white-space:nowrap;
-    cursor: none;
+    cursor: pointer;
     position:relative;
   }
   .btn-primary{
@@ -1105,7 +1082,7 @@
   }
   .faq summary{
     list-style:none;
-    cursor:none;
+    cursor:pointer;
     display:flex; align-items:center; justify-content:space-between;
     font-family: var(--serif);
     font-weight: 400;
@@ -1276,7 +1253,6 @@
 </head>
 <body>
 
-  <div class="cursor" id="cursor" aria-hidden="true"></div>
   <div class="side-rail">faith · on · since the first prayer</div>
 
   <!-- ========== NAV ========== -->
@@ -1985,7 +1961,7 @@
       color: var(--ink-soft);
       font-size: 22px; line-height: 1;
       display:grid; place-items:center;
-      cursor: none;
+      cursor: pointer;
       transition: background .2s;
     }
     .cx-x:hover{ background: var(--paper-deep); }
@@ -2124,26 +2100,6 @@
           });
         }
       });
-    });
-
-    // Custom cursor with smoothing
-    const cursor = document.getElementById('cursor');
-    let cx = window.innerWidth/2, cy = window.innerHeight/2;
-    let tx = cx, ty = cy;
-    document.addEventListener('mousemove', e => {
-      tx = e.clientX; ty = e.clientY;
-    });
-    function tick(){
-      cx += (tx - cx) * 0.18;
-      cy += (ty - cy) * 0.18;
-      cursor.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
-      requestAnimationFrame(tick);
-    }
-    tick();
-    const hoverables = 'a, button, summary, .demo-card, .feat, .step, .plan, .testi, .season, .phone';
-    document.querySelectorAll(hoverables).forEach(el => {
-      el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
-      el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
     });
 
     // ============== Checkout flow ==============
