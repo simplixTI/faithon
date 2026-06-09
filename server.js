@@ -176,7 +176,7 @@ app.post(
 // Normal middleware
 // =====================================================================
 app.use(express.json());
-app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.get('/api/config', (_req, res) => {
   res.json({ publishableKey: process.env.STRIPE_PUBLISHABLE_KEY });
@@ -243,7 +243,7 @@ app.get('/api/health', async (_req, res) => {
 
 app.use((req, res, next) => {
   if (req.method !== 'GET') return next();
-  res.sendFile(path.join(__dirname, 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // Only start an HTTP listener when run directly (local dev).
