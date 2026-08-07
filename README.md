@@ -11,7 +11,7 @@ wisdom, devotionals, and gentle encouragement. A **SIMPLIX LLC** project.
 
 - **Static marketing site** — vanilla HTML/CSS/JS (`index.html`)
 - **Backend** — Node.js + Express (`server.js`)
-- **Payments** — Stripe Checkout (subscription, $0.99/mo)
+- **Payments** — Stripe Checkout (subscription, $1.99/mo)
 - **Database** — Supabase (Postgres + RLS)
 - **Hosting** — Vercel (serverless function via `api/index.js`)
 

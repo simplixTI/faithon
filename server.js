@@ -1,7 +1,7 @@
 // =====================================================================
 // FaithOn — server
 //   • Serves the marketing site (index.html)
-//   • Creates Stripe Checkout subscription sessions ($0.99/mo)
+//   • Creates Stripe Checkout subscription sessions ($1.99/mo)
 //   • Receives Stripe webhooks → mirrors subscription state to Supabase
 //   • Exposes /api/config (publishable key) and /api/health
 // =====================================================================
@@ -44,7 +44,7 @@ async function upsertUserByPhone(phoneE164, stripeCustomerId) {
   return data;
 }
 
-// FaithOn Plus product + $0.99/mo price — created lazily on first need.
+// FaithOn Plus product + $1.99/mo price — created lazily on first need.
 let cachedPriceId = null;
 async function getFaithOnPlusPriceId() {
   if (cachedPriceId) return cachedPriceId;
@@ -63,12 +63,12 @@ async function getFaithOnPlusPriceId() {
     product: product.id, active: true, type: 'recurring', limit: 100,
   });
   let price = prices.data.find(p =>
-    p.unit_amount === 99 && p.currency === 'usd' && p.recurring?.interval === 'month'
+    p.unit_amount === 199 && p.currency === 'usd' && p.recurring?.interval === 'month'
   );
   if (!price) {
     price = await stripe.prices.create({
       product: product.id,
-      unit_amount: 99,
+      unit_amount: 199,
       currency: 'usd',
       recurring: { interval: 'month' },
       metadata: { slug: 'faithon-plus-monthly' },
