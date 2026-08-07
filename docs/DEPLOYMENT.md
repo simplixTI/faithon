@@ -47,34 +47,39 @@ Create in `vercel.json`:
 Prefer routing crons through n8n if you already have it — you get one
 place to see all scheduled runs.
 
-## App 2 — Admin (`admin/`)
+## App 2 — Admin (`admin/`) served under `faithon.ai/admin`
 
-Recommended: **separate Vercel project** pointed at the `admin/` root.
-Deploy on subdomain `admin.faithon.ai`.
+The admin is a separate Vercel project (name: `faithon-admin`) but the
+public URL is `https://faithon.ai/admin/*`. Two things make it work:
+
+1. `admin/next.config.mjs` sets `basePath: "/admin"` so Next.js
+   generates internal routes and asset URLs under `/admin/*`.
+2. Root `vercel.json` on the main project rewrites:
+   ```json
+   { "source": "/admin/:path*",
+     "destination": "https://faithon-admin.vercel.app/admin/:path*" }
+   ```
+   Vercel proxies the request, forwards cookies, and rewrites
+   response headers. To the browser, everything looks like one origin.
 
 ### Setup
 
-1. Import the repo again in Vercel; set **Root Directory** = `admin`.
-2. Framework preset: Next.js.
+1. Import the repo again in Vercel; **name it `faithon-admin`** and
+   set **Root Directory** = `admin`.
+2. Framework preset: Next.js (auto-detected).
 3. Env vars (Production):
    ```
    NEXT_PUBLIC_SUPABASE_URL
    NEXT_PUBLIC_SUPABASE_ANON_KEY
    SUPABASE_SERVICE_ROLE_KEY
    ```
-4. Custom domain: `admin.faithon.ai` → Vercel gives DNS records.
-5. In Supabase → **Auth → URL Configuration**, add the admin URL to
-   the allowed list:
-   - Site URL: `https://admin.faithon.ai`
-   - Redirect URLs: `https://admin.faithon.ai/auth/callback`
-
-### Alternative — single project
-
-If you prefer to keep one Vercel project, set
-`admin/next.config.mjs`'s `basePath: '/admin'` and add a rewrite in
-the root `vercel.json`. This makes deployment tighter but the two
-apps' env vars have to be reconciled (they conflict on
-`SUPABASE_SERVICE_ROLE_KEY`).
+4. **No custom domain needed on this project** — the main project's
+   rewrite handles routing.
+5. In Supabase → **Auth → URL Configuration**:
+   - Site URL: `https://faithon.ai`
+   - Redirect URLs (add these):
+     - `https://faithon.ai/admin/auth/callback`
+     - `http://localhost:3000/admin/auth/callback` (for local dev)
 
 ## Local dev
 

@@ -1,7 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/api/(.*)", "destination": "/api" }
+    { "source": "/api/(.*)", "destination": "/api" },
+    { "source": "/admin", "destination": "https://faithon-admin.vercel.app/admin" },
+    { "source": "/admin/:path*", "destination": "https://faithon-admin.vercel.app/admin/:path*" }
   ],
   "functions": {
     "api/index.js": {

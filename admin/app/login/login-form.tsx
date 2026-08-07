@@ -13,7 +13,8 @@ export function LoginForm() {
     setError(null);
     setBusy(true);
     const supabase = getSupabaseBrowser();
-    const redirectTo = `${window.location.origin}/auth/callback`;
+    // basePath is /admin — Supabase Auth needs the full URL including it.
+    const redirectTo = `${window.location.origin}/admin/auth/callback`;
     const { error } = await supabase.auth.signInWithOtp({
       email: email.trim().toLowerCase(),
       options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
