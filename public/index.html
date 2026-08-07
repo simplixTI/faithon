@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>FaithOn — Never face a difficult day alone</title>
 <meta name="description" content="A spiritual companion in your pocket. Prayer, encouragement, and biblical wisdom delivered through text messages — anytime, anywhere." />
-<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-<link rel="apple-touch-icon" href="/favicon.svg" />
+<link rel="icon" href="/logo.png" type="image/png" />
+<link rel="apple-touch-icon" href="/logo.png" />
 <meta name="theme-color" content="#F4ECDF" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -224,23 +224,9 @@
     display:flex; align-items:center; justify-content:space-between;
     padding: 18px 0;
   }
-  .logo{
-    display:flex; align-items:center; gap:10px;
-    font-family: var(--serif);
-    font-weight: 500;
-    font-variation-settings: "opsz" 60;
-    font-size: 22px;
-    letter-spacing: -0.02em;
-  }
-  .logo .mark{
-    width:34px;height:34px;border-radius:50%;
-    background: var(--paper-deep);
-    display:grid; place-items:center;
-    position:relative;
-    box-shadow: inset 0 0 0 1px rgba(26,23,20,.08);
-  }
-  .logo .mark svg{ width:18px; height:18px; }
-  .logo .on{ font-weight:700; }
+  .logo{ display:inline-flex; align-items:center; }
+  .logo img{ height: 40px; width: auto; display: block; }
+  .foot-brand .logo img{ height: 48px; }
   nav ul{
     display:flex; gap:28px; list-style:none;
     font-size: 14px; color: var(--ink-soft);
@@ -1261,20 +1247,8 @@
   <!-- ========== NAV ========== -->
   <nav class="top">
     <div class="wrap nav-inner">
-      <a href="#" class="logo">
-        <span class="mark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M12 3v6"/>
-            <path d="M10.5 3.5l-.5 1.5"/>
-            <path d="M13.5 3.5l.5 1.5"/>
-            <path d="M9 4.2l-.7 1.3"/>
-            <path d="M15 4.2l.7 1.3"/>
-            <path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/>
-            <path d="M9 10v6"/>
-            <path d="M15 10v6"/>
-          </svg>
-        </span>
-        <span>faith<span class="on">on</span></span>
+      <a href="#" class="logo" aria-label="FaithOn — home">
+        <img src="/logo.png" alt="FaithOn" />
       </a>
       <ul>
         <li><a href="#how">How It Works</a></li>
@@ -1851,14 +1825,8 @@
     <div class="wrap">
       <div class="foot-grid">
         <div class="foot-brand">
-          <a href="#" class="logo">
-            <span class="mark">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M12 3v6"/><path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/>
-                <path d="M9 10v6"/><path d="M15 10v6"/>
-              </svg>
-            </span>
-            <span>faith<span class="on">on</span></span>
+          <a href="#" class="logo" aria-label="FaithOn — home">
+            <img src="/logo.png" alt="FaithOn" />
           </a>
           <p>A spiritual companion in your pocket — prayer, encouragement, and biblical wisdom delivered through text messages, anytime.</p>
           <p class="verse" style="margin-top:18px">“Cast all your anxiety on him because he cares for you.” — 1 Peter 5:7</p>
