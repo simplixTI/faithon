@@ -9,98 +9,93 @@ wisdom, devotionals, and gentle encouragement. A **SIMPLIX LLC** project.
 
 ## Stack
 
-- **Static marketing site** — vanilla HTML/CSS/JS (`index.html`)
-- **Backend** — Node.js + Express (`server.js`)
-- **Payments** — Stripe Checkout (subscription, $1.99/mo)
+- **Static marketing site** — vanilla HTML/CSS/JS ([public/index.html](public/index.html))
+- **Backend** — Node.js + Express ([server.js](server.js), [routes/](routes/), [lib/](lib/))
+- **Backoffice** — Next.js 15 + TypeScript + Supabase Auth ([admin/](admin/))
 - **Database** — Supabase (Postgres + RLS)
-- **Hosting** — Vercel (serverless function via `api/index.js`)
+- **Payments** — Stripe Checkout (subscription, $1.99/mo)
+- **SMS** — Twilio (10DLC, deferred setup)
+- **AI** — OpenAI (`gpt-4o-mini` primary, `gpt-4o` fallback)
+- **Orchestration** — n8n workflows
+- **Hosting** — Vercel (marketing + API in one project, admin in another)
+
+---
+
+## Documentation
+
+Read the docs in this order:
+
+1. [ARCHITECTURE.md](docs/ARCHITECTURE.md) — system diagram + data flow
+2. [DATABASE.md](docs/DATABASE.md) — schema, enums, views, helper functions
+3. [SUPABASE_SETUP.md](docs/SUPABASE_SETUP.md) — migrations + first admin promotion
+4. [ADMIN_GUIDE.md](docs/ADMIN_GUIDE.md) — how to use the backoffice
+5. [STRIPE_SETUP.md](docs/STRIPE_SETUP.md) — product/price/webhook
+6. [TWILIO_SETUP.md](docs/TWILIO_SETUP.md) — 10DLC + webhook wiring
+7. [N8N_WORKFLOWS.md](docs/N8N_WORKFLOWS.md) — payload contracts + workflow specs
+8. [SECURITY.md](docs/SECURITY.md) — secrets, RLS, hardening, rotation
+9. [DEPLOYMENT.md](docs/DEPLOYMENT.md) — Vercel + subdomain setup
+10. [GO_LIVE_CHECKLIST.md](docs/GO_LIVE_CHECKLIST.md) — final gates before turning it on
 
 ---
 
 ## Local development
 
 ```bash
+# Marketing + API (:5500)
 npm install
-cp .env.example .env       # then fill in real keys
-npm start                  # http://localhost:5500
+cp .env.example .env       # fill values (see below)
+npm start
+
+# Admin (:3000)
+cd admin
+npm install
+cp .env.example .env.local
+npm run dev
 ```
 
-### Required env vars
+### Required env vars (root .env)
 
-| Key                          | Where to get it                              |
-|------------------------------|----------------------------------------------|
-| `STRIPE_SECRET_KEY`          | Stripe → Developers → API keys (`sk_…`)      |
-| `STRIPE_PUBLISHABLE_KEY`     | Stripe → Developers → API keys (`pk_…`)      |
-| `STRIPE_WEBHOOK_SECRET`      | Stripe → Webhooks → endpoint signing secret  |
-| `SUPABASE_URL`               | Supabase → Project Settings → API → URL      |
-| `SUPABASE_SECRET_KEY`        | Supabase → API Keys → `sb_secret_…` (server) |
-| `SUPABASE_PUBLISHABLE_KEY`   | Supabase → API Keys → `sb_publishable_…`     |
-| `PORT`                       | optional, defaults to `5500`                 |
+| Key                          | Required | Notes                                     |
+|------------------------------|:--------:|-------------------------------------------|
+| `SUPABASE_URL`               |    ✓     |                                           |
+| `SUPABASE_SERVICE_ROLE_KEY`  |    ✓     | server only, bypasses RLS                 |
+| `SUPABASE_ANON_KEY`          |    ✓     |                                           |
+| `STRIPE_SECRET_KEY`          |    ✓     | LIVE mode active — see docs/SECURITY.md   |
+| `STRIPE_PUBLISHABLE_KEY`     |    ✓     |                                           |
+| `STRIPE_WEBHOOK_SECRET`      |    ✓     | from Stripe → Webhooks                    |
+| `STRIPE_PLUS_PRICE_ID`       |   opt    | preferred over lazy-creating the price    |
+| `TWILIO_ACCOUNT_SID`         |   opt    | deferred                                  |
+| `TWILIO_AUTH_TOKEN`          |   opt    | required in prod for signature validation |
+| `TWILIO_PHONE_NUMBER`        |   opt    | deferred                                  |
+| `OPENAI_API_KEY`             |   opt    | deferred                                  |
+| `OPENAI_MODEL`               |   opt    | default `gpt-4o-mini`                     |
+| `OPENAI_FALLBACK_MODEL`      |   opt    | default `gpt-4o`                          |
+| `N8N_WEBHOOK_SECRET`         |   opt    | required for n8n endpoints to work        |
+| `CRON_SECRET`                |   opt    | required for cron endpoints               |
+| `APP_URL`                    |   opt    | e.g. `https://www.faithon.ai`             |
 
-> The `service_role` JWT also works in `SUPABASE_SECRET_KEY` for backward
-> compatibility.
+See [`.env.example`](.env.example) for the full list.
 
 ---
 
-## Database setup (one-time)
+## API surface (mounted under `/api`)
 
-The schema lives in [`supabase/migrations/20260609000000_initial_schema.sql`](supabase/migrations/20260609000000_initial_schema.sql).
-
-Apply it either via:
-
-**A. Dashboard (recommended).** Open Supabase → SQL Editor → New query →
-paste the file → Run. Migration is idempotent.
-
-**B. CLI.**
-```bash
-supabase link --project-ref <your-ref>
-supabase db push
-```
-
-### What's in the schema
-
-| Table                      | Purpose                                              |
-|----------------------------|------------------------------------------------------|
-| `users`                    | SMS subscribers — phone is identity, `tier` gates content |
-| `subscriptions`            | Stripe subscription mirror (webhook-maintained)      |
-| `conversations`/`messages` | Full chat history                                    |
-| `daily_usage`              | Rate limit for free tier (5/day)                     |
-| `prayer_requests`          | Saved prayer requests                                |
-| `devotionals`/`verses`     | Content libraries                                    |
-| `stripe_webhook_events`    | Idempotency log for Stripe webhooks                  |
-| `audit_log`                | Compliance / activity log                            |
-
-Plus a view (`active_subscribers`) and a function (`is_phone_plus(phone)`)
-for one-call tier checks from the SMS handler.
-
----
-
-## Stripe webhook
-
-Local testing:
-```bash
-stripe listen --forward-to localhost:5500/api/stripe/webhook
-# copies a whsec_… → put it in .env as STRIPE_WEBHOOK_SECRET
-```
-
-Production (after Vercel deploy):
-1. Stripe Dashboard → Webhooks → Add endpoint
-2. URL: `https://<your-vercel-domain>/api/stripe/webhook`
-3. Events: `checkout.session.completed`, `customer.subscription.created`,
-   `customer.subscription.updated`, `customer.subscription.deleted`
-4. Copy the signing secret → Vercel env vars as `STRIPE_WEBHOOK_SECRET`
-
----
-
-## Deploy to Vercel
-
-1. Push to GitHub.
-2. Import the repo in Vercel.
-3. Add the env vars listed above (Production + Preview).
-4. Deploy. The first deploy lazily creates the Stripe product+price.
-
-`vercel.json` rewrites `/api/*` to the single Express function in
-`api/index.js`. `index.html` is served statically.
+| Route                              | Purpose                                     | Auth                     |
+|------------------------------------|---------------------------------------------|--------------------------|
+| `GET  /config`                     | publishable Stripe key                      | public                   |
+| `GET  /health`                     | server + integration status                 | public                   |
+| `POST /create-checkout-session`    | start Stripe Checkout                       | public (rate-limit soon) |
+| `POST /stripe/portal`              | open Stripe billing portal                  | public                   |
+| `POST /stripe/webhook`             | Stripe events (idempotent)                  | signature                |
+| `POST /twilio/inbound`             | Twilio inbound SMS (commands + logging)     | signature                |
+| `POST /twilio/status`              | Twilio status callback                      | signature                |
+| `POST /n8n/heartbeat`              | n8n uptime ping → `system_health`           | `x-n8n-secret`           |
+| `POST /n8n/execution`              | log a workflow run                          | `x-n8n-secret`           |
+| `GET  /entitlement/:phone`         | can this user receive a reply now?          | `x-n8n-secret`           |
+| `POST /usage/record`               | record tokens + SMS cost                    | `x-n8n-secret`           |
+| `POST /cron/expire-trials`         | downgrade users past trial                  | `x-cron-secret`          |
+| `POST /cron/expire-grace`          | downgrade users past grace period           | `x-cron-secret`          |
+| `POST /cron/reset-daily`           | prune old usage rows                        | `x-cron-secret`          |
 
 ---
 
@@ -108,14 +103,36 @@ Production (after Vercel deploy):
 
 ```
 .
-├── api/
-│   └── index.js                      # Vercel handler (re-exports server)
+├── public/               marketing site (vanilla HTML/CSS/JS + logo)
+│   ├── index.html
+│   └── logo.png
+├── server.js             thin Express bootstrap
+├── routes/               API route modules
+│   ├── config.js
+│   ├── checkout.js
+│   ├── stripe-webhook.js
+│   ├── twilio.js
+│   ├── n8n.js
+│   ├── entitlement.js
+│   ├── usage.js
+│   └── cron.js
+├── lib/                  shared server helpers
+│   ├── supabase.js
+│   ├── phone.js
+│   ├── users.js
+│   ├── twilio-validate.js
+│   └── cost.js
+├── admin/                Next.js 15 backoffice (separate deploy)
+│   ├── app/
+│   ├── components/
+│   ├── lib/
+│   └── middleware.ts
 ├── supabase/
 │   └── migrations/
-│       └── 20260609000000_initial_schema.sql
-├── index.html                        # marketing site
-├── server.js                         # Express app (local + Vercel)
-├── package.json
+│       ├── 20260609000000_initial_schema.sql
+│       └── 20260806000000_admin_and_operations.sql
+├── docs/                 (see above)
+├── api/index.js          Vercel handler → server.js
 ├── vercel.json
 └── .env.example
 ```
