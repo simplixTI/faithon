@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { getSupabaseBrowser } from "@/lib/supabase/client";
+import { sendBrandedMagicLink } from "./actions";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -12,16 +12,12 @@ export function LoginForm() {
     e.preventDefault();
     setError(null);
     setBusy(true);
-    const supabase = getSupabaseBrowser();
-    // basePath is /admin — Supabase Auth needs the full URL including it.
-    const redirectTo = `${window.location.origin}/admin/auth/callback`;
-    const { error } = await supabase.auth.signInWithOtp({
-      email: email.trim().toLowerCase(),
-      options: { emailRedirectTo: redirectTo, shouldCreateUser: true },
-    });
+    // Server action: Supabase generates the link (admin API) and Resend
+    // sends the email with our branded template. Supabase SMTP is bypassed.
+    const result = await sendBrandedMagicLink(email);
     setBusy(false);
-    if (error) setError(error.message);
-    else setSent(true);
+    if (result.ok) setSent(true);
+    else setError(result.error);
   }
 
   if (sent) {
