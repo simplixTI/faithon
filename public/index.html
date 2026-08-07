@@ -994,14 +994,47 @@
   }
   .plan .sub{ font-size: 14px; color: var(--ink-mute); margin-bottom: 28px; }
   .plan.pro .sub{ color: rgba(244,236,223,.6); }
+  .plan .price[hidden]{ display: none; }
   .plan .price{
     display:flex; align-items:baseline; gap: 6px;
     font-family: var(--serif);
     margin-bottom: 4px;
+    flex-wrap: wrap;
   }
   .plan .price .num{ font-size: 68px; font-weight: 380; line-height:1; letter-spacing:-0.04em; }
   .plan .price .per{ font-size: 16px; color: var(--ink-mute); font-family: var(--sans); }
   .plan.pro .price .per{ color: rgba(244,236,223,.6); }
+  .plan .price-yearly-savings{
+    display: block; width: 100%;
+    font-size: 11px; letter-spacing: 0.08em;
+    color: var(--gold-deep); font-family: var(--sans);
+    text-transform: uppercase; margin-top: 6px;
+  }
+  .plan.pro .price-yearly-savings{ color: var(--gold-glow); }
+  .plan .billing-toggle{
+    display:inline-flex; align-items:center;
+    background: var(--paper-deep);
+    border-radius: 999px;
+    padding: 4px;
+    gap: 2px;
+    margin-bottom: 20px;
+    font-family: var(--sans);
+  }
+  .plan.pro .billing-toggle{ background: rgba(244,236,223,.12); }
+  .plan .billing-toggle button{
+    border: 0; background: transparent; padding: 7px 16px;
+    border-radius: 999px; font-size: 12px; cursor: pointer;
+    color: var(--ink-mute); font-family: inherit;
+    letter-spacing: 0.03em; text-transform: uppercase;
+    transition: background .2s, color .2s;
+  }
+  .plan.pro .billing-toggle button{ color: rgba(244,236,223,.6); }
+  .plan .billing-toggle button[aria-pressed="true"]{
+    background: var(--ink); color: var(--paper-soft);
+  }
+  .plan.pro .billing-toggle button[aria-pressed="true"]{
+    background: var(--paper-soft); color: var(--ink);
+  }
   .plan .note{ font-size:13px; color: var(--ink-mute); margin-bottom: 32px; font-family: var(--serif-soft); font-style:italic; }
   .plan.pro .note{ color: var(--gold-warm); }
   .plan ul{ list-style:none; display:flex; flex-direction:column; gap: 12px; flex:1; }
@@ -1695,7 +1728,15 @@
             <span class="badge">Most loved</span>
             <h3>FaithOn Plus</h3>
             <div class="sub">For a deeper, daily rhythm.</div>
-            <div class="price"><span class="num">$1.99</span><span class="per">/ month</span></div>
+            <div class="billing-toggle" role="tablist" aria-label="Billing period">
+              <button type="button" data-plan="monthly" aria-pressed="true">Monthly</button>
+              <button type="button" data-plan="yearly"  aria-pressed="false">Yearly</button>
+            </div>
+            <div class="price" data-price-for="monthly"><span class="num">$1.99</span><span class="per">/ month</span></div>
+            <div class="price" data-price-for="yearly" hidden>
+              <span class="num">$20</span><span class="per">/ year</span>
+              <span class="price-yearly-savings">Save 16% · $1.67/mo effective</span>
+            </div>
             <div class="note">— less than a cup of coffee —</div>
             <ul>
               <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Unlimited conversations</li>
@@ -2078,7 +2119,25 @@
     const cxPhone = document.getElementById('cxPhone');
     const cxErr   = document.getElementById('cxErr');
     const cxGo    = document.getElementById('cxGo');
+    const cxLede  = document.querySelector('.cx-lede');
     const plusBtn = document.getElementById('plusBtn');
+
+    // Billing period toggle (Monthly / Yearly)
+    let selectedPlan = 'monthly';
+    const toggleButtons = document.querySelectorAll('.billing-toggle button');
+    const priceBlocks = document.querySelectorAll('.price[data-price-for]');
+    toggleButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        selectedPlan = btn.dataset.plan;
+        toggleButtons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
+        priceBlocks.forEach(el => { el.hidden = el.dataset.priceFor !== selectedPlan; });
+        if (cxLede) {
+          cxLede.innerHTML = selectedPlan === 'yearly'
+            ? 'Enter the phone number you want to receive FaithOn messages on. We\'ll start your subscription at <b>$20/year</b> (save 16%) — cancel anytime.'
+            : 'Enter the phone number you want to receive FaithOn messages on. We\'ll start your subscription at <b>$1.99/month</b> — cancel anytime.';
+        }
+      });
+    });
 
     function cxOpen(){
       cxModal.classList.add('open');
@@ -2122,7 +2181,7 @@
         const r = await fetch('/api/create-checkout-session', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ phone: '+1' + digits }),
+          body: JSON.stringify({ phone: '+1' + digits, plan: selectedPlan }),
         });
         const data = await r.json();
         if (!r.ok || !data.url) throw new Error(data.error || 'Checkout failed.');

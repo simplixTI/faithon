@@ -8,13 +8,20 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
 const router = express.Router();
 
 /**
- * Prefer a fixed STRIPE_PLUS_PRICE_ID from env. If not set, fall back to
- * lazily creating a $1.99/mo price (dev-only pattern — dangerous in live).
+ * Resolves the Stripe price ID for the given plan.
+ *   plan='monthly' → STRIPE_PLUS_PRICE_ID
+ *   plan='yearly'  → STRIPE_PLUS_PRICE_ID_YEARLY
+ * Falls back to lazy product/price creation only if the monthly env var
+ * is missing — safety net for local dev, dangerous in live.
  */
-async function getPlusPriceId() {
+async function getPlusPriceId(plan = 'monthly') {
+  if (plan === 'yearly') {
+    if (process.env.STRIPE_PLUS_PRICE_ID_YEARLY) return process.env.STRIPE_PLUS_PRICE_ID_YEARLY;
+    throw new Error('STRIPE_PLUS_PRICE_ID_YEARLY is not set — cannot process yearly checkout.');
+  }
   if (process.env.STRIPE_PLUS_PRICE_ID) return process.env.STRIPE_PLUS_PRICE_ID;
 
-  // Fallback lazy-create — cached in memory per warm instance.
+  // Monthly fallback: lazy-create — cached in memory per warm instance.
   if (getPlusPriceId._cache) return getPlusPriceId._cache;
   const search = await stripe.products.search({
     query: "active:'true' AND metadata['slug']:'faithon-plus'",
@@ -51,7 +58,9 @@ router.post('/create-checkout-session', async (req, res) => {
     const phoneE164 = normalizePhoneE164(req.body?.phone);
     if (!phoneE164) return res.status(400).json({ error: 'Please enter a valid phone number.' });
 
-    const priceId = await getPlusPriceId();
+    const rawPlan = String(req.body?.plan ?? 'monthly').toLowerCase();
+    const plan = rawPlan === 'yearly' ? 'yearly' : 'monthly';
+    const priceId = await getPlusPriceId(plan);
 
     let customer;
     const found = await stripe.customers.search({
@@ -72,8 +81,8 @@ router.post('/create-checkout-session', async (req, res) => {
       success_url: `${origin}/?checkout=success`,
       cancel_url: `${origin}/?checkout=cancel`,
       allow_promotion_codes: true,
-      metadata: { phone_e164: phoneE164, faithon_user_id: user.id, source: 'sms' },
-      subscription_data: { metadata: { phone_e164: phoneE164, faithon_user_id: user.id } },
+      metadata: { phone_e164: phoneE164, faithon_user_id: user.id, source: 'sms', plan },
+      subscription_data: { metadata: { phone_e164: phoneE164, faithon_user_id: user.id, plan } },
     });
 
     res.json({ url: session.url });
