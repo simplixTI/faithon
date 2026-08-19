@@ -117,13 +117,8 @@ async function sendSystemReply({ to, text, userId, provider, command = null }) {
 router.post('/sms/incoming', express.json(), async (req, res) => {
   const correlationId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
   const flowStartedAt = Date.now();
-  let messageId = null;
-  let conversationId = null;
-  let userId = null;
 
   try {
-    await record({ correlationId, stage: STAGES.SMS_RECEIVED, status: STATUS.SUCCESS });
-
     const provider = getSmsProvider();
     const inbound = provider.normalizeInbound(req.body || {});
 
@@ -133,8 +128,6 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.FAILED, errorCode: 'missing_sender', errorMessage: 'missing sender' });
       return res.status(400).send('missing sender');
     }
-
-    await record({ correlationId, stage: STAGES.PHONE_NORMALIZED, status: STATUS.SUCCESS, metadata: { from: inbound.from } });
 
     // Ignore carrier/system messages (delivery reports, spam, etc.)
     if (isSystemOrCarrierMessage({ sender: inbound.from, body: inbound.body })) {
@@ -149,8 +142,6 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       return res.status(400).send('missing message id');
     }
 
-    await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.SUCCESS });
-
     // Idempotency: skip if already processed
     const { data: seen } = await supabase
       .from('sms_webhook_events').select('id, processed_at').eq('id', webhookId).maybeSingle();
@@ -159,6 +150,29 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SKIPPED, metadata: { reason: 'duplicate_webhook' } });
       return res.status(204).end();
     }
+
+    // Acknowledge immediately to avoid Vercel timeout, then process async
+    res.status(204).end();
+
+    // Continue processing in background
+    setImmediate(() => {
+      processInbound({ req, res, correlationId, flowStartedAt, inbound, webhookId }).catch((err) => {
+        console.error(`[sms/incoming:${correlationId}] async error:`, err);
+      });
+    });
+
+  } catch (err) {
+    console.error(`[sms/incoming:${correlationId}] error:`, err);
+    return res.status(500).send('error');
+  }
+});
+
+async function processInbound({ req, res, correlationId, flowStartedAt, inbound, webhookId }) {
+  let userId = null;
+  try {
+    await record({ correlationId, stage: STAGES.SMS_RECEIVED, status: STATUS.SUCCESS });
+    await record({ correlationId, stage: STAGES.PHONE_NORMALIZED, status: STATUS.SUCCESS, metadata: { from: inbound.from } });
+    await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.SUCCESS });
 
     await supabase.from('sms_webhook_events').upsert({
       id: webhookId,
@@ -197,7 +211,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'STOP' } });
-      return res.status(204).end();
+      return;
     }
 
     // --- START/UNSTOP: opt back in ---
@@ -219,7 +233,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command } });
-      return res.status(204).end();
+      return;
     }
 
     // --- HELP ---
@@ -229,7 +243,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'HELP' } });
-      return res.status(204).end();
+      return;
     }
 
     // --- FASE 3: PRAY or any message -> AI-generated reply ---
@@ -251,7 +265,6 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
     await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, durationMs: totalMs });
 
     console.log(`[sms/incoming:${correlationId}] AI replied to ${inbound.from}: "${aiResult.text.slice(0, 80)}..."`);
-    return res.status(204).end();
 
   } catch (err) {
     console.error(`[sms/incoming:${correlationId}] error:`, err);
@@ -265,9 +278,8 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       errorCode: err.code || 'unknown',
       errorMessage: err.message,
     });
-    return res.status(500).send('error');
   }
-});
+}
 
 /**
  * POST /api/sms/status
