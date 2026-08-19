@@ -17,7 +17,7 @@ const { STAGES, STATUS, record, startStage, completeStage } = require('../lib/tr
 
 const router = express.Router();
 
-const COMMANDS = new Set(['PRAY', 'HELP', 'STOP', 'START', 'UNSTOP']);
+const COMMANDS = new Set(['PRAY', 'HELP', 'STOP', 'START', 'UNSTOP', 'PLUS']);
 
 function detectCommand(body) {
   const raw = String(body || '').trim().toUpperCase();
@@ -226,6 +226,19 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'HELP' } });
+      return res.status(204).end();
+    }
+
+    // --- PLUS: upgrade link ---
+    if (command === 'PLUS') {
+      const { createCheckoutSessionForPhone } = require('./checkout');
+      const session = await createCheckoutSessionForPhone(inbound.from);
+      const upgradeText = await getSettingText('text_upgrade_link', 'Upgrade to FaithOn Plus for $1.99/mo: {url}');
+      const text = upgradeText.replace('{url}', session.url);
+      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command });
+      await supabase.from('sms_webhook_events')
+        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+      await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'PLUS', checkoutUrl: session.url } });
       return res.status(204).end();
     }
 

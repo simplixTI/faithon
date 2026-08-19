@@ -113,5 +113,35 @@ router.post('/stripe/portal', async (req, res) => {
   }
 });
 
+async function createCheckoutSessionForPhone(phoneE164, plan = 'monthly') {
+  const priceId = await getPlusPriceId(plan);
+
+  let customer;
+  const found = await stripe.customers.search({
+    query: `metadata['phone_e164']:'${phoneE164}'`,
+  });
+  if (found.data.length) customer = found.data[0];
+  else customer = await stripe.customers.create({
+    phone: phoneE164, metadata: { phone_e164: phoneE164 },
+  });
+
+  const user = await upsertUserByPhone(phoneE164, customer.id);
+
+  const origin = process.env.APP_URL ?? 'https://www.faithon.ai';
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    customer: customer.id,
+    line_items: [{ price: priceId, quantity: 1 }],
+    success_url: `${origin}/?checkout=success`,
+    cancel_url: `${origin}/?checkout=cancel`,
+    allow_promotion_codes: true,
+    metadata: { phone_e164: phoneE164, faithon_user_id: user.id, source: 'sms', plan },
+    subscription_data: { metadata: { phone_e164: phoneE164, faithon_user_id: user.id, plan } },
+  });
+
+  return { url: session.url, id: session.id };
+}
+
 module.exports = router;
 module.exports.getPlusPriceId = getPlusPriceId;
+module.exports.createCheckoutSessionForPhone = createCheckoutSessionForPhone;
