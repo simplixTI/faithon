@@ -231,14 +231,13 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
 
     // --- PLUS: upgrade link ---
     if (command === 'PLUS') {
-      const { createCheckoutSessionForPhone } = require('./checkout');
-      const session = await createCheckoutSessionForPhone(inbound.from);
+      const paymentLink = process.env.STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/cNi6oH5g951JfCn6sCenS00';
       const upgradeText = await getSettingText('text_upgrade_link', 'Upgrade to FaithOn Plus for $1.99/mo: {url}');
-      const text = upgradeText.replace('{url}', session.url);
+      const text = upgradeText.replace('{url}', paymentLink);
       await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command });
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
-      await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'PLUS', checkoutUrl: session.url } });
+      await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'PLUS', paymentLink } });
       return res.status(204).end();
     }
 
