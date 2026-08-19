@@ -5,8 +5,8 @@
 //       config      — GET  /api/config, /api/health
 //       checkout    — POST /api/create-checkout-session, /api/stripe/portal
 //       stripe hook — POST /api/stripe/webhook (raw body; mounted early)
-//       twilio      — POST /api/twilio/inbound, /api/twilio/status
-//       n8n         — POST /api/n8n/heartbeat, /api/n8n/execution
+//       sms       — POST /api/sms/incoming, /api/sms/status
+//       n8n       — POST /api/n8n/heartbeat, /api/n8n/execution
 //       entitlement — GET  /api/entitlement/:phone
 //       usage       — POST /api/usage/record
 //       cron        — POST /api/cron/{expire-trials, expire-grace, reset-daily}
@@ -31,9 +31,6 @@ app.use((_req, res, next) => {
 // -------- Stripe webhook FIRST (needs raw body) --------
 app.use('/api', require('./routes/stripe-webhook'));
 
-// -------- Twilio routes (need urlencoded body — handled per-route) --------
-app.use('/api', require('./routes/twilio'));
-
 // -------- JSON middleware for remaining routes --------
 app.use(express.json());
 
@@ -43,6 +40,7 @@ app.use('/api', require('./routes/n8n'));
 app.use('/api', require('./routes/entitlement'));
 app.use('/api', require('./routes/usage'));
 app.use('/api', require('./routes/cron'));
+app.use('/api', require('./routes/sms'));
 
 // -------- Static marketing site --------
 app.use(express.static(path.join(__dirname, 'public')));
@@ -64,12 +62,16 @@ if (require.main === module) {
     console.log('━'.repeat(60));
     console.log(`✦ FaithOn server  http://localhost:${PORT}`);
     console.log('━'.repeat(60));
-    console.log(`  stripe:  ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'MISSING'}`);
-    console.log(`  supa:    ${process.env.SUPABASE_URL ? 'configured' : 'MISSING'}`);
-    console.log(`  twilio:  ${process.env.TWILIO_AUTH_TOKEN ? 'configured' : 'DEFERRED'}`);
-    console.log(`  openai:  ${process.env.OPENAI_API_KEY ? 'configured' : 'DEFERRED'}`);
-    console.log(`  n8n key: ${process.env.N8N_WEBHOOK_SECRET ? 'set' : 'unset'}`);
-    console.log(`  cron:    ${process.env.CRON_SECRET ? 'set' : 'unset'}`);
+    console.log(`  stripe:     ${process.env.STRIPE_SECRET_KEY ? 'configured' : 'MISSING'}`);
+    console.log(`  supa:       ${process.env.SUPABASE_URL ? 'configured' : 'MISSING'}`);
+    console.log(`  sms:        ${process.env.SMS_PROVIDER || 'smsgate'}`);
+    console.log(`  smsgate:    ${process.env.SMSGATE_URL || '192.168.15.2:8080'}`);
+    console.log(`  ai:         ${process.env.AI_PROVIDER || 'not set'}`);
+    console.log(`  ai model:   ${process.env.AI_MODEL || 'default'}`);
+    console.log(`  deepseek:   ${process.env.DEEPSEEK_API_KEY ? 'configured' : 'MISSING'}`);
+    console.log(`  openai:     ${process.env.OPENAI_API_KEY ? 'configured' : 'DEFERRED'}`);
+    console.log(`  n8n key:    ${process.env.N8N_WEBHOOK_SECRET ? 'set' : 'unset'}`);
+    console.log(`  cron:       ${process.env.CRON_SECRET ? 'set' : 'unset'}`);
     console.log('━'.repeat(60));
   });
 }

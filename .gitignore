@@ -7,3 +7,6 @@ Thumbs.db
 
 .vercel
 supabase/.temp/
+.tools/
+data/
+server.pid
