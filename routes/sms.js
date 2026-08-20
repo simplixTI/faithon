@@ -127,8 +127,8 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
 
   try {
     const eventType = req.body?.event;
-    if (!['sms:received', 'mms:received'].includes(eventType)) {
-      return res.status(400).send('expected sms:received or mms:received event');
+    if (!['sms:received', 'mms:received', 'mms:downloaded'].includes(eventType)) {
+      return res.status(400).send('expected sms:received, mms:received or mms:downloaded event');
     }
 
     const provider = getSmsProvider();
@@ -137,7 +137,8 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
     console.log(`[sms/incoming:${correlationId}] event=${eventType} from=${inbound.from} body="${inbound.body}"`);
 
     if (!inbound.from) {
-      await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.FAILED, errorCode: 'missing_sender', errorMessage: 'missing sender' });
+      console.error(`[sms/incoming:${correlationId}] missing sender, payload:`, JSON.stringify(req.body));
+      await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.FAILED, errorCode: 'missing_sender', errorMessage: 'missing sender', metadata: { eventType, payload: req.body } });
       return res.status(400).send('missing sender');
     }
 
