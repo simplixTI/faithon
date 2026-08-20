@@ -64,6 +64,14 @@ são particularmente problemáticos).
   - Propaga `message_id` nos eventos de trace.
   - Retorna `outboundMessageId` para facilitar rastreamento.
 
+### 2026-08-20 — MMS tratado como texto
+
+- `routes/sms.js`: endpoint `/api/sms/incoming` agora aceita também `mms:downloaded`
+  (Android frequentemente entrega mensagens de texto como MMS).
+- `lib/sms-provider.js`: `normalizeInbound()` extrai o corpo de MMS do campo
+  `payload.body` (além de `message`, `text` e `parts`).
+- Log do payload completo quando o sender está ausente, para diagnóstico.
+
 ### 2026-08-19 — Diagnóstico SMS/cloud + MMS
 
 - `routes/sms.js`: endpoint `/api/sms/incoming` agora aceita `mms:received` além de
