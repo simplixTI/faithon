@@ -13,6 +13,7 @@ const { ensureUserWithTrial } = require('../lib/users');
 const { computeSmsCostCents } = require('../lib/cost');
 const { getSmsProvider, estimateSegments } = require('../lib/sms-provider');
 const { generateReply } = require('../lib/conversation-service');
+const { checkEntitlement } = require('../lib/entitlement');
 const { STAGES, STATUS, record, startStage, completeStage } = require('../lib/trace');
 
 const router = express.Router();
@@ -46,7 +47,7 @@ async function recordInboundMessage({ user, from, to, body, messageId, provider,
   const segments = estimateSegments(body);
   const cost = await computeSmsCostCents({ segments, direction: 'inbound' });
 
-  await supabase.from('sms_messages').insert({
+  const { data: inserted } = await supabase.from('sms_messages').insert({
     user_id: user.id,
     direction: 'inbound',
     from_e164: from,
@@ -59,7 +60,7 @@ async function recordInboundMessage({ user, from, to, body, messageId, provider,
     status: 'received',
     command,
     price_cents: cost,
-  });
+  }).select('id').single();
 
   const today = new Date().toISOString().slice(0, 10);
   const { data: usageRow } = await supabase
@@ -77,15 +78,18 @@ async function recordInboundMessage({ user, from, to, body, messageId, provider,
     last_active_at: new Date().toISOString(),
     last_message_at: new Date().toISOString(),
   }).eq('id', user.id);
+
+  return inserted?.id ?? null;
 }
 
-async function sendSystemReply({ to, text, userId, provider, command = null }) {
+async function sendSystemReply({ to, text, userId, provider, command = null, correlationId = null }) {
   const sms = getSmsProvider();
+  const smsStage = await startStage({ correlationId, stage: STAGES.SMS_SEND_STARTED, provider, userId });
   const result = await sms.send({ to, text });
   const segments = estimateSegments(text);
   const cost = await computeSmsCostCents({ segments, direction: 'outbound' });
 
-  await supabase.from('sms_messages').insert({
+  const { data: inserted } = await supabase.from('sms_messages').insert({
     user_id: userId,
     direction: 'outbound',
     from_e164: null,
@@ -98,7 +102,9 @@ async function sendSystemReply({ to, text, userId, provider, command = null }) {
     status: 'queued',
     command,
     price_cents: cost,
-  });
+  }).select('id').single();
+
+  await completeStage(smsStage, { status: STATUS.SUCCESS, metadata: { providerMessageId: result.providerMessageId, messageId: inserted?.id ?? null } });
 
   if (userId) {
     await supabase.from('users').update({
@@ -107,12 +113,12 @@ async function sendSystemReply({ to, text, userId, provider, command = null }) {
     }).eq('id', userId);
   }
 
-  return result;
+  return { ...result, messageId: inserted?.id ?? null };
 }
 
 /**
  * POST /api/sms/incoming
- * Receives inbound SMS webhooks from the active provider.
+ * Receives inbound SMS and MMS webhooks from the active provider.
  */
 router.post('/sms/incoming', express.json(), async (req, res) => {
   const correlationId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -120,10 +126,15 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
   let userId = null;
 
   try {
+    const eventType = req.body?.event;
+    if (!['sms:received', 'mms:received'].includes(eventType)) {
+      return res.status(400).send('expected sms:received or mms:received event');
+    }
+
     const provider = getSmsProvider();
     const inbound = provider.normalizeInbound(req.body || {});
 
-    console.log(`[sms/incoming:${correlationId}] from=${inbound.from} body="${inbound.body}"`);
+    console.log(`[sms/incoming:${correlationId}] event=${eventType} from=${inbound.from} body="${inbound.body}"`);
 
     if (!inbound.from) {
       await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.FAILED, errorCode: 'missing_sender', errorMessage: 'missing sender' });
@@ -171,7 +182,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
     await completeStage(userStage, { status: STATUS.SUCCESS, metadata: { userId: user.id, isNew } });
     await record({ correlationId, stage: isNew ? STAGES.USER_CREATED : STAGES.USER_FOUND, status: STATUS.SUCCESS, userId: user.id });
 
-    await recordInboundMessage({
+    const inboundMessageId = await recordInboundMessage({
       user,
       from: inbound.from,
       to: inbound.to,
@@ -181,6 +192,22 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       providerMetadata: inbound.raw,
       command,
     });
+
+    // Entitlement check (limits, opt-out, trial/grace status)
+    const entitlementStage = await startStage({ correlationId, stage: STAGES.ENTITLEMENT_CHECK_STARTED, provider: 'supabase', userId: user.id, messageId: inboundMessageId });
+    const entitlement = await checkEntitlement(inbound.from);
+    if (!entitlement.allowed) {
+      await completeStage(entitlementStage, { status: STATUS.FAILED, errorCode: entitlement.reason, metadata: { daily_used: entitlement.daily_used, daily_limit: entitlement.daily_limit } });
+      await record({ correlationId, stage: STAGES.ENTITLEMENT_BLOCKED, status: STATUS.FAILED, userId: user.id, messageId: inboundMessageId, errorCode: entitlement.reason, metadata: { reason: entitlement.reason } });
+      const limitText = await getSettingText('text_daily_limit', "You've reached your daily message limit. Reply PLUS to upgrade.");
+      await sendSystemReply({ to: inbound.from, text: limitText, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
+      await supabase.from('sms_webhook_events')
+        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+      await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, messageId: inboundMessageId, metadata: { command, blockedReason: entitlement.reason } });
+      return res.status(204).end();
+    }
+    await completeStage(entitlementStage, { status: STATUS.SUCCESS, metadata: { plan: entitlement.plan, daily_used: entitlement.daily_used, daily_limit: entitlement.daily_limit } });
+    await record({ correlationId, stage: STAGES.ENTITLEMENT_ALLOWED, status: STATUS.SUCCESS, userId: user.id, messageId: inboundMessageId, metadata: { plan: entitlement.plan } });
 
     // --- STOP: opt-out ---
     if (command === 'STOP') {
@@ -212,7 +239,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
         access_status: user.tier === 'plus' ? 'active' : 'free',
       }).eq('id', user.id);
       const text = await getSettingText('text_start_ack', 'Welcome back to FaithOn. Send PRAY to begin.');
-      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command });
+      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command } });
@@ -222,7 +249,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
     // --- HELP ---
     if (command === 'HELP') {
       const text = await getSettingText('text_help', 'FaithOn: a spiritual companion by SMS. Reply STOP to opt out. Support: help@faithon.ai');
-      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command });
+      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'HELP' } });
@@ -234,7 +261,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       const paymentLink = process.env.STRIPE_PAYMENT_LINK || 'https://buy.stripe.com/cNi6oH5g951JfCn6sCenS00';
       const upgradeText = await getSettingText('text_upgrade_link', 'Upgrade to FaithOn Plus for $1.99/mo: {url}');
       const text = upgradeText.replace('{url}', paymentLink);
-      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command });
+      await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
       await supabase.from('sms_webhook_events')
         .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'PLUS', paymentLink } });
@@ -243,13 +270,13 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
 
     // --- FASE 3: PRAY or any message -> AI-generated reply ---
     const isFirstInteraction = !!user.isNew;
-    const aiStage = await startStage({ correlationId, stage: STAGES.AI_REQUEST_STARTED, provider: process.env.AI_PROVIDER || 'deepseek', userId: user.id });
+    const aiStage = await startStage({ correlationId, stage: STAGES.AI_REQUEST_STARTED, provider: process.env.AI_PROVIDER || 'deepseek', userId: user.id, messageId: inboundMessageId });
     const aiResult = await generateReply({
       user,
       body: inbound.body,
       isFirstInteraction,
       correlationId,
-      messageId: inbound.messageId,
+      messageId: inboundMessageId,
     });
     await completeStage(aiStage, { status: STATUS.SUCCESS, metadata: { tokens: aiResult.tokens } });
 
@@ -283,6 +310,8 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
  * Receives delivery status webhooks from the active provider.
  */
 router.post('/sms/status', express.json(), async (req, res) => {
+  const correlationId = `status-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+
   try {
     const event = req.body || {};
     const allowedEvents = new Set(['sms:sent', 'sms:delivered', 'sms:failed']);
@@ -306,6 +335,13 @@ router.post('/sms/status', express.json(), async (req, res) => {
     const providerMessageId = payload.messageId;
     if (!providerMessageId) return res.status(400).send('missing messageId');
 
+    const { data: smsMessage } = await supabase
+      .from('sms_messages')
+      .select('id, user_id, conversation_id')
+      .eq('provider', process.env.SMS_PROVIDER || 'smsgate')
+      .eq('provider_message_id', providerMessageId)
+      .maybeSingle();
+
     const patch = { status: 'sent' };
     if (event.event === 'sms:delivered') {
       patch.status = 'delivered';
@@ -321,12 +357,46 @@ router.post('/sms/status', express.json(), async (req, res) => {
       .eq('provider', process.env.SMS_PROVIDER || 'smsgate')
       .eq('provider_message_id', providerMessageId);
 
+    // Record delivery trace event when delivered/failed
+    if (event.event === 'sms:delivered') {
+      await record({
+        correlationId,
+        stage: STAGES.DELIVERY_CONFIRMED,
+        status: STATUS.SUCCESS,
+        userId: smsMessage?.user_id ?? null,
+        messageId: smsMessage?.id ?? null,
+        conversationId: smsMessage?.conversation_id ?? null,
+        provider: process.env.SMS_PROVIDER || 'smsgate',
+        metadata: { providerMessageId, event: event.event },
+      });
+    } else if (event.event === 'sms:failed') {
+      await record({
+        correlationId,
+        stage: STAGES.DELIVERY_FAILED,
+        status: STATUS.FAILED,
+        userId: smsMessage?.user_id ?? null,
+        messageId: smsMessage?.id ?? null,
+        conversationId: smsMessage?.conversation_id ?? null,
+        provider: process.env.SMS_PROVIDER || 'smsgate',
+        errorCode: payload.reason ?? 'delivery_failed',
+        errorMessage: payload.reason ?? 'delivery failed',
+        metadata: { providerMessageId, event: event.event },
+      });
+    }
+
     await supabase.from('sms_webhook_events')
       .update({ processed_at: new Date().toISOString() }).eq('id', eventKey);
 
     return res.status(204).end();
   } catch (err) {
     console.error('sms/status error:', err);
+    await record({
+      correlationId,
+      stage: STAGES.DELIVERY_FAILED,
+      status: STATUS.FAILED,
+      errorCode: err.code || 'unknown',
+      errorMessage: err.message,
+    });
     return res.status(500).send('error');
   }
 });
