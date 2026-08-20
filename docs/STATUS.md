@@ -37,8 +37,8 @@ são particularmente problemáticos).
    número FaithOn → validar inbound no Supabase + resposta recebida no celular.
 2. Mensagem de teste `40xtqerIjU-XgzUxNYKpr` ficou `Pending` na cloud (número fake
    +5511990001234) — vai falhar quando o aparelho reconectar; ignorar.
-3. Limpar dados de teste no Supabase: usuário/mensagens de `+5511990001234` e
-   eventos `sms_webhook_events` com id `test-*`.
+3. ~~Limpar dados de teste no Supabase: usuário/mensagens de `+5511990001234` e
+   eventos `sms_webhook_events` com id `test-*`.~~ ✅ Feito em 20/08.
 4. Quando o aparelho novo chegar: instalar SMSGate, logar na mesma conta cloud,
    desativar otimização de bateria. Não precisa mudar nada no backend (device ID
    pode mudar — se mudar, atualizar `SMSGATE_DEVICE_ID` na Vercel e no `.env` local).
