@@ -14,8 +14,12 @@
   },
   "crons": [
     {
-      "path": "/api/cron/devotional",
+      "path": "/api/cron/devotional?secret=REPLACE",
       "schedule": "0 12 * * *"
+    },
+    {
+      "path": "/api/cron/health-check?secret=REPLACE",
+      "schedule": "*/5 * * * *"
     }
   ]
 }

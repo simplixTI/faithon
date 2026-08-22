@@ -33,6 +33,17 @@ Text PRAY to 1 (954) 795‑0686 when you are ready. Someone will be there.
 
 #anxietyrelief #christianencouragement #john1427 #nightprayer #insomniaprayers #peaceofgod #jesusisnear #faithoverfear #christianmentalhealth #hope #latenightthoughts #comfortinchrist #christianwomen #christianmen #biblescripture
 
+## Render spec
+
+**Mode:** A — Editorial. See `content/instagram/render-templates.md#mode-a--editorial`.
+
+**Aspect:** 4:5 portrait.
+
+**AI prompt:**
+> moody editorial photograph shot from above, a hand loosely holding a smartphone on rumpled bedsheets late at night, the phone screen is dim and shows no visible content, a small warm amber bedside lamp glows softly in the far background creating one light source, deep navy blue and black tones with a single pocket of warm amber, no face visible, blurred pillow edge, cinematic film grain, quiet insomnia mood, no text, 4:5 portrait, night photography
+
+**Overlay:** none. This post lives or dies by the caption; keep the image completely clean.
+
 ## Notes
 
 This is the pillar that converts. The whole post has to feel like being seen. If the image is too styled or too "brand," strip it back. Reality > polish here.

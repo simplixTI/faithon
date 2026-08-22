@@ -35,6 +35,17 @@ Text PRAY to 1 (954) 795‑0686. Start anywhere.
 
 #grandmotherlove #christianfamily #prayerlife #james516 #faithoverfear #christianencouragement #jesuslovesyou #praywithoutceasing #hopeinjesus #christianwomen #christianmen #dailyprayer #biblescripture #fridayfaith #startwhereyouare
 
+## Render spec
+
+**Mode:** A — Editorial. See `content/instagram/render-templates.md#mode-a--editorial`.
+
+**Aspect:** 4:5 portrait.
+
+**AI prompt:**
+> editorial photograph, close-up of elderly wrinkled folded hands resting gently on top of a worn leather-bound Bible with visible cracked spine and gold-edged pages, warm morning window light from the left, warm cream and neutral honey tones, soft depth of field, no face visible, quiet devotional mood, film photography aesthetic, natural imperfections, 4:5 portrait
+
+**Overlay:** none. Optional small FaithOn wordmark bottom-right at 50% opacity.
+
 ## Notes
 
 Pillar 3 has to feel warm and specific, never generic. The 5:15 detail matters — remove it and the post becomes a Hallmark card.

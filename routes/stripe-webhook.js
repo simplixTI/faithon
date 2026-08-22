@@ -90,6 +90,9 @@ router.post(
       id: event.id, type: event.type, payload: event,
     });
 
+    const { heartbeat } = require('../lib/system-health');
+    heartbeat('stripe', 'ok', { event: event.type, id: event.id }).catch(() => {});
+
     try {
       switch (event.type) {
         case 'checkout.session.completed': {

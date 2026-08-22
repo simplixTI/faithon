@@ -134,6 +134,10 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
     const provider = getSmsProvider();
     const inbound = provider.normalizeInbound(req.body || {});
 
+    // SMSGate is alive: we just received a real webhook from it.
+    const { heartbeat } = require('../lib/system-health');
+    heartbeat('smsgate', 'ok', { event: eventType, from: inbound.from }).catch(() => {});
+
     console.log(`[sms/incoming:${correlationId}] event=${eventType} from=${inbound.from} body="${inbound.body}"`);
 
     if (!inbound.from) {

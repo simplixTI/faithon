@@ -38,6 +38,24 @@ Text PRAY to 1 (954) 795‑0686.
 
 #christianencouragement #prayerlife #faithjourney #hope #biblestudy #christianwomen #christianmen #prayerworks #godsplan #faithinjesus #textprayer #comeasyouare #jesusisnear #peaceofgod
 
+## Render spec
+
+**Mode:** B — Ad system. See `content/instagram/render-templates.md#mode-b--ad-system`.
+
+**Aspect:** 9:16 vertical.
+
+**Palette:** cream `#F5EFE6` background for cards, ink `#111111` for text, gold `#B29968` for the emphasis word on the final CTA card. Real iOS SMS UI for the phone-screen frames (green outgoing bubble, grey reply).
+
+**Typography:** Recoleta / Playfair Display / Fraunces (headline serif). Overlay lines use headline serif at ~52pt equivalent, centered, generous leading.
+
+**Music:** soft piano or ambient pad. Free-license track from Epidemic Sound / Artlist. Sub-conscious volume.
+
+**Card frames (0:00, 0:17, 0:20):** cream background, serif overlay, gold underline flourish under emphasis word on final card.
+
+**Phone frames (0:07–0:15):** actual iPhone screen recording OR high-fidelity mockup. Sender name at top: "FaithOn". Message thread content — do NOT use "your Christian AI" line from the reference creatives. Use the on-brand reply:
+> Hello!
+> I'm here to pray, give biblical guidance and encourage you with God's Word.
+
 ## Notes
 
 - The reply message shown on screen must be a mockup — do NOT screen-record a real user's conversation.

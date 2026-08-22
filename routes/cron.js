@@ -3,6 +3,7 @@ const { supabase } = require('../lib/supabase');
 const { getSmsProvider, estimateSegments } = require('../lib/sms-provider');
 const { computeSmsCostCents } = require('../lib/cost');
 const { generateDailyDevotional } = require('../lib/devotional');
+const { heartbeat } = require('../lib/system-health');
 
 const router = express.Router();
 
@@ -50,6 +51,7 @@ router.post('/cron/expire-trials', requireCron, async (_req, res) => {
     }, { onConflict: 'user_id' });
     downgraded++;
   }
+  await heartbeat('cron', 'ok', { job: 'expire-trials', processed: users?.length ?? 0, downgraded });
   res.json({ processed: users?.length ?? 0, downgraded });
 });
 
@@ -80,6 +82,7 @@ router.post('/cron/expire-grace', requireCron, async (_req, res) => {
       user_id: u.id, plan_slug: 'free', access_status: 'free',
     }, { onConflict: 'user_id' });
   }
+  await heartbeat('cron', 'ok', { job: 'expire-grace', processed: users?.length ?? 0 });
   res.json({ processed: users?.length ?? 0 });
 });
 
@@ -93,6 +96,7 @@ router.post('/cron/reset-daily', requireCron, async (_req, res) => {
   // Prune rows older than 90 days to keep the table small.
   const cutoff = new Date(Date.now() - 90 * 86400 * 1000).toISOString().slice(0, 10);
   const { count } = await supabase.from('usage_daily').delete({ count: 'exact' }).lt('usage_date', cutoff);
+  await heartbeat('cron', 'ok', { job: 'reset-daily', pruned: count ?? 0 });
   res.json({ pruned: count ?? 0 });
 });
 
@@ -142,11 +146,63 @@ router.post('/cron/devotional', requireCron, async (_req, res) => {
       }
     }
 
+    await heartbeat('cron', failed === 0 ? 'ok' : 'degraded', { job: 'devotional', sent, failed, total: plusUsers?.length ?? 0 });
     res.json({ devotional, sent, failed, total: plusUsers?.length ?? 0 });
   } catch (err) {
     console.error('devotional cron error:', err);
+    await heartbeat('cron', 'down', { job: 'devotional', error: err.message }).catch(() => {});
     res.status(500).json({ error: err.message });
   }
+});
+
+/**
+ * POST /api/cron/health-check
+ * Runs frequently (e.g. every 5 minutes). Marks components as degraded/down
+ * when their last heartbeat is too old, without needing each component to
+ * report negative state itself.
+ */
+router.post('/cron/health-check', requireCron, async (_req, res) => {
+  const thresholds = {
+    api: 10 * 60 * 1000,        // 10 minutes
+    smsgate: 60 * 60 * 1000,    // 1 hour (SMS can be quiet)
+    stripe: 24 * 60 * 60 * 1000, // 1 day
+    openai: 60 * 60 * 1000,     // 1 hour
+    cron: 70 * 60 * 1000,       // 70 minutes (cron jobs run at least hourly)
+    n8n: 70 * 60 * 1000,        // 70 minutes
+  };
+
+  const { data: rows, error } = await supabase
+    .from('system_health')
+    .select('component, status, last_heartbeat_at, details');
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  const now = Date.now();
+  const updated = [];
+
+  for (const row of rows ?? []) {
+    const threshold = thresholds[row.component];
+    if (!threshold) continue;
+
+    const last = row.last_heartbeat_at ? new Date(row.last_heartbeat_at).getTime() : 0;
+    const stale = !last || now - last > threshold;
+
+    let nextStatus = row.status;
+    if (stale && row.status === 'ok') nextStatus = 'degraded';
+    if (stale && !last) nextStatus = 'down';
+
+    if (nextStatus !== row.status) {
+      await supabase.from('system_health').upsert({
+        component: row.component,
+        status: nextStatus,
+        details: { ...(row.details || {}), stale_ms: last ? now - last : null },
+      }, { onConflict: 'component' });
+      updated.push({ component: row.component, from: row.status, to: nextStatus });
+    }
+  }
+
+  await heartbeat('cron', 'ok', { job: 'health-check', updated });
+  res.json({ checked: rows?.length ?? 0, updated });
 });
 
 module.exports = router;

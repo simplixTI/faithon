@@ -61,6 +61,22 @@ Lembretes para o aparelho novo:
   `/pray` sem expor o arquivo.
 - `.env.example`: adicionada `FAITHON_SMS_NUMBER` (fallback ainda é
   `+19547950686`).
+- `scripts/re-engage.js`: script de reengajamento SMS (com dry-run, force e
+  skip automático de opted-out). Mensagem gerada pelo DeepSeek:
+  `FaithOn is back! Need prayer or guidance? Just text PRAY and we're here for you. Reply STOP to opt out.`
+  Enviada em 2026-08-22 para os 4 números da foto (+18165894867,
+  +13104389963, +18505576241, +16104923473) com sucesso.
+- System health configurado:
+  - `lib/system-health.js`: helper de heartbeat.
+  - `supabase/migrations/20260822000000_system_health_heartbeats.sql`:
+    adiciona componente `smsgate`.
+  - `routes/config.js`, `routes/sms.js`, `routes/stripe-webhook.js`,
+    `lib/ai-provider.js`, `routes/cron.js`: escrevem heartbeat de
+    `api`/`database`, `smsgate`, `stripe`, `openai` e `cron`.
+  - `routes/cron.js`: novo endpoint `/api/cron/health-check` que marca
+    componentes como `degraded`/`down` conforme tempo sem heartbeat.
+  - `vercel.json`: cron `/api/cron/health-check` a cada 5 min
+    (`?secret=REPLACE` — substituir pelo `CRON_SECRET` real no deploy).
 
 ### 2026-08-21 — Migração para aparelho novo A55 5G
 

@@ -29,6 +29,17 @@ Text PRAY to 1 (954) 795‑0686 to keep the conversation going.
 
 #faith #hope #dailyprayer #christianencouragement #matthew1128 #jesuslovesyou #restinthelord #christianlife #comeasyouare #peaceofgod #faithoverfear #mondaymotivation #christianwomen #christianmen #biblescripture
 
+## Render spec
+
+**Mode:** A — Editorial. See `content/instagram/render-templates.md#mode-a--editorial`.
+
+**Aspect:** 4:5 portrait.
+
+**AI prompt:**
+> editorial photograph, warm early morning light streaming diagonally through a bedroom or kitchen window onto a wooden table, a simple cream ceramic mug of coffee gently steaming, an open leather-bound journal with visible page texture slightly out of focus in the background, single beam of warm honey light catching dust motes, warm cream and gold tones, muted quiet mood, no faces, no text, shallow depth of field, film photography aesthetic, natural imperfections, 4:5 portrait
+
+**Overlay:** none. Optional small FaithOn wordmark bottom-right at 50% opacity.
+
 ## Notes
 
 Post Monday morning — first thing readers see when they open IG on their way to work / school run. If a first-comment CTA is enabled in the scheduler, drop the hashtags there instead of at the end of the caption for a cleaner feed appearance.

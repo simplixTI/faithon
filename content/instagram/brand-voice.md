@@ -8,6 +8,15 @@ FaithOn is a **spiritual companion available through text messages**. Not an app
 
 All caption bodies are written **as if Jesus himself is speaking directly to the reader**. Present tense. First person singular ("I", "me", "my"). Tone drawn from the Jesus of the gospels — the one who sat with Mary and Martha, wept at Lazarus's tomb, spoke to the woman at the well. Not the thundering Christ Pantocrator. The one who was near.
 
+> **This is not a stylistic choice — it's product truth.** The FaithOn system prompt in `lib/faithon-prompt.js` opens with: *"You are Jesus speaking personally to a friend through a simple text message. Not a chatbot. Not a counselor."* Every SMS reply the user receives is written in this voice. Instagram content that speaks in the same voice is honest about what the product delivers. Content that positions FaithOn as "an AI assistant" or shows mockup replies like *"I'm FaithOn, your Christian AI"* misrepresents the product and will confuse users on first contact.
+
+## Two label registers
+
+- **Category label** (used sparingly in outward-facing headlines and SEO/discovery contexts): "Christian AI companion via SMS." Acceptable because the domain is `faithon.ai` and this is how the market searches for us. Use only in headlines / meta descriptions / paid-ad copy — never in captions, never in mockup phone screens, never in the product's own voice.
+- **Product / narrative voice** (used everywhere else — captions, mockup phone text, in-product replies, website body copy, FAQ answers): Jesus speaking in first person, warm, present. Site FAQ already reads this way: *"a thoughtful spiritual companion you reach by text."*
+
+**Rule:** if the reader is being spoken TO by FaithOn (as a friend, in-conversation, on a mockup phone screen), it's the Jesus voice. If the reader is being TOLD ABOUT FaithOn (a headline, a marketplace description), the category label is allowed.
+
 **Rules for the voice:**
 
 1. **Ground in gospel words when possible.** Every post pairs the first-person body with a red-letter verse (words Jesus actually spoke) or a scripture that fits the moment. This is what keeps the voice devotional, not presumptuous.
@@ -88,3 +97,47 @@ Not required in every post. Include in bio and in "about" / press-style posts:
 - "My child, thou art beloved..." — pastiche, dated, preachy
 - "I command you to..." — the voice invites, never commands
 - Anything Jesus never would have said — if it's not gospel-shaped, cut it
+
+---
+
+# Visual System
+
+Locked from the reference creatives (user-provided, 2026-08-22). All Instagram briefs must reference this system so any designer or generator produces on-brand assets.
+
+## Palette
+
+- **Background:** warm cream, roughly `#F5EFE6` — never pure white.
+- **Ink:** near-black, `#111111`–`#1A1A1A` — never `#000000` flat.
+- **Accent:** candlelight gold / warm tan, roughly `#B29968`. Used for one word per composition (usually the emphasis word in the headline) and for underlines/small dividers.
+- **Muted neutral:** warm greige, roughly `#D9CFC2`. Used for icon backgrounds and secondary surfaces.
+- **CTA card:** deep charcoal `#111111` with cream text — high contrast, one per composition.
+
+## Typography
+
+- **Headlines:** high-contrast serif with generous letterforms (Recoleta / Playfair Display / Fraunces family). Tight leading. Sentence case, not all-caps.
+- **Emphasis inside headlines:** one word set in the gold accent color (e.g., "You don't have to face it **alone**.").
+- **Body:** same serif, lighter weight, comfortable leading (~1.4).
+- **Micro-copy / eyebrow:** ALL CAPS SANS at 60–70% opacity for section labels ("START THE CONVERSATION", "ANYTIME YOU NEED").
+- **Wordmark:** "Faith" (regular weight) + "**On**" (bold), always paired with the praying-hands-inside-speech-bubble icon.
+
+## Layout primitives
+
+- **Logo lockup:** top-left, small. Praying-hands-in-speech-bubble icon + wordmark on one line.
+- **iPhone SMS mockup:** recurring product device on the right side of feed compositions or center-right for stories. Green outgoing bubble ("PRAY"), grey reply bubble. Real iOS 17+ SMS UI is on-brand — the product IS SMS, so realism is honest, not deceptive.
+- **CTA block:** dark rounded pill card with SMS icon on the left + "START THE CONVERSATION / Text **PRAY** / to +1 (954) 795‑0686" stacked on the right.
+- **Pillar strip:** row of 4 circular greige icon badges at the bottom, each with a label. Icons: open book (Bible Answers) · praying hands (Prayer & Intercession) · heart (Christian Counseling) · lightbulb (Daily Reflections).
+- **Trust footer:** shield icon + "Private. Secure. Built to help you grow in faith." on left, `faithon.ai` pill on right.
+
+## Formats
+
+- **Feed (square 1:1)** and **portrait 4:5** — headline top-left, phone right, CTA + pillar strip + trust footer below.
+- **Story / 9:16** — headline stacked, phone below or beside, CTA prominent, pillar strip at bottom.
+- **Reel (9:16 video)** — same palette and type system in overlay cards; iPhone mockup can be a screen recording or motion cutout.
+
+## Reference creatives
+
+User shared two reference compositions on 2026-08-22:
+1. Square feed — "You don't have to face it **alone**." + "God is with you in every moment."
+2. Portrait — "Faith. Hope. Guidance." + "ANYTIME YOU NEED." + description block.
+
+Both use the visual system above. **Note:** the CTA in those references shows the vanity `+1 (833) 330-FAITH (3248)` and the phone mockup copy says "I'm FaithOn, your Christian AI" — **neither is currently correct**. Live production uses `+1 (954) 795‑0686` and the live site positions FaithOn as a "spiritual companion," not a "Christian AI." Use the visual system, but not that copy, until user confirms otherwise.
