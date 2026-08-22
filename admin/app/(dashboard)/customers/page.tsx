@@ -22,7 +22,10 @@ export default async function CustomersPage({
   const admin = getSupabaseAdmin();
   let q = admin
     .from("users")
-    .select("id, phone_e164, tier, access_status, trial_ends_at, created_at, last_active_at, stripe_customer_id", { count: "exact" })
+    .select(
+      "id, phone_e164, first_name, tier, access_status, trial_ends_at, created_at, last_active_at, stripe_customer_id, user_consents(opt_out, opt_out_at)",
+      { count: "exact" },
+    )
     .is("deleted_at", null)
     .order("created_at", { ascending: false })
     .range(from, to);
@@ -99,37 +102,53 @@ export default async function CustomersPage({
           <Table>
             <THead>
               <TH>Phone</TH>
+              <TH>Name</TH>
               <TH>Plan</TH>
               <TH>Status</TH>
+              <TH>Opt-out</TH>
               <TH>Trial ends</TH>
               <TH>Last seen</TH>
               <TH>Created</TH>
               <TH></TH>
             </THead>
             <TBody>
-              {rows.map((r) => (
-                <TR key={r.id}>
-                  <TD className="font-mono text-xs">{maskPhone(r.phone_e164)}</TD>
-                  <TD>
-                    <Badge tone={r.tier === "plus" ? "gold" : "neutral"}>
-                      {r.tier === "plus" ? "Plus" : "Free"}
-                    </Badge>
-                  </TD>
-                  <TD>
-                    <Badge tone={toneForAccessStatus(r.access_status)}>
-                      {r.access_status ?? "—"}
-                    </Badge>
-                  </TD>
-                  <TD className="text-ink-mute">{r.trial_ends_at ? relTime(r.trial_ends_at) : "—"}</TD>
-                  <TD className="text-ink-mute">{r.last_active_at ? relTime(r.last_active_at) : "—"}</TD>
-                  <TD className="text-ink-mute">{dateShort(r.created_at)}</TD>
-                  <TD className="text-right">
-                    <Link href={`/customers/${r.id}` as never} className="text-gold-deep hover:text-gold text-sm">
-                      Open →
-                    </Link>
-                  </TD>
-                </TR>
-              ))}
+              {rows.map((r) => {
+                const consent = (r.user_consents as unknown as { opt_out?: boolean; opt_out_at?: string }[] | undefined)?.[0];
+                return (
+                  <TR key={r.id}>
+                    <TD className="font-mono text-xs">{maskPhone(r.phone_e164)}</TD>
+                    <TD>{r.first_name || "—"}</TD>
+                    <TD>
+                      <Badge tone={r.tier === "plus" ? "gold" : "neutral"}>
+                        {r.tier === "plus" ? "Plus" : "Free"}
+                      </Badge>
+                    </TD>
+                    <TD>
+                      <Badge tone={toneForAccessStatus(r.access_status)}>
+                        {r.access_status ?? "—"}
+                      </Badge>
+                    </TD>
+                    <TD>
+                      {consent?.opt_out ? (
+                        <div>
+                          <Badge tone="red">Opted out</Badge>
+                          <div className="text-[10px] text-ink-mute mt-0.5">{dateShort(consent.opt_out_at)}</div>
+                        </div>
+                      ) : (
+                        <span className="text-ink-mute text-sm">—</span>
+                      )}
+                    </TD>
+                    <TD className="text-ink-mute">{r.trial_ends_at ? relTime(r.trial_ends_at) : "—"}</TD>
+                    <TD className="text-ink-mute">{r.last_active_at ? relTime(r.last_active_at) : "—"}</TD>
+                    <TD className="text-ink-mute">{dateShort(r.created_at)}</TD>
+                    <TD className="text-right">
+                      <Link href={`/customers/${r.id}` as never} className="text-gold-deep hover:text-gold text-sm">
+                        Open →
+                      </Link>
+                    </TD>
+                  </TR>
+                );
+              })}
             </TBody>
           </Table>
 

@@ -160,20 +160,26 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
 
     await record({ correlationId, stage: STAGES.WEBHOOK_VALIDATED, status: STATUS.SUCCESS });
 
-    // Idempotency: skip if already processed
-    const { data: seen } = await supabase
-      .from('sms_webhook_events').select('id, processed_at').eq('id', webhookId).maybeSingle();
-    if (seen?.processed_at) {
-      console.log(`[sms/incoming:${correlationId}] duplicate webhook, skipping`);
-      await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SKIPPED, metadata: { reason: 'duplicate_webhook' } });
-      return res.status(204).end();
+    // Idempotency: mark webhook as processed atomically at the start.
+    // If another request already inserted this webhookId, the insert fails
+    // with a duplicate key error and we return 204 immediately.
+    const { error: insertError } = await supabase
+      .from('sms_webhook_events')
+      .insert({
+        id: webhookId,
+        type: 'inbound',
+        payload: req.body,
+        processed_at: new Date().toISOString(),
+      });
+    if (insertError) {
+      const isDuplicate = insertError.code === '23505' || String(insertError.message).includes('duplicate key');
+      if (isDuplicate) {
+        console.log(`[sms/incoming:${correlationId}] duplicate webhook, skipping`);
+        await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SKIPPED, metadata: { reason: 'duplicate_webhook' } });
+        return res.status(204).end();
+      }
+      throw insertError;
     }
-
-    await supabase.from('sms_webhook_events').upsert({
-      id: webhookId,
-      type: 'inbound',
-      payload: req.body,
-    });
 
     const command = detectCommand(inbound.body);
     const userStage = await startStage({ correlationId, stage: STAGES.USER_LOOKUP_STARTED, provider: 'supabase' });
@@ -202,8 +208,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       await record({ correlationId, stage: STAGES.ENTITLEMENT_BLOCKED, status: STATUS.FAILED, userId: user.id, messageId: inboundMessageId, errorCode: entitlement.reason, metadata: { reason: entitlement.reason } });
       const limitText = await getSettingText('text_daily_limit', "You've reached your daily message limit. Reply PLUS to upgrade.");
       await sendSystemReply({ to: inbound.from, text: limitText, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
-      await supabase.from('sms_webhook_events')
-        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, messageId: inboundMessageId, metadata: { command, blockedReason: entitlement.reason } });
       return res.status(204).end();
     }
@@ -219,8 +224,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
         opt_out_reason: 'STOP',
       }, { onConflict: 'user_id' });
       await supabase.from('users').update({ access_status: 'opted_out' }).eq('id', user.id);
-      await supabase.from('sms_webhook_events')
-        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'STOP' } });
       return res.status(204).end();
     }
@@ -241,8 +245,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       }).eq('id', user.id);
       const text = await getSettingText('text_start_ack', 'Welcome back to FaithOn. Send PRAY to begin.');
       await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
-      await supabase.from('sms_webhook_events')
-        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command } });
       return res.status(204).end();
     }
@@ -251,8 +254,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
     if (command === 'HELP') {
       const text = await getSettingText('text_help', 'FaithOn: a spiritual companion by SMS. Reply STOP to opt out. Support: help@faithon.ai');
       await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
-      await supabase.from('sms_webhook_events')
-        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'HELP' } });
       return res.status(204).end();
     }
@@ -263,8 +265,7 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       const upgradeText = await getSettingText('text_upgrade_link', 'Upgrade to FaithOn Plus for $1.99/mo: {url}');
       const text = upgradeText.replace('{url}', paymentLink);
       await sendSystemReply({ to: inbound.from, text, userId: user.id, provider: process.env.SMS_PROVIDER || 'smsgate', command, correlationId });
-      await supabase.from('sms_webhook_events')
-        .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
+
       await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, metadata: { command: 'PLUS', paymentLink } });
       return res.status(204).end();
     }
@@ -280,9 +281,6 @@ router.post('/sms/incoming', express.json(), async (req, res) => {
       messageId: inboundMessageId,
     });
     await completeStage(aiStage, { status: STATUS.SUCCESS, metadata: { tokens: aiResult.tokens } });
-
-    await supabase.from('sms_webhook_events')
-      .update({ processed_at: new Date().toISOString() }).eq('id', webhookId);
 
     const totalMs = Date.now() - flowStartedAt;
     await record({ correlationId, stage: STAGES.FLOW_COMPLETED, status: STATUS.SUCCESS, userId: user.id, durationMs: totalMs });

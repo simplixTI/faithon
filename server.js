@@ -9,7 +9,7 @@
 //       n8n       — POST /api/n8n/heartbeat, /api/n8n/execution
 //       entitlement — GET  /api/entitlement/:phone
 //       usage       — POST /api/usage/record
-//       cron        — POST /api/cron/{expire-trials, expire-grace, reset-daily}
+//       cron        — POST /api/cron/{expire-trials, expire-grace, reset-daily, devotional}
 // =====================================================================
 require('dotenv').config();
 
@@ -41,6 +41,15 @@ app.use('/api', require('./routes/entitlement'));
 app.use('/api', require('./routes/usage'));
 app.use('/api', require('./routes/cron'));
 app.use('/api', require('./routes/sms'));
+
+// -------- SMS deep-link shortcut --------
+// /pray serves a small landing page that auto-opens the user's SMS app
+// with the FaithOn number and "PRAY" pre-filled. The page also shows a
+// fallback button for browsers that block automatic sms: redirects.
+// Configure the number via FAITHON_SMS_NUMBER (hardcoded fallback below).
+app.get('/pray', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'pray.html'));
+});
 
 // -------- Static marketing site --------
 app.use(express.static(path.join(__dirname, 'public')));

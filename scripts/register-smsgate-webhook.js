@@ -13,7 +13,7 @@ require('dotenv').config();
 const { registerWebhook, listWebhooks } = require('../lib/smsgate');
 
 const APP_URL = (process.env.APP_URL || 'http://localhost:5500').replace(/\/$/, '');
-const EVENTS = ['sms:received', 'mms:received', 'sms:sent', 'sms:delivered', 'sms:failed'];
+const EVENTS = ['sms:received', 'mms:downloaded', 'sms:sent', 'sms:delivered', 'sms:failed'];
 
 async function main() {
   console.log('URL do FaithOn backend:', APP_URL);
@@ -25,7 +25,8 @@ async function main() {
   console.log('');
 
   for (const event of EVENTS) {
-    const url = `${APP_URL}/api/sms/${event === 'sms:received' ? 'incoming' : 'status'}`;
+    const isIncoming = event === 'sms:received' || event.startsWith('mms:');
+    const url = `${APP_URL}/api/sms/${isIncoming ? 'incoming' : 'status'}`;
     console.log(`Registrando webhook: ${event} → ${url}`);
     const result = await registerWebhook({ url, event });
     console.log(`Status: ${result.status}`);

@@ -1,6 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
+    { "source": "/pray", "destination": "/pray.html" },
     { "source": "/api/(.*)", "destination": "/api" },
     { "source": "/admin",  "destination": "https://faithon-admin-simplix.vercel.app/admin" },
     { "source": "/admin/", "destination": "https://faithon-admin-simplix.vercel.app/admin" },
@@ -10,5 +11,11 @@
     "api/index.js": {
       "maxDuration": 60
     }
-  }
+  },
+  "crons": [
+    {
+      "path": "/api/cron/devotional",
+      "schedule": "0 12 * * *"
+    }
+  ]
 }

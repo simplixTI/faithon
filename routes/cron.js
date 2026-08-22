@@ -1,5 +1,8 @@
 const express = require('express');
 const { supabase } = require('../lib/supabase');
+const { getSmsProvider, estimateSegments } = require('../lib/sms-provider');
+const { computeSmsCostCents } = require('../lib/cost');
+const { generateDailyDevotional } = require('../lib/devotional');
 
 const router = express.Router();
 
@@ -91,6 +94,59 @@ router.post('/cron/reset-daily', requireCron, async (_req, res) => {
   const cutoff = new Date(Date.now() - 90 * 86400 * 1000).toISOString().slice(0, 10);
   const { count } = await supabase.from('usage_daily').delete({ count: 'exact' }).lt('usage_date', cutoff);
   res.json({ pruned: count ?? 0 });
+});
+
+/**
+ * POST /api/cron/devotional
+ * Sends a daily devotional SMS to all active PLUS users.
+ * Intended to run once every morning via Vercel Cron or n8n.
+ */
+router.post('/cron/devotional', requireCron, async (_req, res) => {
+  try {
+    const devotional = await generateDailyDevotional();
+    const segments = estimateSegments(devotional);
+    const smsCost = await computeSmsCostCents({ segments, direction: 'outbound' });
+
+    const { data: plusUsers } = await supabase
+      .from('users')
+      .select('id, phone_e164')
+      .eq('tier', 'plus')
+      .eq('access_status', 'active')
+      .is('deleted_at', null);
+
+    const sms = getSmsProvider();
+    let sent = 0;
+    let failed = 0;
+
+    for (const user of plusUsers ?? []) {
+      try {
+        const result = await sms.send({ to: user.phone_e164, text: devotional });
+        await supabase.from('sms_messages').insert({
+          user_id: user.id,
+          direction: 'outbound',
+          from_e164: null,
+          to_e164: user.phone_e164,
+          body: devotional,
+          provider: process.env.SMS_PROVIDER || 'smsgate',
+          provider_message_id: result.providerMessageId,
+          provider_metadata: result.raw,
+          num_segments: segments,
+          status: 'queued',
+          command: 'devotional',
+          price_cents: smsCost,
+        });
+        sent++;
+      } catch (err) {
+        console.error(`devotional send failed for ${user.phone_e164}:`, err.message);
+        failed++;
+      }
+    }
+
+    res.json({ devotional, sent, failed, total: plusUsers?.length ?? 0 });
+  } catch (err) {
+    console.error('devotional cron error:', err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 module.exports = router;

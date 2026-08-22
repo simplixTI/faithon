@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>FaithOn — Send PRAY</title>
+  <meta name="description" content="Open your SMS app and send PRAY to FaithOn." />
+  <link rel="icon" href="/logo.png" type="image/png" />
+  <link rel="apple-touch-icon" href="/logo.png" />
+  <meta name="theme-color" content="#F4ECDF" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=DM+Sans:opsz,wght@9..40,300..700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --paper: #F4ECDF;
+      --paper-soft: #FBF6EC;
+      --ink: #1A1714;
+      --ink-mute: #6E6358;
+      --gold: #B98238;
+      --gold-deep: #8E5F22;
+      --shadow: 0 6px 24px rgba(26,23,20,.08);
+      --serif: 'Fraunces', Georgia, serif;
+      --sans: 'DM Sans', ui-sans-serif, system-ui, sans-serif;
+    }
+    *{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+    body{
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--sans);
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      text-align: center;
+    }
+    .card{
+      background: var(--paper-soft);
+      border: 1px solid rgba(26,23,20,.08);
+      border-radius: 24px;
+      padding: 40px 32px;
+      max-width: 360px;
+      width: 100%;
+      box-shadow: var(--shadow);
+    }
+    .mark{
+      width: 56px;
+      height: 56px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      background: var(--paper);
+      border: 1px solid rgba(26,23,20,.08);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+      color: var(--gold-deep);
+    }
+    h1{
+      font-family: var(--serif);
+      font-size: 28px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+    p{
+      color: var(--ink-mute);
+      font-size: 15px;
+      line-height: 1.55;
+      margin-bottom: 24px;
+    }
+    .btn{
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: var(--ink);
+      color: var(--paper-soft);
+      font-family: var(--sans);
+      font-size: 16px;
+      font-weight: 600;
+      padding: 16px 28px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: var(--shadow);
+      transition: transform .15s ease, opacity .15s ease;
+    }
+    .btn:active{transform: scale(.98)}
+    .muted{
+      margin-top: 20px;
+      font-size: 12px;
+      color: var(--ink-mute);
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="mark">✦</div>
+    <h1>Send PRAY</h1>
+    <p>Tap the button below to open your SMS app with <strong>PRAY</strong> ready to send to FaithOn.</p>
+    <a id="sms-link" class="btn" href="sms:+19547950686?body=PRAY">Open Messages</a>
+    <p class="muted">If nothing happens, make sure your device supports SMS links.</p>
+  </main>
+
+  <script>
+    (function() {
+      var link = document.getElementById('sms-link');
+      var href = link.href;
+      // Try to open the SMS app automatically on load.
+      window.location.href = href;
+      // On some browsers the automatic jump is blocked; the button remains.
+    })();
+  </script>
+</body>
+</html>
