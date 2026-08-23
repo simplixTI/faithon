@@ -65,8 +65,10 @@
   - `routes/config.js`, `routes/sms.js`, `routes/stripe-webhook.js`,
     `lib/ai-provider.js`, `routes/cron.js`: escrevem heartbeat de
     `api`/`database`, `smsgate`, `stripe`, `openai` e `cron`.
-  - `routes/cron.js`: novo endpoint `/api/cron/health-check` que marca
-    componentes como `degraded`/`down` conforme tempo sem heartbeat.
+  - `routes/cron.js`: endpoint `/api/cron/health-check` atualiza os heartbeats
+    de `api`/`database` e marca componentes como `degraded` apenas quando já
+    tiveram heartbeat e ficaram velhos. Componentes sem nenhum heartbeat
+    permanecem `unknown` (não são marcados como `down`).
 - Vercel Cron corrigido:
   - `CRON_SECRET` gerado e adicionado às env vars da Vercel (production).
   - `routes/cron.js` agora aceita o header `Authorization: Bearer <CRON_SECRET>`

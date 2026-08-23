@@ -165,19 +165,29 @@ router.post('/cron/devotional', requireCron, async (_req, res) => {
 
 /**
  * POST /api/cron/health-check
- * Runs frequently (e.g. every 5 minutes). Marks components as degraded/down
- * when their last heartbeat is too old, without needing each component to
- * report negative state itself.
+ * Runs daily. Keeps api/database heartbeats fresh and marks components as
+ * degraded when their last heartbeat is too old. Components that never
+ * reported (last_heartbeat_at is null) stay "unknown" instead of "down".
  */
 router.post('/cron/health-check', requireCron, async (_req, res) => {
   const thresholds = {
-    api: 10 * 60 * 1000,        // 10 minutes
-    smsgate: 60 * 60 * 1000,    // 1 hour (SMS can be quiet)
+    api: 10 * 60 * 1000,         // 10 minutes
+    smsgate: 60 * 60 * 1000,     // 1 hour (SMS can be quiet)
     stripe: 24 * 60 * 60 * 1000, // 1 day
-    openai: 60 * 60 * 1000,     // 1 hour
-    cron: 70 * 60 * 1000,       // 70 minutes (cron jobs run at least hourly)
-    n8n: 70 * 60 * 1000,        // 70 minutes
+    openai: 60 * 60 * 1000,      // 1 hour
+    cron: 25 * 60 * 60 * 1000,   // 25 hours (daily cron)
+    n8n: 25 * 60 * 60 * 1000,    // 25 hours
   };
+
+  // Keep api/database heartbeats fresh from the cron itself.
+  let supaOk = false, supaErr = null;
+  try {
+    const { error } = await supabase.from('users').select('id').limit(1);
+    supaOk = !error;
+    supaErr = error?.message || null;
+  } catch (e) { supaErr = e.message; }
+  await heartbeat('api', 'ok', { checked_at: new Date().toISOString() });
+  await heartbeat('database', supaOk ? 'ok' : 'down', { error: supaErr });
 
   const { data: rows, error } = await supabase
     .from('system_health')
@@ -193,11 +203,13 @@ router.post('/cron/health-check', requireCron, async (_req, res) => {
     if (!threshold) continue;
 
     const last = row.last_heartbeat_at ? new Date(row.last_heartbeat_at).getTime() : 0;
-    const stale = !last || now - last > threshold;
 
     let nextStatus = row.status;
-    if (stale && row.status === 'ok') nextStatus = 'degraded';
-    if (stale && !last) nextStatus = 'down';
+    if (last && now - last > threshold && row.status === 'ok') {
+      nextStatus = 'degraded';
+    }
+    // Only mark as "down" if we had a heartbeat before and it went stale.
+    // Components that never reported stay "unknown".
 
     if (nextStatus !== row.status) {
       await supabase.from('system_health').upsert({
