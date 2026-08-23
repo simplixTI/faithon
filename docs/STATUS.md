@@ -78,6 +78,28 @@
   - Devocional diário agora inclui usuários Plus em trial (`active` ou `trial`).
 - Deploy produtivo realizado em 2026-08-23.
 
+### 2026-08-23 — Suporte a espanhol no site institucional
+
+- `public/index.html`:
+  - Adicionado switcher de idioma (EN / ES) no topo da navegação, com estilo
+    discreto na paleta cream/gold do site.
+  - Implementado i18n client-side leve via `<script>` no final da página,
+    usando atributos `data-i18n` e dicionário EN/ES.
+  - Tradução cobre: `<title>`, meta description, `<html lang>`, navegação,
+    hero, faixa de confiança, marquee de versículos, seções "Some Days Don't
+    Wait", "Seasons of a Day", "How It Works", "Features", demonstrações de
+    conversa, depoimentos, preços, "Why Text Messages", FAQ, CTA final, rodapé,
+    modal de checkout e banners de status.
+  - Preserva ícones e elementos filhos (checkmarks, numerais romanas, etc.)
+    movendo a tradução para spans internos.
+  - Persistência do idioma em `localStorage` e detecção do idioma do navegador
+    (`es*` → espanhol) na primeira visita; troca de idioma sem recarregar.
+  - Textos dinâmicos do checkout (mensal/anual, erro, redirecionamento e
+    banners de sucesso/cancelamento) agora usam `i18n.t()`.
+- Validação: scripts `scripts/validate-i18n.js` e
+  `scripts/test-i18n-toggle.js` verificam sintaxe, presença de chaves e
+  alternância EN ↔ ES.
+
 ### 2026-08-21 — Migração para aparelho novo A55 5G
 
 - Atualizadas credenciais SMSGate no `.env` local e na Vercel (production):

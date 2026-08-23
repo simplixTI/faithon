@@ -1,10 +1,10 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-i18n-lang>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>FaithOn — Never face a difficult day alone</title>
-<meta name="description" content="A spiritual companion in your pocket. Prayer, encouragement, and biblical wisdom delivered through text messages — anytime, anywhere." />
+<title data-i18n="meta.title">FaithOn — Never face a difficult day alone</title>
+<meta name="description" data-i18n="meta.description" data-i18n-attr="content" content="A spiritual companion in your pocket. Prayer, encouragement, and biblical wisdom delivered through text messages — anytime, anywhere." />
 <link rel="icon" href="/logo.png" type="image/png" />
 <link rel="apple-touch-icon" href="/logo.png" />
 <meta name="theme-color" content="#F4ECDF" />
@@ -240,6 +240,27 @@
   }
   nav ul a:hover::after{ transform: scaleX(1); }
   .nav-cta{ display:flex; align-items:center; gap:14px; }
+  .lang-switch{
+    display:inline-flex; align-items:center;
+    background: var(--paper-deep);
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 3px;
+    gap: 2px;
+  }
+  .lang-switch button{
+    font-size: 11px; font-weight:600; letter-spacing:0.04em;
+    text-transform:uppercase;
+    color: var(--ink-mute);
+    padding: 6px 10px;
+    border-radius: 999px;
+    transition: background .2s, color .2s;
+  }
+  .lang-switch button[aria-pressed="true"]{
+    background: var(--ink);
+    color: var(--paper-soft);
+  }
+  .lang-switch button:hover:not([aria-pressed="true"]){ color: var(--ink); }
   @media (max-width: 880px){ nav ul{ display:none; } }
 
   /* ============== HERO ============== */
@@ -1275,7 +1296,7 @@
 </head>
 <body>
 
-  <div class="side-rail">faith · on · since the first prayer</div>
+  <div class="side-rail" data-i18n="sideRail">faith · on · since the first prayer</div>
 
   <!-- ========== NAV ========== -->
   <nav class="top">
@@ -1284,16 +1305,20 @@
         <img src="/logo.png" alt="FaithOn" />
       </a>
       <ul>
-        <li><a href="#how">How It Works</a></li>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#stories">Stories</a></li>
-        <li><a href="#pricing">Pricing</a></li>
-        <li><a href="#faq">FAQ</a></li>
+        <li><a href="#how" data-i18n="nav.howItWorks">How It Works</a></li>
+        <li><a href="#features" data-i18n="nav.features">Features</a></li>
+        <li><a href="#stories" data-i18n="nav.stories">Stories</a></li>
+        <li><a href="#pricing" data-i18n="nav.pricing">Pricing</a></li>
+        <li><a href="#faq" data-i18n="nav.faq">FAQ</a></li>
       </ul>
       <div class="nav-cta">
+        <div class="lang-switch" aria-label="Language">
+          <button type="button" data-lang="en" aria-pressed="true">EN</button>
+          <button type="button" data-lang="es" aria-pressed="false">ES</button>
+        </div>
         <a href="sms:+19547950686?&body=PRAY" class="btn btn-primary" aria-label="Open SMS app and send PRAY to FaithOn">
           <span class="pulse"></span>
-          Text PRAY to start
+          <span data-i18n="cta.textPrayStart">Text PRAY to start</span>
         </a>
       </div>
     </div>
@@ -1306,41 +1331,41 @@
       <div class="hero-copy reveal">
         <div class="verse-badge">
           <span class="tick">✦</span>
-          <span>Today's word: <em>“Be still, and know.”</em></span>
+          <span data-i18n="hero.verseBadge">Today's word: <em>“Be still, and know.”</em></span>
         </div>
         <h1 class="display">
-          <span class="line">Never face</span>
-          <span class="line">a difficult day</span>
-          <span class="line"><span class="alone">alone.
+          <span class="line" data-i18n="hero.title.line1">Never face</span>
+          <span class="line" data-i18n="hero.title.line2">a difficult day</span>
+          <span class="line"><span class="alone"><span data-i18n="hero.title.line3">alone.</span>
             <svg class="swoosh" viewBox="0 0 300 14" preserveAspectRatio="none" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M2 10 C 60 0, 160 16, 298 4"/></svg>
           </span></span>
         </h1>
-        <p class="lede">
+        <p class="lede" data-i18n="hero.lede">
           Prayer, biblical wisdom, devotionals, and gentle encouragement — delivered as text messages, in the quiet moments when you need them most.
         </p>
         <div class="cta-row">
           <a href="sms:+19547950686?&body=PRAY" class="btn btn-primary" aria-label="Open SMS app and send PRAY to FaithOn">
             <span class="pulse"></span>
-            Text PRAY to start
+            <span data-i18n="cta.textPrayStart">Text PRAY to start</span>
           </a>
           <a href="#how" class="btn btn-ghost">
-            See how it works
+            <span data-i18n="cta.seeHow">See how it works</span>
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
           </a>
         </div>
         <div class="meta">
           <span class="stars">★★★★★</span>
-          <span>“Felt like a warm hand on my shoulder.”</span>
+          <span data-i18n="hero.metaQuote">“Felt like a warm hand on my shoulder.”</span>
           <span class="divider"></span>
-          <span>Thousands of quiet conversations</span>
+          <span data-i18n="hero.metaConversations">Thousands of quiet conversations</span>
         </div>
       </div>
 
       <!-- Phone -->
       <div class="phone-wrap reveal">
-        <span class="tag tag-1"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg> 24/7 available</span>
-        <span class="tag tag-2"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z"/></svg> Private &amp; gentle</span>
-        <span class="tag tag-3"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg> SMS · no app</span>
+        <span class="tag tag-1"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg><span data-i18n="phone.tagAvailable"> 24/7 available</span></span>
+        <span class="tag tag-2"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-12V5l-8-3-8 3v5c0 8 8 12 8 12z"/></svg><span data-i18n="phone.tagPrivate"> Private &amp; gentle</span></span>
+        <span class="tag tag-3"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5h18v14H3z"/><path d="M3 7l9 6 9-6"/></svg><span data-i18n="phone.tagNoApp"> SMS · no app</span></span>
 
         <div class="phone">
           <div class="phone-screen">
@@ -1359,19 +1384,19 @@
                 </svg>
               </div>
               <div class="name">FaithOn</div>
-              <div class="sub">Companion · responds in seconds</div>
+              <div class="sub" data-i18n="phone.companionSub">Companion · responds in seconds</div>
             </div>
             <div class="chat">
-              <div class="timestamp"><b>Today</b> · 6:42 AM</div>
-              <div class="bubble them" style="animation-delay:.1s">
+              <div class="timestamp"><b data-i18n="phone.today">Today</b> · 6:42 AM</div>
+              <div class="bubble them" style="animation-delay:.1s" data-i18n="phone.bubble.greeting">
                 Good morning, Sarah. Here is a quiet thought for today:
                 <span class="verse">“Be still, and know that I am God.” — Psalm 46:10</span>
               </div>
-              <div class="bubble me" style="animation-delay:.4s">I'm anxious about the meeting today 😔</div>
-              <div class="bubble them" style="animation-delay:.9s">
+              <div class="bubble me" style="animation-delay:.4s" data-i18n="phone.bubble.anxious">I'm anxious about the meeting today 😔</div>
+              <div class="bubble them" style="animation-delay:.9s" data-i18n="phone.bubble.response">
                 Take a breath. You are not carrying this alone. Would you like a short prayer for peace before you walk in?
               </div>
-              <div class="bubble me" style="animation-delay:1.4s">Yes please.</div>
+              <div class="bubble me" style="animation-delay:1.4s" data-i18n="phone.bubble.yesPlease">Yes please.</div>
               <div class="typing" style="opacity:0; animation: rise .6s 1.8s cubic-bezier(.2,.7,.2,1) forwards"><span></span><span></span><span></span></div>
             </div>
           </div>
@@ -1383,27 +1408,27 @@
   <!-- ========== TRUST STRIP ========== -->
   <section class="trust">
     <div class="wrap trust-inner">
-      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 24/7</div>
-      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg> Private</div>
-      <div class="trust-item"><em>—  faith should be easy to reach  —</em></div>
-      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7l9 5 9-5-9-5z"/><path d="M3 12l9 5 9-5"/></svg> Scripture‑rooted</div>
-      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> No app</div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span data-i18n="trust.available24"> 24/7</span></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg><span data-i18n="trust.private"> Private</span></div>
+      <div class="trust-item"><em data-i18n="trust.tagline">—  faith should be easy to reach  —</em></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L3 7l9 5 9-5-9-5z"/><path d="M3 12l9 5 9-5"/></svg><span data-i18n="trust.scriptureRooted"> Scripture‑rooted</span></div>
+      <div class="trust-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="trust.noApp"> No app</span></div>
     </div>
   </section>
 
   <!-- ========== VERSE MARQUEE ========== -->
   <section class="marquee" aria-hidden="true">
     <div class="marquee-track">
-      <span>Be still, and know that I am God.</span>
-      <span>The Lord is my shepherd; I shall not want.</span>
-      <span>Cast all your anxiety on him because he cares for you.</span>
-      <span>Do not be afraid; I am with you.</span>
-      <span>The light shines in the darkness.</span>
-      <span>Be still, and know that I am God.</span>
-      <span>The Lord is my shepherd; I shall not want.</span>
-      <span>Cast all your anxiety on him because he cares for you.</span>
-      <span>Do not be afraid; I am with you.</span>
-      <span>The light shines in the darkness.</span>
+      <span data-i18n="marquee.v1">Be still, and know that I am God.</span>
+      <span data-i18n="marquee.v2">The Lord is my shepherd; I shall not want.</span>
+      <span data-i18n="marquee.v3">Cast all your anxiety on him because he cares for you.</span>
+      <span data-i18n="marquee.v4">Do not be afraid; I am with you.</span>
+      <span data-i18n="marquee.v5">The light shines in the darkness.</span>
+      <span data-i18n="marquee.v1">Be still, and know that I am God.</span>
+      <span data-i18n="marquee.v2">The Lord is my shepherd; I shall not want.</span>
+      <span data-i18n="marquee.v3">Cast all your anxiety on him because he cares for you.</span>
+      <span data-i18n="marquee.v4">Do not be afraid; I am with you.</span>
+      <span data-i18n="marquee.v5">The light shines in the darkness.</span>
     </div>
   </section>
 
@@ -1411,14 +1436,14 @@
   <section class="s">
     <div class="emo reveal">
       <div class="quote-mark">”</div>
-      <div class="eyebrow"><span class="dot"></span>Some Days Don't Wait</div>
-      <h2 class="section-title" style="margin-top:20px">Life doesn't always wait <em>until Sunday.</em></h2>
+      <div class="eyebrow" data-i18n="emo.eyebrow"><span class="dot"></span>Some Days Don't Wait</div>
+      <h2 class="section-title" style="margin-top:20px" data-i18n="emo.title">Life doesn't always wait <em>until Sunday.</em></h2>
       <div class="lines">
-        <span>Some days bring anxiety.</span>
-        <span>Some days bring uncertainty.</span>
-        <span>Some days bring quiet gratitude.</span>
+        <span data-i18n="emo.line1">Some days bring anxiety.</span>
+        <span data-i18n="emo.line2">Some days bring uncertainty.</span>
+        <span data-i18n="emo.line3">Some days bring quiet gratitude.</span>
       </div>
-      <p class="closing">
+      <p class="closing" data-i18n="emo.closing">
         FaithOn is here for every season. Whether you need a prayer to slow your breathing, a verse to hold onto, or someone to celebrate a small mercy with — help is one text away. <strong>No appointments. No waiting rooms. No noise.</strong>
       </p>
     </div>
@@ -1429,45 +1454,45 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>Every Hour, A Welcome</div>
-          <h2 class="section-title" style="margin-top:20px">The seasons <em>of a day.</em></h2>
+          <div class="eyebrow" data-i18n="seasons.eyebrow"><span class="dot"></span>Every Hour, A Welcome</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="seasons.title">The seasons <em>of a day.</em></h2>
         </div>
-        <p class="lede">Different hours bring different weights. From the first cup of coffee to the prayer whispered before sleep — FaithOn meets you where you are.</p>
+        <p class="lede" data-i18n="seasons.lede">Different hours bring different weights. From the first cup of coffee to the prayer whispered before sleep — FaithOn meets you where you are.</p>
       </div>
 
       <div class="seasons reveal">
         <div class="season dawn">
           <div class="sky"></div>
           <div class="orb"></div>
-          <div class="when">06:30 · Dawn</div>
-          <h4>A devotional with your coffee.</h4>
-          <p>The first words of the day shape the rest of it. A verse, a thought, an invitation to begin slowly.</p>
-          <div class="quote">“Joy comes in the morning.”</div>
+          <div class="when">06:30 · <span data-i18n="seasons.dawn.label">Dawn</span></div>
+          <h4 data-i18n="seasons.dawn.title">A devotional with your coffee.</h4>
+          <p data-i18n="seasons.dawn.desc">The first words of the day shape the rest of it. A verse, a thought, an invitation to begin slowly.</p>
+          <div class="quote" data-i18n="seasons.dawn.quote">“Joy comes in the morning.”</div>
         </div>
         <div class="season noon">
           <div class="sky"></div>
           <div class="orb"></div>
-          <div class="when">12:42 · Midday</div>
-          <h4>A breath between meetings.</h4>
-          <p>For the email that ruined your morning. For the lunch you ate alone. For the moment you needed someone.</p>
-          <div class="quote">“My grace is sufficient.”</div>
+          <div class="when">12:42 · <span data-i18n="seasons.noon.label">Midday</span></div>
+          <h4 data-i18n="seasons.noon.title">A breath between meetings.</h4>
+          <p data-i18n="seasons.noon.desc">For the email that ruined your morning. For the lunch you ate alone. For the moment you needed someone.</p>
+          <div class="quote" data-i18n="seasons.noon.quote">“My grace is sufficient.”</div>
         </div>
         <div class="season dusk">
           <div class="sky"></div>
           <div class="orb"></div>
-          <div class="when">18:15 · Dusk</div>
-          <h4>A reflection on the day.</h4>
-          <p>What did you carry? What can you set down? A few words to close the day with gratitude or honesty.</p>
-          <div class="quote">“This is the day.”</div>
+          <div class="when">18:15 · <span data-i18n="seasons.dusk.label">Dusk</span></div>
+          <h4 data-i18n="seasons.dusk.title">A reflection on the day.</h4>
+          <p data-i18n="seasons.dusk.desc">What did you carry? What can you set down? A few words to close the day with gratitude or honesty.</p>
+          <div class="quote" data-i18n="seasons.dusk.quote">“This is the day.”</div>
         </div>
         <div class="season night">
           <div class="sky"></div>
           <div class="stars"></div>
           <div class="orb"></div>
-          <div class="when">02:14 · Night</div>
-          <h4>A prayer in the dark hours.</h4>
-          <p>For the anxiety that wakes you. For the doubt that visits at 3 a.m. There is no shift on which we close.</p>
-          <div class="quote">“He gives to his beloved sleep.”</div>
+          <div class="when">02:14 · <span data-i18n="seasons.night.label">Night</span></div>
+          <h4 data-i18n="seasons.night.title">A prayer in the dark hours.</h4>
+          <p data-i18n="seasons.night.desc">For the anxiety that wakes you. For the doubt that visits at 3 a.m. There is no shift on which we close.</p>
+          <div class="quote" data-i18n="seasons.night.quote">“He gives to his beloved sleep.”</div>
         </div>
       </div>
     </div>
@@ -1478,30 +1503,30 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>How It Works</div>
-          <h2 class="section-title" style="margin-top:20px">Three steps, <em>that's all.</em></h2>
+          <div class="eyebrow" data-i18n="how.eyebrow"><span class="dot"></span>How It Works</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="how.title">Three steps, <em>that's all.</em></h2>
         </div>
-        <p class="lede">No downloads. No accounts to set up. Just the messaging app that's already on your phone — and a companion that listens.</p>
+        <p class="lede" data-i18n="how.lede">No downloads. No accounts to set up. Just the messaging app that's already on your phone — and a companion that listens.</p>
       </div>
 
       <div class="steps reveal">
         <div class="step">
           <div class="num-circle">i</div>
-          <h3>Text PRAY</h3>
-          <p>Send a single word from any phone. We'll meet you there, gently.</p>
-          <span class="chip">SEND TO 1 (954) 795‑0686</span>
+          <h3 data-i18n="how.step1.title">Text PRAY</h3>
+          <p data-i18n="how.step1.desc">Send a single word from any phone. We'll meet you there, gently.</p>
+          <span class="chip" data-i18n="how.step1.chip">SEND TO 1 (954) 795‑0686</span>
         </div>
         <div class="step">
           <div class="num-circle">ii</div>
-          <h3>Share your heart</h3>
-          <p>Tell us what you're carrying today — a worry, a hope, a question, a thank you. Anything.</p>
-          <span class="chip">PRIVATE &amp; SECURE</span>
+          <h3 data-i18n="how.step2.title">Share your heart</h3>
+          <p data-i18n="how.step2.desc">Tell us what you're carrying today — a worry, a hope, a question, a thank you. Anything.</p>
+          <span class="chip" data-i18n="how.step2.chip">PRIVATE &amp; SECURE</span>
         </div>
         <div class="step">
           <div class="num-circle">iii</div>
-          <h3>Receive what you need</h3>
-          <p>Scripture, prayer, encouragement, or simply a steady presence — written just for this moment.</p>
-          <span class="chip">RESPONDS IN SECONDS</span>
+          <h3 data-i18n="how.step3.title">Receive what you need</h3>
+          <p data-i18n="how.step3.desc">Scripture, prayer, encouragement, or simply a steady presence — written just for this moment.</p>
+          <span class="chip" data-i18n="how.step3.chip">RESPONDS IN SECONDS</span>
         </div>
       </div>
     </div>
@@ -1512,60 +1537,60 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>What FaithOn Offers</div>
-          <h2 class="section-title" style="margin-top:20px">A companion for <em>the whole life.</em></h2>
+          <div class="eyebrow" data-i18n="features.eyebrow"><span class="dot"></span>What FaithOn Offers</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="features.title">A companion for <em>the whole life.</em></h2>
         </div>
-        <p class="lede">From the first quiet moment of the morning to the prayer whispered before sleep — every season of the day, FaithOn is there.</p>
+        <p class="lede" data-i18n="features.lede">From the first quiet moment of the morning to the prayer whispered before sleep — every season of the day, FaithOn is there.</p>
       </div>
 
       <div class="features reveal">
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 4h12a4 4 0 0 1 4 4v12"/><path d="M4 4v16h12"/><path d="M8 9h8M8 13h6"/></svg>
-          <h4>Daily Devotionals</h4>
-          <p>Short, personal reflections delivered each morning — written for the life you're actually living.</p>
-          <span class="tag-small">— every morning</span>
+          <h4 data-i18n="features.items.0.title">Daily Devotionals</h4>
+          <p data-i18n="features.items.0.desc">Short, personal reflections delivered each morning — written for the life you're actually living.</p>
+          <span class="tag-small" data-i18n="features.items.0.tag">— every morning</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v6"/><path d="M9 10c-1.5 1-3 3-3 5.5 0 3 2 5.5 4 5.5h4c2 0 4-2.5 4-5.5 0-2.5-1.5-4.5-3-5.5"/><path d="M9 10v6"/><path d="M15 10v6"/></svg>
-          <h4>Prayer Companion</h4>
-          <p>Guided prayers written for you — for peace, courage, grief, gratitude, or a quiet moment.</p>
-          <span class="tag-small">— anytime you ask</span>
+          <h4 data-i18n="features.items.1.title">Prayer Companion</h4>
+          <p data-i18n="features.items.1.desc">Guided prayers written for you — for peace, courage, grief, gratitude, or a quiet moment.</p>
+          <span class="tag-small" data-i18n="features.items.1.tag">— anytime you ask</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 5l9-2 9 2v14l-9-2-9 2V5z"/><path d="M12 3v18"/></svg>
-          <h4>Biblical Wisdom</h4>
-          <p>Scripture-rooted guidance — never preachy, always grounded in the Word.</p>
-          <span class="tag-small">— rooted in scripture</span>
+          <h4 data-i18n="features.items.2.title">Biblical Wisdom</h4>
+          <p data-i18n="features.items.2.desc">Scripture-rooted guidance — never preachy, always grounded in the Word.</p>
+          <span class="tag-small" data-i18n="features.items.2.tag">— rooted in scripture</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-          <h4>Difficult Day Support</h4>
-          <p>For anxiety, grief, fear, or loneliness — a steady voice that doesn't flinch from the hard parts.</p>
-          <span class="tag-small">— when you need it most</span>
+          <h4 data-i18n="features.items.3.title">Difficult Day Support</h4>
+          <p data-i18n="features.items.3.desc">For anxiety, grief, fear, or loneliness — a steady voice that doesn't flinch from the hard parts.</p>
+          <span class="tag-small" data-i18n="features.items.3.tag">— when you need it most</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M8 12l3 3 5-6"/></svg>
-          <h4>Celebration Moments</h4>
-          <p>Share the good news — a baby, a job, an answered prayer — and receive reflections that hold the joy with you.</p>
-          <span class="tag-small">— small &amp; big victories</span>
+          <h4 data-i18n="features.items.4.title">Celebration Moments</h4>
+          <p data-i18n="features.items.4.desc">Share the good news — a baby, a job, an answered prayer — and receive reflections that hold the joy with you.</p>
+          <span class="tag-small" data-i18n="features.items.4.tag">— small &amp; big victories</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5 5l3 3M16 16l3 3M19 5l-3 3M8 16l-3 3"/><circle cx="12" cy="12" r="3"/></svg>
-          <h4>Spiritual Growth</h4>
-          <p>Gentle rhythms that build over time — reading plans, reflections, and a relationship that deepens.</p>
-          <span class="tag-small">— walk further</span>
+          <h4 data-i18n="features.items.5.title">Spiritual Growth</h4>
+          <p data-i18n="features.items.5.desc">Gentle rhythms that build over time — reading plans, reflections, and a relationship that deepens.</p>
+          <span class="tag-small" data-i18n="features.items.5.tag">— walk further</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-          <h4>Available 24/7</h4>
-          <p>3 a.m. doubts. Lunch‑break worries. Sunday‑morning gratitude. We're always here.</p>
-          <span class="tag-small">— always on</span>
+          <h4 data-i18n="features.items.6.title">Available 24/7</h4>
+          <p data-i18n="features.items.6.desc">3 a.m. doubts. Lunch‑break worries. Sunday‑morning gratitude. We're always here.</p>
+          <span class="tag-small" data-i18n="features.items.6.tag">— always on</span>
         </div>
         <div class="feat">
           <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="5" y="2" width="14" height="20" rx="3"/><path d="M11 18h2"/></svg>
-          <h4>SMS Simplicity</h4>
-          <p>No app store. No password. No new home‑screen icon. Just the messages app you already use.</p>
-          <span class="tag-small">— already on your phone</span>
+          <h4 data-i18n="features.items.7.title">SMS Simplicity</h4>
+          <p data-i18n="features.items.7.desc">No app store. No password. No new home‑screen icon. Just the messages app you already use.</p>
+          <span class="tag-small" data-i18n="features.items.7.tag">— already on your phone</span>
         </div>
       </div>
     </div>
@@ -1579,50 +1604,50 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>Quiet Conversations</div>
-          <h2 class="section-title" style="margin-top:20px">What it actually <em>feels like.</em></h2>
+          <div class="eyebrow" data-i18n="demo.eyebrow"><span class="dot"></span>Quiet Conversations</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="demo.title">What it actually <em>feels like.</em></h2>
         </div>
-        <p class="lede">Real moments — anxiety, intercession, a morning devotional — answered with patience, scripture, and presence.</p>
+        <p class="lede" data-i18n="demo.lede">Real moments — anxiety, intercession, a morning devotional — answered with patience, scripture, and presence.</p>
       </div>
 
       <div class="demos reveal">
         <div class="demo-card">
           <div class="head">
-            <span class="label">Anxious morning</span>
+            <span class="label" data-i18n="demo.card1.label">Anxious morning</span>
             <span class="time">07:14</span>
           </div>
           <div class="conv">
-            <div class="bubble me">I feel anxious about tomorrow.</div>
-            <div class="bubble them">
+            <div class="bubble me" data-i18n="demo.card1.bubble1">I feel anxious about tomorrow.</div>
+            <div class="bubble them" data-i18n="demo.card1.bubble2">
               Remember Matthew 6:34 — tomorrow has enough worries of its own. Would you like a short prayer for peace today?
               <span class="verse">— Matthew 6:34</span>
             </div>
-            <div class="bubble me">Yes please.</div>
+            <div class="bubble me" data-i18n="demo.card1.bubble3">Yes please.</div>
           </div>
         </div>
 
         <div class="demo-card">
           <div class="head">
-            <span class="label">Praying for family</span>
+            <span class="label" data-i18n="demo.card2.label">Praying for family</span>
             <span class="time">12:42</span>
           </div>
           <div class="conv">
-            <div class="bubble me">Please pray for my family.</div>
-            <div class="bubble them">
+            <div class="bubble me" data-i18n="demo.card2.bubble1">Please pray for my family.</div>
+            <div class="bubble them" data-i18n="demo.card2.bubble2">
               Let's pray together. May your family be surrounded by peace, wisdom, protection, and love — today and through the week ahead.
             </div>
-            <div class="bubble me">Thank you 🙏</div>
+            <div class="bubble me" data-i18n="demo.card2.bubble3">Thank you 🙏</div>
           </div>
         </div>
 
         <div class="demo-card">
           <div class="head">
-            <span class="label">Today's devotional</span>
+            <span class="label" data-i18n="demo.card3.label">Today's devotional</span>
             <span class="time">06:30</span>
           </div>
           <div class="conv">
-            <div class="bubble me">Send today's devotional.</div>
-            <div class="bubble them">
+            <div class="bubble me" data-i18n="demo.card3.bubble1">Send today's devotional.</div>
+            <div class="bubble them" data-i18n="demo.card3.bubble2">
               Today's reminder: God's timing is perfect even when we cannot see the full picture. Patience is a quiet kind of faith.
               <span class="verse">— Ecclesiastes 3:11</span>
             </div>
@@ -1637,61 +1662,61 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>Stories From Real Lives</div>
-          <h2 class="section-title" style="margin-top:20px">The hand on the <em>shoulder.</em></h2>
+          <div class="eyebrow" data-i18n="testimonials.eyebrow"><span class="dot"></span>Stories From Real Lives</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="testimonials.title">The hand on the <em>shoulder.</em></h2>
         </div>
-        <p class="lede">From students in dorm rooms to nurses on long shifts to retirees walking the dog — FaithOn finds people in the middle of their days.</p>
+        <p class="lede" data-i18n="testimonials.lede">From students in dorm rooms to nurses on long shifts to retirees walking the dog — FaithOn finds people in the middle of their days.</p>
       </div>
 
       <div class="testi-grid reveal">
         <div class="testi feature">
           <div class="stars">★★★★★</div>
-          <blockquote>
+          <blockquote data-i18n="testimonials.q1">
             “I had a panic attack at 2 a.m. and didn't want to wake my husband. I texted FaithOn and within seconds had a prayer to read out loud. By the third sentence I was <em>breathing again.</em>”
           </blockquote>
           <div class="who">
             <div class="ava">R</div>
-            <div><b>Rachel M.</b><small>Nurse · Charlotte, NC</small></div>
+            <div data-i18n="testimonials.r1"><b>Rachel M.</b><small>Nurse · Charlotte, NC</small></div>
           </div>
         </div>
         <div class="testi">
           <div class="stars">★★★★★</div>
-          <blockquote>“My quiet time was getting lost in the noise. Now I get a verse with my coffee and it <em>sets the tone</em> of my whole day.”</blockquote>
+          <blockquote data-i18n="testimonials.q2">“My quiet time was getting lost in the noise. Now I get a verse with my coffee and it <em>sets the tone</em> of my whole day.”</blockquote>
           <div class="who">
             <div class="ava">M</div>
-            <div><b>Marcus T.</b><small>Father of three · Austin, TX</small></div>
+            <div data-i18n="testimonials.r2"><b>Marcus T.</b><small>Father of three · Austin, TX</small></div>
           </div>
         </div>
         <div class="testi">
           <div class="stars">★★★★★</div>
-          <blockquote>“On deployment, I couldn't always make it to chapel. Texting FaithOn felt like <em>keeping the door open.</em>”</blockquote>
+          <blockquote data-i18n="testimonials.q3">“On deployment, I couldn't always make it to chapel. Texting FaithOn felt like <em>keeping the door open.</em>”</blockquote>
           <div class="who">
             <div class="ava">D</div>
-            <div><b>David L.</b><small>U.S. Navy</small></div>
+            <div data-i18n="testimonials.r3"><b>David L.</b><small>U.S. Navy</small></div>
           </div>
         </div>
         <div class="testi">
           <div class="stars">★★★★★</div>
-          <blockquote>“It's never judgmental. It just listens, prays with me, and points me back to the Bible.”</blockquote>
+          <blockquote data-i18n="testimonials.q4">“It's never judgmental. It just listens, prays with me, and points me back to the Bible.”</blockquote>
           <div class="who">
             <div class="ava">E</div>
-            <div><b>Emily R.</b><small>College student · Boston, MA</small></div>
+            <div data-i18n="testimonials.r4"><b>Emily R.</b><small>College student · Boston, MA</small></div>
           </div>
         </div>
         <div class="testi">
           <div class="stars">★★★★★</div>
-          <blockquote>“At 74, the last thing I want is another app. A text message I can do. This has <em>become part of how I pray.</em>”</blockquote>
+          <blockquote data-i18n="testimonials.q5">“At 74, the last thing I want is another app. A text message I can do. This has <em>become part of how I pray.</em>”</blockquote>
           <div class="who">
             <div class="ava">G</div>
-            <div><b>Gloria H.</b><small>Retired teacher · Phoenix, AZ</small></div>
+            <div data-i18n="testimonials.r5"><b>Gloria H.</b><small>Retired teacher · Phoenix, AZ</small></div>
           </div>
         </div>
         <div class="testi">
           <div class="stars">★★★★★</div>
-          <blockquote>“I asked for a prayer for my mom's surgery. The one I got was the one I <em>would've written if I'd had the words.</em>”</blockquote>
+          <blockquote data-i18n="testimonials.q6">“I asked for a prayer for my mom's surgery. The one I got was the one I <em>would've written if I'd had the words.</em>”</blockquote>
           <div class="who">
             <div class="ava">J</div>
-            <div><b>Jordan P.</b><small>Designer · Brooklyn, NY</small></div>
+            <div data-i18n="testimonials.r6"><b>Jordan P.</b><small>Designer · Brooklyn, NY</small></div>
           </div>
         </div>
       </div>
@@ -1703,50 +1728,50 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>Pricing</div>
-          <h2 class="section-title" style="margin-top:20px">Accessible support <em>for everyone.</em></h2>
+          <div class="eyebrow" data-i18n="pricing.eyebrow"><span class="dot"></span>Pricing</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="pricing.title">Accessible support <em>for everyone.</em></h2>
         </div>
-        <p class="lede">Faith should never be behind a paywall. Start free, forever. Upgrade only when you want a deeper rhythm.</p>
+        <p class="lede" data-i18n="pricing.lede">Faith should never be behind a paywall. Start free, forever. Upgrade only when you want a deeper rhythm.</p>
       </div>
 
       <div class="pricing-wrap">
         <div class="pricing reveal">
           <div class="plan">
-            <h3>Free</h3>
-            <div class="sub">For the quiet beginning.</div>
+            <h3 data-i18n="pricing.free.name">Free</h3>
+            <div class="sub" data-i18n="pricing.free.sub">For the quiet beginning.</div>
             <div class="price"><span class="num">$0</span><span class="per">/ month, forever</span></div>
-            <div class="note">No card. No commitment.</div>
+            <div class="note" data-i18n="pricing.free.note">No card. No commitment.</div>
             <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Verse of the day</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Submit prayer requests anytime</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> 5 conversations per day</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.free.f1"> Verse of the day</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.free.f2"> Submit prayer requests anytime</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.free.f3"> 5 conversations per day</span></li>
             </ul>
-            <a href="#start" class="btn btn-ghost">Start free</a>
+            <a href="#start" class="btn btn-ghost"><span data-i18n="pricing.free.cta">Start free</span></a>
           </div>
 
           <div class="plan pro">
-            <span class="badge">Most loved</span>
-            <h3>FaithOn Plus</h3>
-            <div class="sub">For a deeper, daily rhythm.</div>
+            <span class="badge" data-i18n="pricing.plus.badge">Most loved</span>
+            <h3 data-i18n="pricing.plus.name">FaithOn Plus</h3>
+            <div class="sub" data-i18n="pricing.plus.sub">For a deeper, daily rhythm.</div>
             <div class="billing-toggle" role="tablist" aria-label="Billing period">
-              <button type="button" data-plan="monthly" aria-pressed="true">Monthly</button>
-              <button type="button" data-plan="yearly"  aria-pressed="false">Yearly</button>
+              <button type="button" data-plan="monthly" aria-pressed="true" data-i18n="pricing.plus.monthly">Monthly</button>
+              <button type="button" data-plan="yearly"  aria-pressed="false" data-i18n="pricing.plus.yearly">Yearly</button>
             </div>
             <div class="price" data-price-for="monthly"><span class="num">$1.99</span><span class="per">/ month</span></div>
             <div class="price" data-price-for="yearly" hidden>
               <span class="num">$20</span><span class="per">/ year</span>
-              <span class="price-yearly-savings">Save 16% · $1.67/mo effective</span>
+              <span class="price-yearly-savings" data-i18n="pricing.plus.savings">Save 16% · $1.67/mo effective</span>
             </div>
-            <div class="note">— less than a cup of coffee —</div>
+            <div class="note" data-i18n="pricing.plus.note">— less than a cup of coffee —</div>
             <ul>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Unlimited conversations</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Personalized devotionals</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Personalized prayer support</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Spiritual growth plans</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Bible study guidance</li>
-              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg> Saved conversation history</li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.plus.f1"> Unlimited conversations</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.plus.f2"> Personalized devotionals</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.plus.f3"> Personalized prayer support</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.plus.f4"> Spiritual growth plans</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.plus.f5"> Bible study guidance</span></li>
+              <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12l5 5L20 7"/></svg><span data-i18n="pricing.plus.f6"> Saved conversation history</span></li>
             </ul>
-            <button id="plusBtn" class="btn btn-primary" type="button"><span class="pulse"></span> Start FaithOn Plus</button>
+            <button id="plusBtn" class="btn btn-primary" type="button"><span class="pulse"></span><span data-i18n="pricing.plus.cta"> Start FaithOn Plus</span></button>
           </div>
         </div>
       </div>
@@ -1757,18 +1782,18 @@
   <section class="s">
     <div class="why-sms reveal">
       <div>
-        <div class="eyebrow" style="color:rgba(244,236,223,.7)"><span class="dot"></span>Why Text Messages</div>
-        <h2 class="section-title" style="margin-top:20px; color:var(--paper)">Because faith should be <em>easy to reach.</em></h2>
-        <p style="margin-top:24px; color:rgba(244,236,223,.7); max-width:48ch; font-size:17px; line-height:1.65">
+        <div class="eyebrow" style="color:rgba(244,236,223,.7)" data-i18n="whySms.eyebrow"><span class="dot"></span>Why Text Messages</div>
+        <h2 class="section-title" style="margin-top:20px; color:var(--paper)" data-i18n="whySms.title">Because faith should be <em>easy to reach.</em></h2>
+        <p style="margin-top:24px; color:rgba(244,236,223,.7); max-width:48ch; font-size:17px; line-height:1.65" data-i18n="whySms.body">
           The fastest path to a quiet moment isn't a new app — it's the messaging app you've used since you were a teenager. We meet you exactly where you already are.
         </p>
       </div>
       <ul>
-        <li><span class="n">i.</span> No downloads, ever.</li>
-        <li><span class="n">ii.</span> Works on every phone — flip phones included.</li>
-        <li><span class="n">iii.</span> Available everywhere you have signal.</li>
-        <li><span class="n">iv.</span> Simple, familiar, no learning curve.</li>
-        <li><span class="n">v.</span> Instant access when it matters most.</li>
+        <li><span class="n">i.</span><span data-i18n="whySms.item1"> No downloads, ever.</span></li>
+        <li><span class="n">ii.</span><span data-i18n="whySms.item2"> Works on every phone — flip phones included.</span></li>
+        <li><span class="n">iii.</span><span data-i18n="whySms.item3"> Available everywhere you have signal.</span></li>
+        <li><span class="n">iv.</span><span data-i18n="whySms.item4"> Simple, familiar, no learning curve.</span></li>
+        <li><span class="n">v.</span><span data-i18n="whySms.item5"> Instant access when it matters most.</span></li>
       </ul>
     </div>
   </section>
@@ -1778,60 +1803,52 @@
     <div class="wrap">
       <div class="s-head reveal">
         <div>
-          <div class="eyebrow"><span class="dot"></span>Honest Answers</div>
-          <h2 class="section-title" style="margin-top:20px">Things people often <em>wonder.</em></h2>
+          <div class="eyebrow" data-i18n="faq.eyebrow"><span class="dot"></span>Honest Answers</div>
+          <h2 class="section-title" style="margin-top:20px" data-i18n="faq.title">Things people often <em>wonder.</em></h2>
         </div>
-        <p class="lede">If you're considering FaithOn, you probably have one of these on your mind. Here's what we'd want a friend to know.</p>
+        <p class="lede" data-i18n="faq.lede">If you're considering FaithOn, you probably have one of these on your mind. Here's what we'd want a friend to know.</p>
       </div>
 
       <div class="faq reveal">
         <details>
-          <summary>Is FaithOn a real person?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q1">Is FaithOn a real person?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">FaithOn is a thoughtful spiritual companion you reach by text. Real people — pastors, theologians, and writers — shape its voice. Real scripture grounds every word. Think of it like a thoughtful friend who is always available and always rooted in the Bible.</div>
+          <div class="ans" data-i18n="faq.a1">FaithOn is a thoughtful spiritual companion you reach by text. Real people — pastors, theologians, and writers — shape its voice. Real scripture grounds every word. Think of it like a thoughtful friend who is always available and always rooted in the Bible.</div>
         </details>
         <details>
-          <summary>Is FaithOn based on the Bible?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q2">Is FaithOn based on the Bible?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">Yes — every devotional, prayer, and reflection draws from Scripture. Verses are cited when shared. You're always welcome to ask for the passage behind a thought.</div>
+          <div class="ans" data-i18n="faq.a2">Yes — every devotional, prayer, and reflection draws from Scripture. Verses are cited when shared. You're always welcome to ask for the passage behind a thought.</div>
         </details>
         <details>
-          <summary>Can I use FaithOn anytime?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q3">Can I use FaithOn anytime?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">Yes. Day or night, holiday or Sunday, FaithOn responds in seconds. There is no sabbath on which we close.</div>
+          <div class="ans" data-i18n="faq.a3">Yes. Day or night, holiday or Sunday, FaithOn responds in seconds. There is no sabbath on which we close.</div>
         </details>
         <details>
-          <summary>Do I need an app?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q4">Do I need an app?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">No. FaithOn is a text-message service. If you can send a text, you can use it. No downloads, accounts, or passwords required.</div>
+          <div class="ans" data-i18n="faq.a4">No. FaithOn is a text-message service. If you can send a text, you can use it. No downloads, accounts, or passwords required.</div>
         </details>
         <details>
-          <summary>Are conversations private?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q5">Are conversations private?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">Yes. Your conversations are private. We do not sell or share what you write. You can request that everything be permanently deleted at any time.</div>
+          <div class="ans" data-i18n="faq.a5">Yes. Your conversations are private. We do not sell or share what you write. You can request that everything be permanently deleted at any time.</div>
         </details>
         <details>
-          <summary>Can FaithOn pray with me?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q6">Can FaithOn pray with me?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">Yes — that's one of the most common requests. Ask for a prayer for peace, courage, healing, gratitude, or any specific situation, and FaithOn will write one with you to read together.</div>
+          <div class="ans" data-i18n="faq.a6">Yes — that's one of the most common requests. Ask for a prayer for peace, courage, healing, gratitude, or any specific situation, and FaithOn will write one with you to read together.</div>
         </details>
         <details>
-          <summary>Can FaithOn help me during difficult moments?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q7">Can FaithOn help me during difficult moments?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">Yes. Anxiety, grief, fear, loneliness, doubt — these are exactly the moments FaithOn is built for. We respond with care, not clichés.</div>
+          <div class="ans" data-i18n="faq.a7">Yes. Anxiety, grief, fear, loneliness, doubt — these are exactly the moments FaithOn is built for. We respond with care, not clichés.</div>
         </details>
         <details>
-          <summary>Does FaithOn replace church or counseling?
-            <span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
+          <summary><span data-i18n="faq.q8">Does FaithOn replace church or counseling?</span><span class="plus"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg></span>
           </summary>
-          <div class="ans">No, and we'd never want to. FaithOn is a companion alongside your community, your pastor, and — when needed — your therapist or doctor. In a true emergency, we'll point you to the right kind of help right away.</div>
+          <div class="ans" data-i18n="faq.a8">No, and we'd never want to. FaithOn is a companion alongside your community, your pastor, and — when needed — your therapist or doctor. In a true emergency, we'll point you to the right kind of help right away.</div>
         </details>
       </div>
     </div>
@@ -1844,20 +1861,20 @@
       <div class="body"></div>
     </div>
     <div class="wrap">
-      <div class="eyebrow reveal" style="margin-top:120px"><span class="dot"></span>Begin Anytime</div>
-      <h2 class="reveal">Your next message could change <em>your day.</em></h2>
-      <p class="reveal">Prayer, encouragement, and biblical wisdom are one text away. Try it now — your first conversation is free.</p>
+      <div class="eyebrow reveal" style="margin-top:120px" data-i18n="finalCta.eyebrow"><span class="dot"></span>Begin Anytime</div>
+      <h2 class="reveal" data-i18n="finalCta.title">Your next message could change <em>your day.</em></h2>
+      <p class="reveal" data-i18n="finalCta.body">Prayer, encouragement, and biblical wisdom are one text away. Try it now — your first conversation is free.</p>
       <div class="cta-row reveal">
         <a href="sms:+19547950686?&body=PRAY" class="btn btn-primary" aria-label="Open SMS app and send PRAY to FaithOn">
           <span class="pulse"></span>
-          Text PRAY to 1 (954) 795‑0686
+          <span data-i18n="cta.textPrayNumber">Text PRAY to 1 (954) 795‑0686</span>
         </a>
         <a href="#how" class="btn btn-ghost">
-          How it works
+          <span data-i18n="cta.howItWorks">How it works</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
         </a>
       </div>
-      <div class="signature reveal">Peace be with you. Always.</div>
+      <div class="signature reveal" data-i18n="finalCta.signature">Peace be with you. Always.</div>
     </div>
   </section>
 
@@ -1869,40 +1886,40 @@
           <a href="#" class="logo" aria-label="FaithOn — home">
             <img src="/logo.png" alt="FaithOn" />
           </a>
-          <p>A spiritual companion in your pocket — prayer, encouragement, and biblical wisdom delivered through text messages, anytime.</p>
-          <p class="verse" style="margin-top:18px">“Cast all your anxiety on him because he cares for you.” — 1 Peter 5:7</p>
+          <p data-i18n="footer.brand">A spiritual companion in your pocket — prayer, encouragement, and biblical wisdom delivered through text messages, anytime.</p>
+          <p class="verse" style="margin-top:18px" data-i18n="footer.verse">“Cast all your anxiety on him because he cares for you.” — 1 Peter 5:7</p>
         </div>
         <div class="foot-col">
-          <h5>Company</h5>
+          <h5 data-i18n="footer.headings.company">Company</h5>
           <ul>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Our Beliefs</a></li>
-            <li><a href="#">Contact</a></li>
-            <li><a href="#">Blog</a></li>
+            <li><a href="#" data-i18n="footer.company.about">About</a></li>
+            <li><a href="#" data-i18n="footer.company.beliefs">Our Beliefs</a></li>
+            <li><a href="#" data-i18n="footer.company.contact">Contact</a></li>
+            <li><a href="#" data-i18n="footer.company.blog">Blog</a></li>
           </ul>
         </div>
         <div class="foot-col">
-          <h5>Library</h5>
+          <h5 data-i18n="footer.headings.library">Library</h5>
           <ul>
-            <li><a href="#">Devotionals</a></li>
-            <li><a href="#">Prayer Library</a></li>
-            <li><a href="#">Reading Plans</a></li>
-            <li><a href="#">Verse of the Day</a></li>
+            <li><a href="#" data-i18n="footer.library.devotionals">Devotionals</a></li>
+            <li><a href="#" data-i18n="footer.library.prayer">Prayer Library</a></li>
+            <li><a href="#" data-i18n="footer.library.reading">Reading Plans</a></li>
+            <li><a href="#" data-i18n="footer.library.verse">Verse of the Day</a></li>
           </ul>
         </div>
         <div class="foot-col">
-          <h5>Trust</h5>
+          <h5 data-i18n="footer.headings.trust">Trust</h5>
           <ul>
-            <li><a href="#">Privacy Policy</a></li>
-            <li><a href="#">Terms of Service</a></li>
-            <li><a href="#">Pastoral Council</a></li>
-            <li><a href="#">Emergency Resources</a></li>
+            <li><a href="#" data-i18n="footer.trust.privacy">Privacy Policy</a></li>
+            <li><a href="#" data-i18n="footer.trust.terms">Terms of Service</a></li>
+            <li><a href="#" data-i18n="footer.trust.pastoral">Pastoral Council</a></li>
+            <li><a href="#" data-i18n="footer.trust.emergency">Emergency Resources</a></li>
           </ul>
         </div>
       </div>
       <div class="foot-bottom">
-        <div>© 2026 FaithOn — a SIMPLIX LLC company · Made with reverence.</div>
-        <div>Available wherever you have signal · 1 (954) 795‑0686</div>
+        <div data-i18n="footer.bottomLeft">© 2026 FaithOn — a SIMPLIX LLC company · Made with reverence.</div>
+        <div data-i18n="footer.bottomRight">Available wherever you have signal · 1 (954) 795‑0686</div>
       </div>
     </div>
   </footer>
@@ -1912,22 +1929,22 @@
     <div class="cx-backdrop" data-cx-close></div>
     <div class="cx-card" role="dialog" aria-labelledby="cxTitle">
       <button class="cx-x" data-cx-close aria-label="Close">×</button>
-      <div class="eyebrow"><span class="dot"></span>Begin FaithOn Plus</div>
-      <h3 id="cxTitle">One number. <em>One quiet rhythm.</em></h3>
-      <p class="cx-lede">Enter the phone number you want to receive FaithOn messages on. We'll start your subscription at <b>$1.99/month</b> — cancel anytime.</p>
-      <label class="cx-label" for="cxPhone">Mobile number</label>
+      <div class="eyebrow" data-i18n="checkout.eyebrow"><span class="dot"></span>Begin FaithOn Plus</div>
+      <h3 id="cxTitle" data-i18n="checkout.title">One number. <em>One quiet rhythm.</em></h3>
+      <p class="cx-lede" data-i18n="checkout.lede.monthly">Enter the phone number you want to receive FaithOn messages on. We'll start your subscription at <b>$1.99/month</b> — cancel anytime.</p>
+      <label class="cx-label" for="cxPhone" data-i18n="checkout.label">Mobile number</label>
       <div class="cx-phone-row">
         <span class="cx-cc">🇺🇸 +1</span>
-        <input id="cxPhone" type="tel" inputmode="tel" placeholder="(555) 123‑4567" autocomplete="tel" />
+        <input id="cxPhone" type="tel" inputmode="tel" placeholder="(555) 123‑4567" autocomplete="tel" data-i18n="checkout.placeholder" data-i18n-attr="placeholder" />
       </div>
       <div class="cx-err" id="cxErr" role="alert"></div>
       <button class="btn btn-primary cx-go" id="cxGo">
         <span class="pulse"></span>
-        Continue to secure checkout
+        <span data-i18n="checkout.cta">Continue to secure checkout</span>
       </button>
       <div class="cx-trust">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-        Secured by <b>Stripe</b> · No data stored beyond your phone &amp; subscription status
+        <span data-i18n="checkout.trust">Secured by <b>Stripe</b> · No data stored beyond your phone &amp; subscription status</span>
       </div>
     </div>
   </div>
@@ -2090,6 +2107,504 @@
     .cx-banner b{ color: var(--ink); font-weight: 600; }
     .cx-banner em{ font-family: var(--serif-soft); font-style: italic; color: var(--gold-deep); }
   </style>
+  <script>
+    // ===== Lightweight i18n =====
+    (function () {
+      const STORAGE_KEY = 'faithon-lang';
+      const dict = {
+  "en": {
+    "meta.title": "FaithOn — Never face a difficult day alone",
+    "meta.description": "A spiritual companion in your pocket. Prayer, encouragement, and biblical wisdom delivered through text messages — anytime, anywhere.",
+    "sideRail": "faith · on · since the first prayer",
+    "nav.howItWorks": "How It Works",
+    "nav.features": "Features",
+    "nav.stories": "Stories",
+    "nav.pricing": "Pricing",
+    "nav.faq": "FAQ",
+    "cta.textPrayStart": "Text PRAY to start",
+    "cta.textPrayNumber": "Text PRAY to 1 (954) 795‑0686",
+    "cta.seeHow": "See how it works",
+    "cta.howItWorks": "How it works",
+    "cta.startFree": "Start free",
+    "cta.startPlus": "Start FaithOn Plus",
+    "cta.continueCheckout": "Continue to secure checkout",
+    "hero.verseBadge": "Today's word: <em>“Be still, and know.”</em>",
+    "hero.title.line1": "Never face",
+    "hero.title.line2": "a difficult day",
+    "hero.title.line3": "alone.",
+    "hero.lede": "Prayer, biblical wisdom, devotionals, and gentle encouragement — delivered as text messages, in the quiet moments when you need them most.",
+    "hero.metaQuote": "“Felt like a warm hand on my shoulder.”",
+    "hero.metaConversations": "Thousands of quiet conversations",
+    "phone.tagAvailable": " 24/7 available",
+    "phone.tagPrivate": " Private & gentle",
+    "phone.tagNoApp": " SMS · no app",
+    "phone.companionSub": "Companion · responds in seconds",
+    "phone.today": "Today",
+    "phone.bubble.greeting": "Good morning, Sarah. Here is a quiet thought for today:\n                <span class=\"verse\">“Be still, and know that I am God.” — Psalm 46:10</span>",
+    "phone.bubble.anxious": "I'm anxious about the meeting today 😔",
+    "phone.bubble.response": "Take a breath. You are not carrying this alone. Would you like a short prayer for peace before you walk in?",
+    "phone.bubble.yesPlease": "Yes please.",
+    "trust.available24": " 24/7",
+    "trust.private": " Private",
+    "trust.tagline": "—  faith should be easy to reach  —",
+    "trust.scriptureRooted": " Scripture‑rooted",
+    "trust.noApp": " No app",
+    "marquee.v1": "Be still, and know that I am God.",
+    "marquee.v2": "The Lord is my shepherd; I shall not want.",
+    "marquee.v3": "Cast all your anxiety on him because he cares for you.",
+    "marquee.v4": "Do not be afraid; I am with you.",
+    "marquee.v5": "The light shines in the darkness.",
+    "emo.eyebrow": "Some Days Don't Wait",
+    "emo.title": "Life doesn't always wait <em>until Sunday.</em>",
+    "emo.line1": "Some days bring anxiety.",
+    "emo.line2": "Some days bring uncertainty.",
+    "emo.line3": "Some days bring quiet gratitude.",
+    "emo.closing": "FaithOn is here for every season. Whether you need a prayer to slow your breathing, a verse to hold onto, or someone to celebrate a small mercy with — help is one text away. <strong>No appointments. No waiting rooms. No noise.</strong>",
+    "seasons.eyebrow": "Every Hour, A Welcome",
+    "seasons.title": "The seasons <em>of a day.</em>",
+    "seasons.lede": "Different hours bring different weights. From the first cup of coffee to the prayer whispered before sleep — FaithOn meets you where you are.",
+    "seasons.dawn.label": "Dawn",
+    "seasons.dawn.title": "A devotional with your coffee.",
+    "seasons.dawn.desc": "The first words of the day shape the rest of it. A verse, a thought, an invitation to begin slowly.",
+    "seasons.dawn.quote": "“Joy comes in the morning.”",
+    "seasons.noon.label": "Midday",
+    "seasons.noon.title": "A breath between meetings.",
+    "seasons.noon.desc": "For the email that ruined your morning. For the lunch you ate alone. For the moment you needed someone.",
+    "seasons.noon.quote": "“My grace is sufficient.”",
+    "seasons.dusk.label": "Dusk",
+    "seasons.dusk.title": "A reflection on the day.",
+    "seasons.dusk.desc": "What did you carry? What can you set down? A few words to close the day with gratitude or honesty.",
+    "seasons.dusk.quote": "“This is the day.”",
+    "seasons.night.label": "Night",
+    "seasons.night.title": "A prayer in the dark hours.",
+    "seasons.night.desc": "For the anxiety that wakes you. For the doubt that visits at 3 a.m. There is no shift on which we close.",
+    "seasons.night.quote": "“He gives to his beloved sleep.”",
+    "how.eyebrow": "How It Works",
+    "how.title": "Three steps, <em>that's all.</em>",
+    "how.lede": "No downloads. No accounts to set up. Just the messaging app that's already on your phone — and a companion that listens.",
+    "how.step1.title": "Text PRAY",
+    "how.step1.desc": "Send a single word from any phone. We'll meet you there, gently.",
+    "how.step1.chip": "SEND TO 1 (954) 795‑0686",
+    "how.step2.title": "Share your heart",
+    "how.step2.desc": "Tell us what you're carrying today — a worry, a hope, a question, a thank you. Anything.",
+    "how.step2.chip": "PRIVATE & SECURE",
+    "how.step3.title": "Receive what you need",
+    "how.step3.desc": "Scripture, prayer, encouragement, or simply a steady presence — written just for this moment.",
+    "how.step3.chip": "RESPONDS IN SECONDS",
+    "features.eyebrow": "What FaithOn Offers",
+    "features.title": "A companion for <em>the whole life.</em>",
+    "features.lede": "From the first quiet moment of the morning to the prayer whispered before sleep — every season of the day, FaithOn is there.",
+    "features.items.0.title": "Daily Devotionals",
+    "features.items.0.desc": "Short, personal reflections delivered each morning — written for the life you're actually living.",
+    "features.items.0.tag": "— every morning",
+    "features.items.1.title": "Prayer Companion",
+    "features.items.1.desc": "Guided prayers written for you — for peace, courage, grief, gratitude, or a quiet moment.",
+    "features.items.1.tag": "— anytime you ask",
+    "features.items.2.title": "Biblical Wisdom",
+    "features.items.2.desc": "Scripture-rooted guidance — never preachy, always grounded in the Word.",
+    "features.items.2.tag": "— rooted in scripture",
+    "features.items.3.title": "Difficult Day Support",
+    "features.items.3.desc": "For anxiety, grief, fear, or loneliness — a steady voice that doesn't flinch from the hard parts.",
+    "features.items.3.tag": "— when you need it most",
+    "features.items.4.title": "Celebration Moments",
+    "features.items.4.desc": "Share the good news — a baby, a job, an answered prayer — and receive reflections that hold the joy with you.",
+    "features.items.4.tag": "— small & big victories",
+    "features.items.5.title": "Spiritual Growth",
+    "features.items.5.desc": "Gentle rhythms that build over time — reading plans, reflections, and a relationship that deepens.",
+    "features.items.5.tag": "— walk further",
+    "features.items.6.title": "Available 24/7",
+    "features.items.6.desc": "3 a.m. doubts. Lunch‑break worries. Sunday‑morning gratitude. We're always here.",
+    "features.items.6.tag": "— always on",
+    "features.items.7.title": "SMS Simplicity",
+    "features.items.7.desc": "No app store. No password. No new home‑screen icon. Just the messages app you already use.",
+    "features.items.7.tag": "— already on your phone",
+    "demo.eyebrow": "Quiet Conversations",
+    "demo.title": "What it actually <em>feels like.</em>",
+    "demo.lede": "Real moments — anxiety, intercession, a morning devotional — answered with patience, scripture, and presence.",
+    "demo.card1.label": "Anxious morning",
+    "demo.card1.bubble1": "I feel anxious about tomorrow.",
+    "demo.card1.bubble2": "Remember Matthew 6:34 — tomorrow has enough worries of its own. Would you like a short prayer for peace today?\n              <span class=\"verse\">— Matthew 6:34</span>",
+    "demo.card1.bubble3": "Yes please.",
+    "demo.card2.label": "Praying for family",
+    "demo.card2.bubble1": "Please pray for my family.",
+    "demo.card2.bubble2": "Let's pray together. May your family be surrounded by peace, wisdom, protection, and love — today and through the week ahead.",
+    "demo.card2.bubble3": "Thank you 🙏",
+    "demo.card3.label": "Today's devotional",
+    "demo.card3.bubble1": "Send today's devotional.",
+    "demo.card3.bubble2": "Today's reminder: God's timing is perfect even when we cannot see the full picture. Patience is a quiet kind of faith.\n              <span class=\"verse\">— Ecclesiastes 3:11</span>",
+    "testimonials.eyebrow": "Stories From Real Lives",
+    "testimonials.title": "The hand on the <em>shoulder.</em>",
+    "testimonials.lede": "From students in dorm rooms to nurses on long shifts to retirees walking the dog — FaithOn finds people in the middle of their days.",
+    "testimonials.q1": "“I had a panic attack at 2 a.m. and didn't want to wake my husband. I texted FaithOn and within seconds had a prayer to read out loud. By the third sentence I was <em>breathing again.</em>”",
+    "testimonials.r1": "<b>Rachel M.</b><small>Nurse · Charlotte, NC</small>",
+    "testimonials.q2": "“My quiet time was getting lost in the noise. Now I get a verse with my coffee and it <em>sets the tone</em> of my whole day.”",
+    "testimonials.r2": "<b>Marcus T.</b><small>Father of three · Austin, TX</small>",
+    "testimonials.q3": "“On deployment, I couldn't always make it to chapel. Texting FaithOn felt like <em>keeping the door open.</em>”",
+    "testimonials.r3": "<b>David L.</b><small>U.S. Navy</small>",
+    "testimonials.q4": "“It's never judgmental. It just listens, prays with me, and points me back to the Bible.”",
+    "testimonials.r4": "<b>Emily R.</b><small>College student · Boston, MA</small>",
+    "testimonials.q5": "“At 74, the last thing I want is another app. A text message I can do. This has <em>become part of how I pray.</em>”",
+    "testimonials.r5": "<b>Gloria H.</b><small>Retired teacher · Phoenix, AZ</small>",
+    "testimonials.q6": "“I asked for a prayer for my mom's surgery. The one I got was the one I <em>would've written if I'd had the words.</em>”",
+    "testimonials.r6": "<b>Jordan P.</b><small>Designer · Brooklyn, NY</small>",
+    "pricing.eyebrow": "Pricing",
+    "pricing.title": "Accessible support <em>for everyone.</em>",
+    "pricing.lede": "Faith should never be behind a paywall. Start free, forever. Upgrade only when you want a deeper rhythm.",
+    "pricing.free.name": "Free",
+    "pricing.free.sub": "For the quiet beginning.",
+    "pricing.free.note": "No card. No commitment.",
+    "pricing.free.f1": "Verse of the day",
+    "pricing.free.f2": "Submit prayer requests anytime",
+    "pricing.free.f3": "5 conversations per day",
+    "pricing.free.cta": "Start free",
+    "pricing.plus.name": "FaithOn Plus",
+    "pricing.plus.badge": "Most loved",
+    "pricing.plus.sub": "For a deeper, daily rhythm.",
+    "pricing.plus.monthly": "Monthly",
+    "pricing.plus.yearly": "Yearly",
+    "pricing.plus.savings": "Save 16% · $1.67/mo effective",
+    "pricing.plus.note": "— less than a cup of coffee —",
+    "pricing.plus.f1": "Unlimited conversations",
+    "pricing.plus.f2": "Personalized devotionals",
+    "pricing.plus.f3": "Personalized prayer support",
+    "pricing.plus.f4": "Spiritual growth plans",
+    "pricing.plus.f5": "Bible study guidance",
+    "pricing.plus.f6": "Saved conversation history",
+    "pricing.plus.cta": " Start FaithOn Plus",
+    "whySms.eyebrow": "Why Text Messages",
+    "whySms.title": "Because faith should be <em>easy to reach.</em>",
+    "whySms.body": "The fastest path to a quiet moment isn't a new app — it's the messaging app you've used since you were a teenager. We meet you exactly where you already are.",
+    "whySms.item1": "No downloads, ever.",
+    "whySms.item2": "Works on every phone — flip phones included.",
+    "whySms.item3": "Available everywhere you have signal.",
+    "whySms.item4": "Simple, familiar, no learning curve.",
+    "whySms.item5": "Instant access when it matters most.",
+    "faq.eyebrow": "Honest Answers",
+    "faq.title": "Things people often <em>wonder.</em>",
+    "faq.lede": "If you're considering FaithOn, you probably have one of these on your mind. Here's what we'd want a friend to know.",
+    "faq.q1": "Is FaithOn a real person?",
+    "faq.a1": "FaithOn is a thoughtful spiritual companion you reach by text. Real people — pastors, theologians, and writers — shape its voice. Real scripture grounds every word. Think of it like a thoughtful friend who is always available and always rooted in the Bible.",
+    "faq.q2": "Is FaithOn based on the Bible?",
+    "faq.a2": "Yes — every devotional, prayer, and reflection draws from Scripture. Verses are cited when shared. You're always welcome to ask for the passage behind a thought.",
+    "faq.q3": "Can I use FaithOn anytime?",
+    "faq.a3": "Yes. Day or night, holiday or Sunday, FaithOn responds in seconds. There is no sabbath on which we close.",
+    "faq.q4": "Do I need an app?",
+    "faq.a4": "No. FaithOn is a text-message service. If you can send a text, you can use it. No downloads, accounts, or passwords required.",
+    "faq.q5": "Are conversations private?",
+    "faq.a5": "Yes. Your conversations are private. We do not sell or share what you write. You can request that everything be permanently deleted at any time.",
+    "faq.q6": "Can FaithOn pray with me?",
+    "faq.a6": "Yes — that's one of the most common requests. Ask for a prayer for peace, courage, healing, gratitude, or any specific situation, and FaithOn will write one with you to read together.",
+    "faq.q7": "Can FaithOn help me during difficult moments?",
+    "faq.a7": "Yes. Anxiety, grief, fear, loneliness, doubt — these are exactly the moments FaithOn is built for. We respond with care, not clichés.",
+    "faq.q8": "Does FaithOn replace church or counseling?",
+    "faq.a8": "No, and we'd never want to. FaithOn is a companion alongside your community, your pastor, and — when needed — your therapist or doctor. In a true emergency, we'll point you to the right kind of help right away.",
+    "finalCta.eyebrow": "Begin Anytime",
+    "finalCta.title": "Your next message could change <em>your day.</em>",
+    "finalCta.body": "Prayer, encouragement, and biblical wisdom are one text away. Try it now — your first conversation is free.",
+    "finalCta.signature": "Peace be with you. Always.",
+    "footer.brand": "A spiritual companion in your pocket — prayer, encouragement, and biblical wisdom delivered through text messages, anytime.",
+    "footer.verse": "“Cast all your anxiety on him because he cares for you.” — 1 Peter 5:7",
+    "footer.headings.company": "Company",
+    "footer.company.about": "About",
+    "footer.company.beliefs": "Our Beliefs",
+    "footer.company.contact": "Contact",
+    "footer.company.blog": "Blog",
+    "footer.headings.library": "Library",
+    "footer.library.devotionals": "Devotionals",
+    "footer.library.prayer": "Prayer Library",
+    "footer.library.reading": "Reading Plans",
+    "footer.library.verse": "Verse of the Day",
+    "footer.headings.trust": "Trust",
+    "footer.trust.privacy": "Privacy Policy",
+    "footer.trust.terms": "Terms of Service",
+    "footer.trust.pastoral": "Pastoral Council",
+    "footer.trust.emergency": "Emergency Resources",
+    "footer.bottomLeft": "© 2026 FaithOn — a SIMPLIX LLC company · Made with reverence.",
+    "footer.bottomRight": "Available wherever you have signal · 1 (954) 795‑0686",
+    "checkout.eyebrow": "Begin FaithOn Plus",
+    "checkout.title": "One number. <em>One quiet rhythm.</em>",
+    "checkout.lede.monthly": "Enter the phone number you want to receive FaithOn messages on. We'll start your subscription at <b>$1.99/month</b> — cancel anytime.",
+    "checkout.lede.yearly": "Enter the phone number you want to receive FaithOn messages on. We'll start your subscription at <b>$20/year</b> (save 16%) — cancel anytime.",
+    "checkout.label": "Mobile number",
+    "checkout.placeholder": "(555) 123‑4567",
+    "checkout.cta": "Continue to secure checkout",
+    "checkout.trust": "Secured by <b>Stripe</b> · No data stored beyond your phone & subscription status",
+    "checkout.redirecting": "<span class=\"pulse\"></span> Redirecting to Stripe…",
+    "checkout.error": "Please enter a 10-digit US mobile number.",
+    "checkout.banner.success": "<span class=\"ico\">✦</span><span><b>Welcome to FaithOn Plus.</b> Your first message is on its way — <em>peace be with you.</em></span>",
+    "checkout.banner.cancel": "<span class=\"ico\">·</span><span>No charge made. <b>You can begin anytime</b> — the door is always open.</span>"
+  },
+  "es": {
+    "meta.title": "FaithOn — Nunca enfrentes un día difícil a solas",
+    "meta.description": "Un compañero espiritual en tu bolsillo. Oración, ánimo y sabiduría bíblica entregados por mensajes de texto — dondequiera que estés, a cualquier hora.",
+    "sideRail": "fe · encendida · desde la primera oración",
+    "nav.howItWorks": "Cómo funciona",
+    "nav.features": "Características",
+    "nav.stories": "Historias",
+    "nav.pricing": "Precios",
+    "nav.faq": "Preguntas frecuentes",
+    "cta.textPrayStart": "Envía PRAY para empezar",
+    "cta.textPrayNumber": "Envía PRAY al 1 (954) 795‑0686",
+    "cta.seeHow": "Cómo funciona",
+    "cta.howItWorks": "Cómo funciona",
+    "cta.startFree": "Empieza gratis",
+    "cta.startPlus": "Empieza FaithOn Plus",
+    "cta.continueCheckout": "Continuar al pago seguro",
+    "hero.verseBadge": "Palabra de hoy: <em>“Estad quietos, y conoced.”</em>",
+    "hero.title.line1": "Nunca enfrentes",
+    "hero.title.line2": "un día difícil",
+    "hero.title.line3": "a solas.",
+    "hero.lede": "Oración, sabiduría bíblica, devocionales y un ánimo delicado — enviados como mensajes de texto, en los momentos tranquilos cuando más los necesitas.",
+    "hero.metaQuote": "“Se sintió como una mano cálida sobre mi hombro.”",
+    "hero.metaConversations": "Miles de conversaciones en silencio",
+    "phone.tagAvailable": " Disponible 24/7",
+    "phone.tagPrivate": " Privado y delicado",
+    "phone.tagNoApp": " SMS · sin app",
+    "phone.companionSub": "Compañero · responde en segundos",
+    "phone.today": "Hoy",
+    "phone.bubble.greeting": "Buenos días, Sarah. Aquí tienes un pensamiento tranquilo para hoy:\n                <span class=\"verse\">“Estad quietos, y conoced que yo soy Dios.” — Salmo 46:10</span>",
+    "phone.bubble.anxious": "Estoy ansiosa por la reunión de hoy 😔",
+    "phone.bubble.response": "Respira hondo. No llevas esto sola. ¿Te gustaría una oración corta por paz antes de entrar?",
+    "phone.bubble.yesPlease": "Sí, por favor.",
+    "trust.available24": " 24/7",
+    "trust.private": " Privado",
+    "trust.tagline": "— la fe debería estar al alcance —",
+    "trust.scriptureRooted": " Arraigado en la Escritura",
+    "trust.noApp": " Sin app",
+    "marquee.v1": "Estad quietos, y conoced que yo soy Dios.",
+    "marquee.v2": "El Señor es mi pastor; nada me faltará.",
+    "marquee.v3": "Echad toda vuestra ansiedad sobre él, porque él tiene cuidado de vosotros.",
+    "marquee.v4": "No temas, porque yo estoy contigo.",
+    "marquee.v5": "La luz brilla en las tinieblas.",
+    "emo.eyebrow": "Algunos días no esperan",
+    "emo.title": "La vida no siempre espera <em>hasta el domingo.</em>",
+    "emo.line1": "Algunos días traen ansiedad.",
+    "emo.line2": "Algunos días traen incertidumbre.",
+    "emo.line3": "Algunos días traen una gratitud tranquila.",
+    "emo.closing": "FaithOn está aquí para cada temporada. Ya sea que necesites una oración para calmar tu respiración, un verso al cual aferrarte o alguien con quien celebrar una pequeña misericordia — la ayuda está a un mensaje de distancia. <strong>Sin citas. Sin salas de espera. Sin ruido.</strong>",
+    "seasons.eyebrow": "Cada hora, una bienvenida",
+    "seasons.title": "Las estaciones <em>de un día.</em>",
+    "seasons.lede": "Diferentes horas traen diferentes pesos. Desde la primera taza de café hasta la oración susurrada antes de dormir — FaithOn te encuentra donde estés.",
+    "seasons.dawn.label": "Amanecer",
+    "seasons.dawn.title": "Un devocional con tu café.",
+    "seasons.dawn.desc": "Las primeras palabras del día moldean el resto. Un verso, un pensamiento, una invitación a comenzar despacio.",
+    "seasons.dawn.quote": "“La alegría viene por la mañana.”",
+    "seasons.noon.label": "Mediodía",
+    "seasons.noon.title": "Un respiro entre reuniones.",
+    "seasons.noon.desc": "Para el correo que arruinó tu mañana. Para el almuerzo que comiste solo. Para el momento en que necesitabas a alguien.",
+    "seasons.noon.quote": "“Mi gracia es suficiente.”",
+    "seasons.dusk.label": "Atardecer",
+    "seasons.dusk.title": "Una reflexión sobre el día.",
+    "seasons.dusk.desc": "¿Qué cargaste? ¿Qué puedes dejar? Unas pocas palabras para cerrar el día con gratitud o honestidad.",
+    "seasons.dusk.quote": "“Este es el día.”",
+    "seasons.night.label": "Noche",
+    "seasons.night.title": "Una oración en las horas oscuras.",
+    "seasons.night.desc": "Para la ansiedad que te despierta. Para la duda que te visita a las 3 a.m. No hay turno en el que cerremos.",
+    "seasons.night.quote": "“Él da sueño a sus amados.”",
+    "how.eyebrow": "Cómo funciona",
+    "how.title": "Tres pasos, <em>eso es todo.</em>",
+    "how.lede": "Sin descargas. Sin cuentas que crear. Solo la app de mensajes que ya tienes en tu teléfono — y un compañero que escucha.",
+    "how.step1.title": "Envía PRAY",
+    "how.step1.desc": "Envía una sola palabra desde cualquier teléfono. Te encontraremos allí, con delicadeza.",
+    "how.step1.chip": "ENVÍALO AL 1 (954) 795‑0686",
+    "how.step2.title": "Comparte tu corazón",
+    "how.step2.desc": "Cuéntanos qué cargas hoy — una preocupación, una esperanza, una pregunta, un gracias. Lo que sea.",
+    "how.step2.chip": "PRIVADO Y SEGURO",
+    "how.step3.title": "Recibe lo que necesitas",
+    "how.step3.desc": "Escritura, oración, ánimo o simplemente una presencia firme — escrita justo para este momento.",
+    "how.step3.chip": "RESPONDE EN SEGUNDOS",
+    "features.eyebrow": "Lo que FaithOn ofrece",
+    "features.title": "Un compañero para <em>toda la vida.</em>",
+    "features.lede": "Desde el primer momento tranquilo de la mañana hasta la oración susurrada antes de dormir — en cada estación del día, FaithOn está ahí.",
+    "features.items.0.title": "Devocionales diarios",
+    "features.items.0.desc": "Reflexiones cortas y personales entregadas cada mañana — escritas para la vida que realmente vives.",
+    "features.items.0.tag": "— cada mañana",
+    "features.items.1.title": "Compañero de oración",
+    "features.items.1.desc": "Oraciones guiadas escritas para ti — por paz, valor, duelo, gratitud o un momento tranquilo.",
+    "features.items.1.tag": "— cuando lo pidas",
+    "features.items.2.title": "Sabiduría bíblica",
+    "features.items.2.desc": "Orientación arraigada en la Escritura — nunca predicadora, siempre fundamentada en la Palabra.",
+    "features.items.2.tag": "— arraigado en la Escritura",
+    "features.items.3.title": "Apoyo para días difíciles",
+    "features.items.3.desc": "Para la ansiedad, el duelo, el miedo o la soledad — una voz firme que no se aparta de las partes difíciles.",
+    "features.items.3.tag": "— cuando más lo necesitas",
+    "features.items.4.title": "Momentos de celebración",
+    "features.items.4.desc": "Comparte las buenas noticias — un bebé, un trabajo, una oración respondida — y recibe reflexiones que sostienen la alegría contigo.",
+    "features.items.4.tag": "— victorias pequeñas y grandes",
+    "features.items.5.title": "Crecimiento espiritual",
+    "features.items.5.desc": "Ritmos delicados que se construyen con el tiempo — planes de lectura, reflexiones y una relación que profundiza.",
+    "features.items.5.tag": "— sigue adelante",
+    "features.items.6.title": "Disponible 24/7",
+    "features.items.6.desc": "Dudas a las 3 a.m. Preocupaciones en el almuerzo. Gratitud del domingo por la mañana. Siempre estamos aquí.",
+    "features.items.6.tag": "— siempre disponible",
+    "features.items.7.title": "Simplicidad por SMS",
+    "features.items.7.desc": "Sin app store. Sin contraseña. Sin un nuevo icono en la pantalla de inicio. Solo la app de mensajes que ya usas.",
+    "features.items.7.tag": "— ya en tu teléfono",
+    "demo.eyebrow": "Conversaciones tranquilas",
+    "demo.title": "Cómo se <em>siente</em> realmente",
+    "demo.lede": "Momentos reales — ansiedad, intercesión, un devocional matutino — respondidos con paciencia, Escritura y presencia.",
+    "demo.card1.label": "Mañana ansiosa",
+    "demo.card1.bubble1": "Me siento ansioso por mañana.",
+    "demo.card1.bubble2": "Recuerda Mateo 6:34 — el mañana tiene suficientes preocupaciones propias. ¿Te gustaría una oración corta por paz hoy?\n              <span class=\"verse\">— Mateo 6:34</span>",
+    "demo.card1.bubble3": "Sí, por favor.",
+    "demo.card2.label": "Orando por la familia",
+    "demo.card2.bubble1": "Por favor, ora por mi familia.",
+    "demo.card2.bubble2": "Oremos juntos. Que tu familia sea rodeada de paz, sabiduría, protección y amor — hoy y durante la semana por venir.",
+    "demo.card2.bubble3": "Gracias 🙏",
+    "demo.card3.label": "Devocional de hoy",
+    "demo.card3.bubble1": "Envía el devocional de hoy.",
+    "demo.card3.bubble2": "Recordatorio de hoy: El tiempo de Dios es perfecto incluso cuando no podemos ver el panorama completo. La paciencia es una fe tranquila.\n              <span class=\"verse\">— Eclesiastés 3:11</span>",
+    "testimonials.eyebrow": "Historias de vidas reales",
+    "testimonials.title": "La mano sobre el <em>hombro.</em>",
+    "testimonials.lede": "Desde estudiantes en dormitorios hasta enfermeras en largos turnos y jubilados paseando al perro — FaithOn encuentra a las personas en medio de sus días.",
+    "testimonials.q1": "“Tuve un ataque de pánico a las 2 a.m. y no quería despertar a mi esposo. Le envié un mensaje a FaithOn y en segundos tuve una oración para leer en voz alta. Para la tercera frase estaba <em>respirando de nuevo.</em>”",
+    "testimonials.r1": "<b>Rachel M.</b><small>Enfermera · Charlotte, NC</small>",
+    "testimonials.q2": "“Mi tiempo de quietud se perdía en el ruido. Ahora recibo un verso con mi café y <em>marca el tono</em> de todo mi día.”",
+    "testimonials.r2": "<b>Marcus T.</b><small>Padre de tres · Austin, TX</small>",
+    "testimonials.q3": "“Durante el despliegue, no siempre podía ir a la capilla. Enviar mensajes a FaithOn se sentía como <em>dejar la puerta abierta.</em>”",
+    "testimonials.r3": "<b>David L.</b><small>U.S. Navy</small>",
+    "testimonials.q4": "“Nunca es juzgador. Solo escucha, ora conmigo y me regresa a la Biblia.”",
+    "testimonials.r4": "<b>Emily R.</b><small>Estudiante universitaria · Boston, MA</small>",
+    "testimonials.q5": "“A los 74, lo último que quiero es otra app. Un mensaje de texto sí puedo. Esto se ha <em>convertido en parte de cómo oro.</em>”",
+    "testimonials.r5": "<b>Gloria H.</b><small>Maestra jubilada · Phoenix, AZ</small>",
+    "testimonials.q6": "“Pedí una oración por la cirugía de mi mamá. La que recibí era la que <em>habría escrito si hubiera tenido las palabras.</em>”",
+    "testimonials.r6": "<b>Jordan P.</b><small>Diseñador · Brooklyn, NY</small>",
+    "pricing.eyebrow": "Precios",
+    "pricing.title": "Apoyo accesible <em>para todos.</em>",
+    "pricing.lede": "La fe nunca debería estar tras una barrera de pago. Empieza gratis, para siempre. Actualiza solo cuando quieras un ritmo más profundo.",
+    "pricing.free.name": "Gratis",
+    "pricing.free.sub": "Para el comienzo tranquilo.",
+    "pricing.free.note": "Sin tarjeta. Sin compromiso.",
+    "pricing.free.f1": "Verso del día",
+    "pricing.free.f2": "Envía peticiones de oración en cualquier momento",
+    "pricing.free.f3": "5 conversaciones por día",
+    "pricing.free.cta": "Empieza gratis",
+    "pricing.plus.name": "FaithOn Plus",
+    "pricing.plus.badge": "El más querido",
+    "pricing.plus.sub": "Para un ritmo diario más profundo.",
+    "pricing.plus.monthly": "Mensual",
+    "pricing.plus.yearly": "Anual",
+    "pricing.plus.savings": "Ahorra 16% · $1.67/mes efectivo",
+    "pricing.plus.note": "— menos de una taza de café —",
+    "pricing.plus.f1": "Conversaciones ilimitadas",
+    "pricing.plus.f2": "Devocionales personalizados",
+    "pricing.plus.f3": "Apoyo de oración personalizado",
+    "pricing.plus.f4": "Planes de crecimiento espiritual",
+    "pricing.plus.f5": "Guía de estudio bíblico",
+    "pricing.plus.f6": "Historial de conversaciones guardado",
+    "pricing.plus.cta": " Empieza FaithOn Plus",
+    "whySms.eyebrow": "Por qué mensajes de texto",
+    "whySms.title": "Porque la fe debería ser <em>fácil de alcanzar.</em>",
+    "whySms.body": "El camino más rápido a un momento de quietud no es una app nueva — es la app de mensajes que usaste desde adolescente. Te encontramos justo donde ya estás.",
+    "whySms.item1": "Sin descargas, nunca.",
+    "whySms.item2": "Funciona en todo teléfono — incluidos los de tapa.",
+    "whySms.item3": "Disponible donde tengas señal.",
+    "whySms.item4": "Simple, familiar, sin curva de aprendizaje.",
+    "whySms.item5": "Acceso instantáneo cuando más importa.",
+    "faq.eyebrow": "Respuestas honestas",
+    "faq.title": "Cosas que la gente a menudo <em>se pregunta.</em>",
+    "faq.lede": "Si estás considerando FaithOn, probablemente tengas una de estas en mente. Esto es lo que le querríamos decir a un amigo.",
+    "faq.q1": "¿FaithOn es una persona real?",
+    "faq.a1": "FaithOn es un compañero espiritual reflexivo al que llegas por mensaje de texto. Personas reales — pastores, teólogos y escritores — moldean su voz. La Escritura real fundamenta cada palabra. Piensa en él como un amigo reflexivo que siempre está disponible y siempre arraigado en la Biblia.",
+    "faq.q2": "¿FaithOn se basa en la Biblia?",
+    "faq.a2": "Sí — cada devocional, oración y reflexión surge de la Escritura. Los versos se citan al compartirse. Siempre eres bienvenido a pedir el pasaje detrás de un pensamiento.",
+    "faq.q3": "¿Puedo usar FaithOn en cualquier momento?",
+    "faq.a3": "Sí. De día o de noche, festivo o domingo, FaithOn responde en segundos. No hay sábado en el que cerremos.",
+    "faq.q4": "¿Necesito una app?",
+    "faq.a4": "No. FaithOn es un servicio de mensajes de texto. Si puedes enviar un mensaje, puedes usarlo. No se requieren descargas, cuentas ni contraseñas.",
+    "faq.q5": "¿Las conversaciones son privadas?",
+    "faq.a5": "Sí. Tus conversaciones son privadas. No vendemos ni compartimos lo que escribes. Puedes solicitar que todo se elimine permanentemente en cualquier momento.",
+    "faq.q6": "¿Puede FaithOn orar conmigo?",
+    "faq.a6": "Sí — esa es una de las peticiones más comunes. Pide una oración por paz, valor, sanidad, gratitud o cualquier situación específica, y FaithOn escribirá una contigo para leer juntos.",
+    "faq.q7": "¿Puede FaithOn ayudarme en momentos difíciles?",
+    "faq.a7": "Sí. Ansiedad, duelo, miedo, soledad, duda — estos son exactamente los momentos para los que FaithOn está hecho. Respondemos con cuidado, no con clichés.",
+    "faq.q8": "¿FaithOn reemplaza a la iglesia o la consejería?",
+    "faq.a8": "No, y nunca querríamos. FaithOn es un compañero junto a tu comunidad, tu pastor y — cuando sea necesario — tu terapeuta o doctor. En una verdadera emergencia, te dirigiremos al tipo de ayuda adecuado de inmediato.",
+    "finalCta.eyebrow": "Empieza en cualquier momento",
+    "finalCta.title": "Tu próximo mensaje podría cambiar <em>tu día.</em>",
+    "finalCta.body": "La oración, el ánimo y la sabiduría bíblica están a un mensaje de distancia. Pruébalo ahora — tu primera conversación es gratis.",
+    "finalCta.signature": "La paz sea contigo. Siempre.",
+    "footer.brand": "Un compañero espiritual en tu bolsillo — oración, ánimo y sabiduría bíblica entregados por mensajes de texto, a cualquier hora.",
+    "footer.verse": "“Echad toda vuestra ansiedad sobre él, porque él tiene cuidado de vosotros.” — 1 Pedro 5:7",
+    "footer.headings.company": "Empresa",
+    "footer.company.about": "Acerca de",
+    "footer.company.beliefs": "Nuestras creencias",
+    "footer.company.contact": "Contacto",
+    "footer.company.blog": "Blog",
+    "footer.headings.library": "Biblioteca",
+    "footer.library.devotionals": "Devocionales",
+    "footer.library.prayer": "Biblioteca de oración",
+    "footer.library.reading": "Planes de lectura",
+    "footer.library.verse": "Verso del día",
+    "footer.headings.trust": "Confianza",
+    "footer.trust.privacy": "Política de privacidad",
+    "footer.trust.terms": "Términos de servicio",
+    "footer.trust.pastoral": "Consejo pastoral",
+    "footer.trust.emergency": "Recursos de emergencia",
+    "footer.bottomLeft": "© 2026 FaithOn — una empresa de SIMPLIX LLC · Hecho con reverencia.",
+    "footer.bottomRight": "Disponible donde tengas señal · 1 (954) 795‑0686",
+    "checkout.eyebrow": "Empieza FaithOn Plus",
+    "checkout.title": "Un número. <em>Un ritmo tranquilo.</em>",
+    "checkout.lede.monthly": "Ingresa el número de teléfono en el que quieres recibir mensajes de FaithOn. Comenzaremos tu suscripción a <b>$1.99/mes</b> — cancela cuando quieras.",
+    "checkout.lede.yearly": "Ingresa el número de teléfono en el que quieres recibir mensajes de FaithOn. Comenzaremos tu suscripción a <b>$20/año</b> (ahorra 16%) — cancela cuando quieras.",
+    "checkout.label": "Número de celular",
+    "checkout.placeholder": "(555) 123‑4567",
+    "checkout.cta": "Continuar al pago seguro",
+    "checkout.trust": "Seguro por <b>Stripe</b> · No almacenamos datos más allá de tu teléfono y estado de suscripción",
+    "checkout.redirecting": "<span class=\"pulse\"></span> Redirigiendo a Stripe…",
+    "checkout.error": "Por favor, ingresa un número de celular estadounidense de 10 dígitos.",
+    "checkout.banner.success": "<span class=\"ico\">✦</span><span><b>Bienvenido a FaithOn Plus.</b> Tu primer mensaje está en camino — <em>la paz sea contigo.</em></span>",
+    "checkout.banner.cancel": "<span class=\"ico\">·</span><span>No se realizó ningún cargo. <b>Puedes empezar en cualquier momento</b> — la puerta siempre está abierta.</span>"
+  }
+};
+
+      function t(key, lang) {
+        const l = lang || currentLang;
+        let val = dict[l] && dict[l][key];
+        if (val === undefined) val = dict.en[key];
+        return val === undefined ? key : val;
+      }
+
+      let currentLang = 'en';
+
+      function applyLang(lang) {
+        if (!dict[lang]) lang = 'en';
+        currentLang = lang;
+        document.documentElement.lang = lang;
+        localStorage.setItem(STORAGE_KEY, lang);
+
+        document.querySelectorAll('.lang-switch button').forEach(btn => {
+          btn.setAttribute('aria-pressed', btn.dataset.lang === lang ? 'true' : 'false');
+        });
+
+        document.querySelectorAll('[data-i18n]').forEach(el => {
+          const val = t(el.dataset.i18n);
+          if (/<[^>]+>/.test(val)) {
+            el.innerHTML = val;
+          } else {
+            el.textContent = val;
+          }
+          const attr = el.dataset.i18nAttr;
+          if (attr) el.setAttribute(attr, val.replace(/<[^>]+>/g, ''));
+        });
+
+        window.dispatchEvent(new CustomEvent('faithon:langchange', { detail: { lang } }));
+      }
+
+      document.addEventListener('click', e => {
+        const btn = e.target.closest('.lang-switch button');
+        if (btn) applyLang(btn.dataset.lang);
+      });
+
+      const saved = localStorage.getItem(STORAGE_KEY);
+      const browser = typeof navigator !== 'undefined' && navigator.language;
+      const initial = saved || (browser && browser.toLowerCase().startsWith('es') ? 'es' : 'en');
+      applyLang(initial);
+
+      window.i18n = { t, applyLang, get currentLang() { return currentLang; } };
+    })();
+  </script>
+
 
   <script>
     // Reveal on scroll
@@ -2132,9 +2647,7 @@
         toggleButtons.forEach(b => b.setAttribute('aria-pressed', b === btn ? 'true' : 'false'));
         priceBlocks.forEach(el => { el.hidden = el.dataset.priceFor !== selectedPlan; });
         if (cxLede) {
-          cxLede.innerHTML = selectedPlan === 'yearly'
-            ? 'Enter the phone number you want to receive FaithOn messages on. We\'ll start your subscription at <b>$20/year</b> (save 16%) — cancel anytime.'
-            : 'Enter the phone number you want to receive FaithOn messages on. We\'ll start your subscription at <b>$1.99/month</b> — cancel anytime.';
+          cxLede.innerHTML = i18n.t('checkout.lede.' + selectedPlan);
         }
       });
     });
@@ -2170,13 +2683,13 @@
     cxGo?.addEventListener('click', async () => {
       const digits = cxPhone.value.replace(/\D/g, '');
       if (digits.length < 10) {
-        cxErr.textContent = 'Please enter a 10-digit US mobile number.';
+        cxErr.textContent = i18n.t('checkout.error');
         return;
       }
       cxErr.textContent = '';
       cxGo.disabled = true;
       const original = cxGo.innerHTML;
-      cxGo.innerHTML = '<span class="pulse"></span> Redirecting to Stripe…';
+      cxGo.innerHTML = i18n.t('checkout.redirecting');
       try {
         const r = await fetch('/api/create-checkout-session', {
           method: 'POST',
@@ -2201,10 +2714,10 @@
       banner.hidden = false;
       if (status === 'success') {
         banner.classList.add('ok');
-        banner.innerHTML = `<span class="ico">✦</span><span><b>Welcome to FaithOn Plus.</b> Your first message is on its way — <em>peace be with you.</em></span>`;
+        banner.innerHTML = i18n.t('checkout.banner.success');
       } else {
         banner.classList.add('cancel');
-        banner.innerHTML = `<span class="ico">·</span><span>No charge made. <b>You can begin anytime</b> — the door is always open.</span>`;
+        banner.innerHTML = i18n.t('checkout.banner.cancel');
       }
       // Clean URL
       history.replaceState({}, '', location.pathname);
