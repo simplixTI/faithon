@@ -19,7 +19,7 @@
     },
     {
       "path": "/api/cron/health-check",
-      "schedule": "*/5 * * * *"
+      "schedule": "0 13 * * *"
     }
   ]
 }

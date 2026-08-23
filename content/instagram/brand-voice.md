@@ -12,10 +12,12 @@ All caption bodies are written **as if Jesus himself is speaking directly to the
 
 ## Two label registers
 
-- **Category label** (used sparingly in outward-facing headlines and SEO/discovery contexts): "Christian AI companion via SMS." Acceptable because the domain is `faithon.ai` and this is how the market searches for us. Use only in headlines / meta descriptions / paid-ad copy — never in captions, never in mockup phone screens, never in the product's own voice.
-- **Product / narrative voice** (used everywhere else — captions, mockup phone text, in-product replies, website body copy, FAQ answers): Jesus speaking in first person, warm, present. Site FAQ already reads this way: *"a thoughtful spiritual companion you reach by text."*
+- **Category label** (used sparingly in outward-facing headlines, SEO, paid-ad hooks): **"Spiritual AI companion via SMS."** We deliberately do NOT use "Christian AI companion" in external framing. Reason: the product's tradition is Christian by design, but we want the door open to anyone seeking prayer, comfort, or a listening presence — regardless of religion. Marketing does not close the door before someone walks through it.
+- **Product / narrative voice** (captions, mockup phone text, in-product replies, website body copy, FAQ answers): Jesus speaking in first person, warm, present. This is what the product actually delivers — no softening for inclusivity's sake. If someone from a different tradition texts in, they receive Jesus in first person. Marketing is inclusive; the product is honest about its tradition.
 
-**Rule:** if the reader is being spoken TO by FaithOn (as a friend, in-conversation, on a mockup phone screen), it's the Jesus voice. If the reader is being TOLD ABOUT FaithOn (a headline, a marketplace description), the category label is allowed.
+**Rule:** if the reader is being spoken TO by FaithOn (as a friend, in-conversation, on a mockup phone screen), it's the Jesus voice. If the reader is being TOLD ABOUT FaithOn (a headline, a marketplace description, an SEO title), the category label ("Spiritual AI companion via SMS") is allowed.
+
+**Never say "Christian AI"** in outward marketing. Never. It closes a door that the category label deliberately leaves open. The product itself is unmistakably Christian once you're in the conversation — that's where the tradition is expressed, not in the ad hook.
 
 **Rules for the voice:**
 
@@ -140,4 +142,8 @@ User shared two reference compositions on 2026-08-22:
 1. Square feed — "You don't have to face it **alone**." + "God is with you in every moment."
 2. Portrait — "Faith. Hope. Guidance." + "ANYTIME YOU NEED." + description block.
 
-Both use the visual system above. **Note:** the CTA in those references shows the vanity `+1 (833) 330-FAITH (3248)` and the phone mockup copy says "I'm FaithOn, your Christian AI" — **neither is currently correct**. Live production uses `+1 (954) 795‑0686` and the live site positions FaithOn as a "spiritual companion," not a "Christian AI." Use the visual system, but not that copy, until user confirms otherwise.
+Both use the visual system above. **Two things in those references are wrong and must be fixed before any of them ships:**
+1. The CTA number shows the vanity `+1 (833) 330-FAITH (3248)` — the live routed number is **`+1 (954) 795‑0686`**. Use the live number.
+2. The phone mockup copy says *"I'm FaithOn, your Christian AI"* — the product never sends that message and the external label is **"Spiritual AI companion via SMS"**, not "Christian AI." Replace the mockup text with the canonical Jesus-voice reply (see `render-templates.md` → "iPhone mockup content").
+
+The visual system itself (palette, type, layout, pillar strip, trust footer) is correct and locked. Use it — but with the corrections above.

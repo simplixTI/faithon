@@ -1,51 +1,42 @@
 # FaithOn — Status Atual do Projeto
 
 > Documento vivo: atualizar ao final de cada sessão de trabalho.
-> Última atualização: 2026-08-22 (sessão: melhorias no admin — colunas Nome e Opt-out na listagem de Customers)
+> Última atualização: 2026-08-23 (sessão: cron fix, reengajamento e system health)
 
-## Estado atual (2026-08-21)
+## Estado atual (2026-08-23)
 
-**Produção (Vercel) está 100% funcional** para o fluxo SMS:
+**Produção (Vercel) está funcional** para o fluxo SMS:
 
-- Aparelho novo **Samsung Galaxy A55 5G** configurado com SMSGate em cloud mode.
+- Aparelho **Samsung Galaxy A55 5G** configurado com SMSGate em cloud mode.
 - Conta cloud SMSGate migrada para as credenciais do A55 5G:
   - User: `C0WFDB`
   - Device ID: `tg7yUrrPW45jO5iBRvPPk`
 - `.env` local e env vars da Vercel atualizadas com as novas credenciais e device ID.
 - Webhooks re-registrados na nova conta cloud (21/08):
   - `sms:received` → `https://www.faithon.ai/api/sms/incoming`
-  - `mms:downloaded` → `https://www.faithon.ai/api/sms/incoming` (corrigido: `mms:received` não tem `body`)
+  - `mms:downloaded` → `https://www.faithon.ai/api/sms/incoming`
   - `sms:sent` / `sms:delivered` / `sms:failed` → `https://www.faithon.ai/api/sms/status`
-- Redeploy produtivo feito em 21/08 ~23:22 UTC; `https://www.faithon.ai` ativo.
-- Observabilidade/trace implementada: toda mensagem gera eventos em
-  `message_events` com `correlation_id`, stages, `duration_ms` e erros.
+- Deep-link `/pray` ativo e servindo landing page em `public/pray.html`.
+- Admin Next.js com colunas **Nome** e **Opt-out** na listagem de Customers.
+- Vercel Cron configurado com `CRON_SECRET` para:
+  - Devocional diário às 12:00 UTC.
+  - Health-check diário às 13:00 UTC (plano Hobby limita crons a 1x ao dia).
+- Deploy produtivo realizado em 23/08 ~00:12 UTC.
 
-**Fluxo real ponta a ponta validado em 21/08 ~22:05 BRT.**
-
-O usuário enviou "PRAY" de `+5521951014062` e:
-1. O webhook `mms:downloaded` chegou na Vercel (a mensagem caiu como MMS no A55).
-2. A mensagem inbound e a resposta foram registradas no Supabase.
-3. A resposta da IA chegou no celular remetente.
-
-Resta monitorar: a primeira mensagem real gerou duas respostas idênticas porque a
-primeira requisição demorou ~25s e a cloud reenviou o webhook. A idempotência foi
-reforçada no deploy de 21/08 ~23:35 UTC.
-
-Lembretes para o aparelho novo:
-- Desativar totalmente a otimização de bateria para o app SMSGate
-  (Configurações → Apps → SMSGate → Bateria → Sem restrições).
-- Manter o app com permissões de SMS/telefone/contatos.
+**Último fluxo real ponta a ponta validado em 21/08.**
 
 ## Pendências
 
 1. ~~Teste real ponta a ponta com aparelho novo A55 5G.~~ ✅ Feito em 21/08.
-2. Limpar dados de teste do número fake `+5511990001234` no Supabase.
-3. Investigar/corrigir quota excedida do OpenAI usado no Bible RAG (erro 429).
-4. Monitorar se a correção de idempotência evita duplicatas em mensagens futuras.
+2. Aplicar migration `supabase/migrations/20260822000000_system_health_heartbeats.sql`
+   no Supabase SQL Editor (adiciona componente `smsgate` ao enum).
+3. Limpar dados de teste do número fake `+5511990001234` no Supabase.
+4. Investigar/corrigir quota excedida do OpenAI usado no Bible RAG (erro 429).
+5. Monitorar se a correção de idempotência evita duplicatas em mensagens futuras.
 
 ## Mudanças de código
 
-### 2026-08-22 — Melhorias no admin / Customers + deep-link /pray
+### 2026-08-22/23 — Admin, /pray, reengajamento, system health e cron fix
 
 - `admin/app/(dashboard)/customers/page.tsx`:
   - Adicionada coluna **Nome** (`users.first_name`) na listagem.
@@ -65,7 +56,8 @@ Lembretes para o aparelho novo:
   skip automático de opted-out). Mensagem gerada pelo DeepSeek:
   `FaithOn is back! Need prayer or guidance? Just text PRAY and we're here for you. Reply STOP to opt out.`
   Enviada em 2026-08-22 para os 4 números da foto (+18165894867,
-  +13104389963, +18505576241, +16104923473) com sucesso.
+  +13104389963, +18505576241, +16104923473) e em 2026-08-23 para
+  +16195304777 (amigo em San Diego), todos com sucesso.
 - System health configurado:
   - `lib/system-health.js`: helper de heartbeat.
   - `supabase/migrations/20260822000000_system_health_heartbeats.sql`:
@@ -75,10 +67,14 @@ Lembretes para o aparelho novo:
     `api`/`database`, `smsgate`, `stripe`, `openai` e `cron`.
   - `routes/cron.js`: novo endpoint `/api/cron/health-check` que marca
     componentes como `degraded`/`down` conforme tempo sem heartbeat.
+- Vercel Cron corrigido:
+  - `CRON_SECRET` gerado e adicionado às env vars da Vercel (production).
+  - `routes/cron.js` agora aceita o header `Authorization: Bearer <CRON_SECRET>`
+    que a Vercel envia automaticamente, além de `x-cron-secret` e `?secret=`.
   - `vercel.json`: crons `/api/cron/devotional` e `/api/cron/health-check`
-    configurados. O `CRON_SECRET` foi gerado e adicionado às env vars da
-    Vercel (production). `routes/cron.js` agora aceita o header
-    `Authorization: Bearer <CRON_SECRET>` que a Vercel envia automaticamente.
+    sem secret na URL.
+  - Devocional diário agora inclui usuários Plus em trial (`active` ou `trial`).
+- Deploy produtivo realizado em 2026-08-23.
 
 ### 2026-08-21 — Migração para aparelho novo A55 5G
 
@@ -103,7 +99,7 @@ Lembretes para o aparelho novo:
 - Adicionado devocional diário para usuários PLUS:
   - `lib/devotional.js`: gera devocional via IA.
   - `routes/cron.js`: endpoint `/api/cron/devotional` envia SMS para PLUS ativos.
-  - `vercel.json`: cron agendado para 12:00 UTC (8:00 EDT / horário de verão de Miami).
+  - `vercel.json`: cron agendado para 12:00 UTC.
 - Redeploy produtivo na Vercel (`vercel deploy --prod`).
 
 ### 2026-08-20 — Observabilidade / message trace
@@ -157,6 +153,8 @@ Lembretes para o aparelho novo:
   `SMSGATE_URL=https://api.sms-gate.app/3rdparty/v1`.
 - O notebook mudou de rede: era `192.168.15.x`, agora `192.168.68.x` — qualquer
   config de modo local com IP fixo está obsoleta.
+- Plano Hobby da Vercel limita Cron Jobs a **1 execução por dia**. Crons mais
+  frequentes exigem upgrade para Pro ou uso de serviço externo (n8n, cron-job.org).
 
 ## Como verificar a saúde do sistema (rápido)
 

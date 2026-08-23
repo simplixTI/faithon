@@ -103,7 +103,8 @@ Composite the FaithOn elements on top in Figma / Canva / Photoshop.
 - [ ] Mode declared (A or B)
 - [ ] Aspect ratio noted (4:5 / 1:1 / 9:16)
 - [ ] Phone number verified as `+1 (954) 795‑0686` (never (833))
-- [ ] Positioning line verified as "spiritual companion" (never "Christian AI")
+- [ ] External-facing headline / category label reads "Spiritual AI companion via SMS" (never "Christian AI")
+- [ ] Phone mockup screen text is in Jesus voice (see canonical mockup above) — never "I'm your Christian AI"
 - [ ] Caption ends with the CTA line on its own row
 - [ ] For Mode A: AI prompt written out
 - [ ] For Mode B: layout described element-by-element

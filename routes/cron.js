@@ -123,7 +123,7 @@ router.post('/cron/devotional', requireCron, async (_req, res) => {
       .from('users')
       .select('id, phone_e164')
       .eq('tier', 'plus')
-      .eq('access_status', 'active')
+      .in('access_status', ['active', 'trial'])
       .is('deleted_at', null);
 
     const sms = getSmsProvider();
