@@ -75,8 +75,10 @@ Lembretes para o aparelho novo:
     `api`/`database`, `smsgate`, `stripe`, `openai` e `cron`.
   - `routes/cron.js`: novo endpoint `/api/cron/health-check` que marca
     componentes como `degraded`/`down` conforme tempo sem heartbeat.
-  - `vercel.json`: cron `/api/cron/health-check` a cada 5 min
-    (`?secret=REPLACE` — substituir pelo `CRON_SECRET` real no deploy).
+  - `vercel.json`: crons `/api/cron/devotional` e `/api/cron/health-check`
+    configurados. O `CRON_SECRET` foi gerado e adicionado às env vars da
+    Vercel (production). `routes/cron.js` agora aceita o header
+    `Authorization: Bearer <CRON_SECRET>` que a Vercel envia automaticamente.
 
 ### 2026-08-21 — Migração para aparelho novo A55 5G
 

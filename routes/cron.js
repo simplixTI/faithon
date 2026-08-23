@@ -10,7 +10,15 @@ const router = express.Router();
 function requireCron(req, res, next) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return res.status(503).json({ error: 'CRON_SECRET not configured' });
-  const provided = req.headers['x-cron-secret'] || req.query.secret;
+
+  // Vercel Cron sends the secret as `Authorization: Bearer <CRON_SECRET>`
+  // when CRON_SECRET is set as an environment variable. We also support
+  // `x-cron-secret` header and `?secret=` query param for external cron
+  // services (e.g. cron-job.org, n8n).
+  const authHeader = req.headers.authorization || '';
+  const bearer = authHeader.startsWith('Bearer ') ? authHeader.slice(7) : null;
+  const provided = bearer || req.headers['x-cron-secret'] || req.query.secret;
+
   if (provided !== secret) return res.status(401).json({ error: 'invalid secret' });
   next();
 }
