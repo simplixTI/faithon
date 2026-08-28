@@ -24,6 +24,19 @@ export default async function OperationsPage() {
     admin.from("sms_webhook_events").select("id, type, received_at, processed_at").order("received_at", { ascending: false }).limit(10),
   ]);
 
+  // whatsapp_webhook_events may not exist yet if the migration wasn't applied
+  let recentWhatsappWebhooks: any[] | null = null;
+  try {
+    const res = await admin
+      .from("whatsapp_webhook_events")
+      .select("id, correlation_id, received_at, processed_at")
+      .order("received_at", { ascending: false })
+      .limit(10);
+    recentWhatsappWebhooks = res.data ?? [];
+  } catch {
+    recentWhatsappWebhooks = [];
+  }
+
   return (
     <div className="space-y-8">
       <h1 className="text-3xl font-serif">Operations</h1>
@@ -109,7 +122,7 @@ export default async function OperationsPage() {
         )}
       </section>
 
-      <section className="grid md:grid-cols-2 gap-6">
+      <section className="grid md:grid-cols-3 gap-6">
         <div>
           <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">Recent Stripe webhooks</h2>
           <Card className="p-0">
@@ -132,7 +145,7 @@ export default async function OperationsPage() {
           </Card>
         </div>
         <div>
-          <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">Recent Twilio webhooks</h2>
+          <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">Recent SMS webhooks</h2>
           <Card className="p-0">
             {recentSmsWebhooks && recentSmsWebhooks.length > 0 ? (
               <ul className="divide-y divide-ink/5 text-sm">
@@ -149,7 +162,28 @@ export default async function OperationsPage() {
                   </li>
                 ))}
               </ul>
-            ) : (<p className="p-5 text-sm text-ink-mute">No Twilio webhooks received yet.</p>)}
+            ) : (<p className="p-5 text-sm text-ink-mute">No SMS webhooks received yet.</p>)}
+          </Card>
+        </div>
+        <div>
+          <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">Recent WhatsApp webhooks</h2>
+          <Card className="p-0">
+            {recentWhatsappWebhooks && recentWhatsappWebhooks.length > 0 ? (
+              <ul className="divide-y divide-ink/5 text-sm">
+                {recentWhatsappWebhooks.map(w => (
+                  <li key={w.id} className="px-5 py-3 flex items-center justify-between">
+                    <div>
+                      <div className="font-mono text-xs text-ink-mute">{w.correlation_id.slice(0, 20)}…</div>
+                      <div>message event</div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xs text-ink-mute">{relTime(w.received_at)}</div>
+                      <Badge tone={w.processed_at ? "green" : "amber"}>{w.processed_at ? "processed" : "pending"}</Badge>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (<p className="p-5 text-sm text-ink-mute">No WhatsApp webhooks received yet.</p>)}
           </Card>
         </div>
       </section>

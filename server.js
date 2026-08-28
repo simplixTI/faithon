@@ -5,8 +5,9 @@
 //       config      — GET  /api/config, /api/health
 //       checkout    — POST /api/create-checkout-session, /api/stripe/portal
 //       stripe hook — POST /api/stripe/webhook (raw body; mounted early)
-//       sms       — POST /api/sms/incoming, /api/sms/status
-//       n8n       — POST /api/n8n/heartbeat, /api/n8n/execution
+//       sms         — POST /api/sms/incoming, /api/sms/status
+//       whatsapp    — POST /api/whatsapp/incoming
+//       n8n         — POST /api/n8n/heartbeat, /api/n8n/execution
 //       entitlement — GET  /api/entitlement/:phone
 //       usage       — POST /api/usage/record
 //       cron        — POST /api/cron/{expire-trials, expire-grace, reset-daily, devotional}
@@ -41,6 +42,7 @@ app.use('/api', require('./routes/entitlement'));
 app.use('/api', require('./routes/usage'));
 app.use('/api', require('./routes/cron'));
 app.use('/api', require('./routes/sms'));
+app.use('/api', require('./routes/whatsapp'));
 
 // -------- SMS deep-link shortcut --------
 // /pray serves a small landing page that auto-opens the user's SMS app

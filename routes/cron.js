@@ -4,6 +4,7 @@ const { getSmsProvider, estimateSegments } = require('../lib/sms-provider');
 const { computeSmsCostCents } = require('../lib/cost');
 const { generateDailyDevotional } = require('../lib/devotional');
 const { heartbeat } = require('../lib/system-health');
+const whatsapp = require('../lib/whatsapp-provider');
 
 const router = express.Router();
 
@@ -109,37 +110,52 @@ router.post('/cron/reset-daily', requireCron, async (_req, res) => {
 });
 
 /**
- * POST /api/cron/devotional
- * Sends a daily devotional SMS to all active PLUS users.
+ * ANY /api/cron/devotional
+ * Sends a daily devotional to all active PLUS users.
  * Intended to run once every morning via Vercel Cron or n8n.
+ * Note: Vercel Cron calls paths with GET — that's why this accepts any method.
+ * Channel per user: SMS only for +1 (US/CA) and +52 (MX); everything else
+ * goes via WhatsApp (BR carriers block our US SMS number, and WhatsApp is
+ * the primary channel outside North America).
  */
-router.post('/cron/devotional', requireCron, async (_req, res) => {
+router.all('/cron/devotional', requireCron, async (_req, res) => {
   try {
-    const devotional = await generateDailyDevotional();
-    const segments = estimateSegments(devotional);
-    const smsCost = await computeSmsCostCents({ segments, direction: 'outbound' });
-
-    const { data: plusUsers } = await supabase
+    const { data: plusUsersRaw } = await supabase
       .from('users')
       .select('id, phone_e164')
       .eq('tier', 'plus')
       .in('access_status', ['active', 'trial'])
       .is('deleted_at', null);
 
+    // Never send to our own service number (would loop back as inbound)
+    const ownNumber = process.env.FAITHON_SMS_NUMBER || '+19547950686';
+    const plusUsers = (plusUsersRaw ?? []).filter((u) => u.phone_e164 !== ownNumber);
+
     const sms = getSmsProvider();
+    const devotionalCache = {}; // one devotional per locale, generated lazily
     let sent = 0;
     let failed = 0;
 
-    for (const user of plusUsers ?? []) {
+    for (const user of plusUsers) {
+      const phone = String(user.phone_e164 || '');
+      const viaSms = phone.startsWith('+1') || phone.startsWith('+52');
+      const locale = phone.startsWith('+55') ? 'pt' : 'en';
       try {
-        const result = await sms.send({ to: user.phone_e164, text: devotional });
+        if (!devotionalCache[locale]) devotionalCache[locale] = await generateDailyDevotional(locale);
+        const header = locale === 'pt' ? '☀️ Devocional do dia:' : "☀️ Today's devotional:";
+        const text = `${header}\n\n${devotionalCache[locale]}`;
+        const segments = estimateSegments(text);
+        const smsCost = await computeSmsCostCents({ segments, direction: 'outbound' });
+        const result = viaSms
+          ? await sms.send({ to: phone, text })
+          : await whatsapp.send({ to: phone, text });
         await supabase.from('sms_messages').insert({
           user_id: user.id,
           direction: 'outbound',
           from_e164: null,
-          to_e164: user.phone_e164,
-          body: devotional,
-          provider: process.env.SMS_PROVIDER || 'smsgate',
+          to_e164: phone,
+          body: text,
+          provider: viaSms ? (process.env.SMS_PROVIDER || 'smsgate') : 'uzapi',
           provider_message_id: result.providerMessageId,
           provider_metadata: result.raw,
           num_segments: segments,
@@ -154,8 +170,8 @@ router.post('/cron/devotional', requireCron, async (_req, res) => {
       }
     }
 
-    await heartbeat('cron', failed === 0 ? 'ok' : 'degraded', { job: 'devotional', sent, failed, total: plusUsers?.length ?? 0 });
-    res.json({ devotional, sent, failed, total: plusUsers?.length ?? 0 });
+    await heartbeat('cron', failed === 0 ? 'ok' : 'degraded', { job: 'devotional', sent, failed, total: plusUsers.length });
+    res.json({ devotionals: devotionalCache, sent, failed, total: plusUsers.length });
   } catch (err) {
     console.error('devotional cron error:', err);
     await heartbeat('cron', 'down', { job: 'devotional', error: err.message }).catch(() => {});
@@ -164,12 +180,13 @@ router.post('/cron/devotional', requireCron, async (_req, res) => {
 });
 
 /**
- * POST /api/cron/health-check
+ * ANY /api/cron/health-check
  * Runs daily. Keeps api/database heartbeats fresh and marks components as
  * degraded when their last heartbeat is too old. Components that never
  * reported (last_heartbeat_at is null) stay "unknown" instead of "down".
+ * Note: Vercel Cron calls paths with GET — that's why this accepts any method.
  */
-router.post('/cron/health-check', requireCron, async (_req, res) => {
+router.all('/cron/health-check', requireCron, async (_req, res) => {
   const thresholds = {
     api: 10 * 60 * 1000,         // 10 minutes
     smsgate: 60 * 60 * 1000,     // 1 hour (SMS can be quiet)

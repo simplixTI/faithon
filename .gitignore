@@ -10,3 +10,6 @@ supabase/.temp/
 .tools/
 data/
 server.pid
+
+# WhatsApp session pairing QR (sensitive — do NOT commit)
+uazapi-qr.png

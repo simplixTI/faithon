@@ -1,11 +1,98 @@
 # FaithOn — Status Atual do Projeto
 
 > Documento vivo: atualizar ao final de cada sessão de trabalho.
-> Última atualização: 2026-08-23 (sessão: cron fix, reengajamento e system health)
+> Última atualização: 2026-08-24 (sessão: correções urgentes do fluxo WhatsApp)
+
+## Incidente 24/08 — WhatsApp não respondia (cliente `+5521992647272`, "Rafael Grossi")
+
+Cliente mandou `PRAY` via click-to-chat do site às 16:37 UTC e ficou sem resposta.
+Três bugs encontrados e corrigidos (deploy em 24/08 ~19h UTC):
+
+1. **`lib/whatsapp-provider.js`**: `ExtendedTextMessage` (mensagem criada por link
+   click-to-chat) traz `message.content` como **objeto** `{text, contextInfo}`, não
+   string. `normalizeInbound` passava o objeto como body → IA falhava com
+   `400 messages.2.content: Invalid input` → `FLOW_FAILED`, cliente sem resposta.
+   Agora extrai `msg.text` (sempre string) com fallback para `content.text`.
+2. **Envio duplo SMS+WhatsApp**: `generateReply` (`lib/conversation-service.js`)
+   enviava a resposta via SMS internamente e `routes/whatsapp.js` enviava de novo
+   via UazapiGO. Para números BR, a cópia SMS era bloqueada pela operadora e o
+   bounce voltava como inbound, sendo respondido pela IA. `generateReply` agora
+   aceita `channel` (default `'sms'`); a rota WhatsApp passa `channel: 'whatsapp'`
+   e o envio SMS interno é pulado.
+3. **Bounce da operadora respondido pela IA**: padrões `UNABLE TO SEND MESSAGE`,
+   `MESSAGE BLOCKING IS ACTIVE` e `FREE MSG:` adicionados ao filtro
+   `isSystemOrCarrierMessage` em `routes/sms.js`.
+
+Obs: cliente `+14322147090` (final 7090) conversou por **SMS** no mesmo dia e fluiu
+normal — nunca houve evento de WhatsApp desse número no backend.
+
+**Sessão WhatsApp caiu (raiz do "não fluiu"):** a instância `FaithOn` na UazapiGO
+está **desconectada desde 24/08 16:51 UTC** (logo após a resposta ao "Hello" do
+Rafael, que ficou `Pending`). `lastDisconnectReason: 401` (sessão deslogada).
+Teste E2E pós-deploy confirmou: PRAY processado e IA respondeu, mas o envio falhou
+com `503 WhatsApp disconnected: session is not reconnectable`.
+**Ação necessária (manual):** re-parear o WhatsApp do número FaithOn escaneando o
+QR Code — `POST /instance/connect` na UazapiGO gera um novo (status foi para
+`connecting`). QR gerado nesta sessão salvo em `uazapi-qr.png` (expira rápido;
+se expirar, gerar outro pelo mesmo endpoint).
+✅ Reconectado em 24/08 ~18:55 UTC (status `connected`).
+
+**Restrição WhatsApp Business (smba):** envio para número que nunca nos mandou
+mensagem é bloqueado — `reachout_timelock` / `new_chat_message_capping` (erro 500
+no `/send/text`). Ou seja: só conseguimos responder dentro da janela de 24h aberta
+por uma mensagem do cliente. Não usar número fake para teste E2E de WhatsApp —
+pedir para uma pessoa real mandar mensagem primeiro.
+
+
+## Incidente 24/08 (2) — Devocional diário nunca foi enviado
+
+Usuário PLUS reportou não ter recebido devocional. Causas encontradas e corrigidas:
+
+1. **Cron nunca disparou com sucesso:** `routes/cron.js` só aceitava `POST`, mas a
+   Vercel Cron chama os paths com **GET** → 404 silencioso todos os dias desde
+   23/08. `/api/cron/devotional` e `/api/cron/health-check` agora usam
+   `router.all(...)`. O heartbeat `cron` de 23/08 00:15 era de teste manual via
+   curl, não do agendador.
+2. **Devocional só saía por SMS** → todos os `+55` seriam bloqueados pela
+   operadora. Agora o envio é por canal: `+55` → WhatsApp (UazapiGO), demais → SMS.
+3. **Guarda anti-loop:** o próprio número FaithOn (`+19547950686`, que era usuário
+   plus/trial) é excluído do envio — caso contrário o SMS voltaria como inbound e
+   a IA responderia a si mesma.
+4. `CRON_SECRET` não existia no `.env` local (só na Vercel, ilegível). Gerado novo,
+   gravado no `.env` e atualizado na Vercel + redeploy.
+
+**Disparo manual de 24/08 ~19:20 UTC:** 7 enviados, 5 falhas.
+- SMS entregues/encaminhados: `+14322147090`, `+14708435123`, `+17864182032`,
+  `+16195304777`, `+14433731617`.
+- WhatsApp aceitos: `+5521951014062`, `+5521992647272` (janela 24h aberta).
+- Falhas: 5 números `+55` **sem janela de 24h aberta** no WhatsApp
+  (`reachout_timelock`) — incluía o fake `+5511999999999` (removido). Os reais
+  (`+5521972846068`, `+5521996358908`, `+5521996350207`, `+5543996254177`)
+  entraram via SMS e nunca falaram no WhatsApp — para alcançá-los, precisam
+  clicar no link wa.me e mandar a primeira mensagem (ou usar template
+  aprovado no futuro).
+- Soft-deletados os usuários de teste `+5511999999999` e `+14073649920`.
+
+**Ajustes 24/08 ~19:40 UTC (deploy seguinte):**
+- SMS do devocional agora só para `+1` e `+52`; todo o resto vai por WhatsApp.
+- Texto passa a ter cabeçalho identificando: `☀️ Devocional do dia:` (PT) /
+  `☀️ Today's devotional:` (EN).
+- `generateDailyDevotional(locale)`: `+55` recebe em português, demais em inglês
+  (um texto por idioma por execução, cacheado dentro do run).
 
 ## Estado atual (2026-08-23)
 
+
 **Produção (Vercel) está funcional** para o fluxo SMS:
+
+> **Incidente 22/08 investigado:** usuário reportou 12 mensagens que "não chegaram /
+não foram respondidas". Análise do banco mostrou que o backend recebeu e respondeu
+31 inbound em 22/08. A confusão veio da diferença entre 12 pessoas esperadas
+(4 amigos + 8 do Instagram) e 10 mensagens iniciais visíveis no admin. Números
+americanos (`+1...`) funcionam ponta a ponta (ex: `+14073649920` testado em
+23/08 às 14:48 UTC, resposta entregue). Números brasileiros (`+55`) sofrem
+bloqueio de operadora por SMS internacional para o número FaithOn americano
+(`+19547950686`) — vimos 3 casos de `Message Blocking is active` em 22/08.
 
 - Aparelho **Samsung Galaxy A55 5G** configurado com SMSGate em cloud mode.
 - Conta cloud SMSGate migrada para as credenciais do A55 5G:
@@ -24,15 +111,23 @@
 - Deploy produtivo realizado em 23/08 ~00:12 UTC.
 
 **Último fluxo real ponta a ponta validado em 21/08.**
+**Teste ponta a ponta com número americano revalidado em 23/08 às 14:48 UTC.**
 
 ## Pendências
 
 1. ~~Teste real ponta a ponta com aparelho novo A55 5G.~~ ✅ Feito em 21/08.
-2. Aplicar migration `supabase/migrations/20260822000000_system_health_heartbeats.sql`
-   no Supabase SQL Editor (adiciona componente `smsgate` ao enum).
-3. Limpar dados de teste do número fake `+5511990001234` no Supabase.
+2. ~~Aplicar migration `system_health_heartbeats`~~ ✅ Feito em 24/08 via CLI.
+3. ~~Limpar dados de teste do número fake `+5511990001234` no Supabase.~~ ✅ Feito em 24/08.
 4. Investigar/corrigir quota excedida do OpenAI usado no Bible RAG (erro 429).
 5. Monitorar se a correção de idempotência evita duplicatas em mensagens futuras.
+6. ~~Decidir estratégia para números brasileiros.~~ ✅ Decisão: manter número
+   americano (`+19547950686`) para SMS. Usuários BR com bloqueio deverão usar
+   WhatsApp quando disponível. Plano: integrar WhatsApp via Uazip e atualizar o
+   site para oferecer SMS e WhatsApp.
+7. ~~Investigar webhook recebido em 23/08 às 11:10 UTC com `deviceId`
+   `ylQbhnUsPGBRFy1cLbchz` (diferente do A55 atual `tg7yUrrPW45jO5iBRvPPk`).~~
+   ✅ Resolvido: app SMSGate removido do celular antigo em 23/08; conta cloud
+   agora lista apenas o device do A55 5G (`tg7yUrrPW45jO5iBRvPPk`).
 
 ## Mudanças de código
 
@@ -77,6 +172,80 @@
     sem secret na URL.
   - Devocional diário agora inclui usuários Plus em trial (`active` ou `trial`).
 - Deploy produtivo realizado em 2026-08-23.
+
+### 2026-08-23 — Investigação de incidente: mensagens não chegaram
+
+- Usuário reportou 12 mensagens de 22/08 que não chegaram / não foram respondidas.
+- Banco de produção mostrou 31 inbound e 35 outbound em 22/08; 11 das 12 mensagens
+  entre 01:00–02:00 UTC foram respondidas e entregues. Uma falhou:
+  resposta para `+19547950686` às 01:47 UTC retornou
+  `RESULT_ERROR_GENERIC_FAILURE (Generic failure cause)`.
+- Causa raiz identificada para números brasileiros: o FaithOn usa número americano
+  (`+19547950686`), então SMS de `+55` é internacional e operadoras brasileiras
+  bloqueiam. Em 22/08 houve 3 casos de `Free Msg: Unable to send message -
+  Message Blocking is active` para `+5511990001234`, `+5521999999999` e
+  `+5521951014062`.
+- Teste com número americano `+14073649920` em 23/08 às 14:48 UTC funcionou
+  ponta a ponta: inbound recebido, resposta gerada pela IA e entrega confirmada.
+- Encontrado webhook em 23/08 às 11:10 UTC com `deviceId`
+  `ylQbhnUsPGBRFy1cLbchz`, diferente do A55 atual (`tg7yUrrPW45jO5iBRvPPk`).
+  A conta SMSGate lista apenas o device do A55; provavelmente é webhook em buffer
+  de device antigo, mas ficou como pendência de verificação.
+
+### 2026-08-23 — Integração WhatsApp via UazapiGO
+
+- **Servidor privado UazapiGO:** `https://faithon.uazapi.com`
+  (Admin Token no painel; instância `FaithOn` com token
+  `fcc12436-4f43-4bc9-9869-84fa560035f0`).
+- `lib/whatsapp-provider.js`: normaliza inbound da UazapiGO (formato
+  `{ EventType, chat, message }`) e envia texto via `POST /send/text`
+  com header `token`.
+- `routes/whatsapp.js`: endpoint `POST /api/whatsapp/incoming` que processa
+  mensagens de texto com as mesmas etapas do SMS (idempotência, usuário,
+  entitlement, STOP/START/HELP/PLUS, resposta IA).
+- **Detecção de idioma híbrida:** mensagem ambígua (ex: `PRAY`) usa DDI do
+  usuário — `+55` → português, `+52/+34/+54/+57/+58` → inglês, outros → inglês.
+- Webhook configurado na instância UazapiGO:
+  `https://www.faithon.ai/api/whatsapp/incoming`, eventos `messages`,
+  excluindo `wasSentByApi`, `fromMeYes`, `isGroupYes`.
+- `.env.example` atualizado com `UAZAPI_BASE_URL`, `UAZAPI_INSTANCE_TOKEN`,
+  `UAZAPI_ADMIN_TOKEN`.
+- Deploy validado ponta a ponta: inbound de `+5521951014062` com `Pray`
+  gerou resposta automática entregue em 23/08 às 23:54 UTC.
+
+### 2026-08-23 — Stripe API key renovada + cliente PLUS corrigido
+
+- A chave `STRIPE_SECRET_KEY` tinha expirado, causando falha nos webhooks do
+  Stripe. Nova restricted key (`rk_live_...`) configurada no `.env` e na Vercel.
+- Cliente `+16195304777` (subscription `sub_1U7lcII7Gc3K1vbWEhHmtSKl`) foi
+  atualizado manualmente para `tier=plus`, `access_status=active` e
+  `stripe_customer_id=cus_V81fivizT55Q76` porque o webhook não foi processado
+  enquanto a chave estava inválida.
+
+### 2026-08-23 — Bible RAG temporariamente desligado
+
+- `lib/bible-rag.js`: `searchBibleVerses` agora só roda quando
+  `BIBLE_RAG_ENABLED=true`. Isso evita chamadas OpenAI (embeddings) a cada
+  mensagem e previne novos erros 429 enquanto o saldo estiver zerado.
+- A IA continua respondendo normalmente, só sem citar versículos do RAG.
+- Para reativar: adicione saldo na OpenAI e defina
+  `BIBLE_RAG_ENABLED=true` na Vercel.
+
+### 2026-08-23 — Admin com controle WhatsApp
+
+- `admin/app/(dashboard)/messages/page.tsx`: adicionado filtro por canal
+  (All / SMS / WhatsApp), coluna **Channel** e contadores SMS vs WhatsApp.
+- `admin/app/(dashboard)/operations/page.tsx`: adicionada seção
+  **Recent WhatsApp webhooks** (lê `whatsapp_webhook_events`; tolera ausência
+  da tabela até a migration ser aplicada).
+
+### 2026-08-23 — Site com SMS + WhatsApp
+
+- `public/index.html`: adicionado botão **WhatsApp** ao lado do SMS nas CTAs
+  principais (nav e hero), com link `https://wa.me/19547950686?text=PRAY`.
+- `public/pray.html`: landing page agora oferece duas opções — **Open Messages**
+  (SMS) e **Open WhatsApp**.
+- Traduções i18n adicionadas para `cta.whatsappPrayStart` (EN/ES).
 
 ### 2026-08-23 — Suporte a espanhol no site institucional
 

@@ -8,31 +8,57 @@ import Link from "next/link";
 
 export const dynamic = "force-dynamic";
 
-export default async function MessagesPage() {
+const PROVIDERS = [
+  { value: "", label: "All" },
+  { value: "smsgate", label: "SMS" },
+  { value: "uzapi", label: "WhatsApp" },
+];
+
+export default async function MessagesPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ provider?: string }>;
+}) {
+  const sp = await searchParams;
+  const provider = sp.provider ?? "";
+
   const admin = getSupabaseAdmin();
 
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
   const start24h = new Date(Date.now() - 24 * 3600 * 1000);
 
+  function baseQuery() {
+    let q = admin.from("sms_messages").select("id", { count: "exact", head: true });
+    if (provider) q = q.eq("provider", provider);
+    return q;
+  }
+
   const [
     inTotal, outTotal,
     inToday, outToday,
     delivered24h, failed24h,
     stopCount, prayCount,
+    smsCount, whatsappCount,
     { data: recent },
   ] = await Promise.all([
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("direction", "inbound"),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("direction", "outbound"),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("direction", "inbound").gte("created_at", startOfDay.toISOString()),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("direction", "outbound").gte("created_at", startOfDay.toISOString()),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("status", "delivered").gte("created_at", start24h.toISOString()),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).in("status", ["failed","undelivered"]).gte("created_at", start24h.toISOString()),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("command", "STOP"),
-    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("command", "PRAY"),
-    admin.from("sms_messages").select("id, direction, command, status, from_e164, to_e164, num_segments, error_code, created_at, user_id")
-      .order("created_at", { ascending: false })
-      .limit(50),
+    baseQuery().eq("direction", "inbound"),
+    baseQuery().eq("direction", "outbound"),
+    baseQuery().eq("direction", "inbound").gte("created_at", startOfDay.toISOString()),
+    baseQuery().eq("direction", "outbound").gte("created_at", startOfDay.toISOString()),
+    baseQuery().eq("status", "delivered").gte("created_at", start24h.toISOString()),
+    baseQuery().in("status", ["failed","undelivered"]).gte("created_at", start24h.toISOString()),
+    baseQuery().eq("command", "STOP"),
+    baseQuery().eq("command", "PRAY"),
+    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("provider", "smsgate"),
+    admin.from("sms_messages").select("id", { count: "exact", head: true }).eq("provider", "uzapi"),
+    (() => {
+      let q = admin.from("sms_messages").select("id, direction, command, status, from_e164, to_e164, num_segments, error_code, created_at, user_id, provider")
+        .order("created_at", { ascending: false })
+        .limit(50);
+      if (provider) q = q.eq("provider", provider);
+      return q;
+    })(),
   ]);
 
   const delivered = delivered24h.count ?? 0;
@@ -41,7 +67,28 @@ export default async function MessagesPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-3xl font-serif">Messages</h1>
+      <div className="flex items-center justify-between">
+        <h1 className="text-3xl font-serif">Messages</h1>
+        <div className="text-sm text-ink-mute">
+          {num(smsCount.count ?? 0)} SMS · {num(whatsappCount.count ?? 0)} WhatsApp
+        </div>
+      </div>
+
+      <div className="flex gap-2">
+        {PROVIDERS.map((p) => (
+          <Link
+            key={p.value}
+            href={p.value ? `/messages?provider=${p.value}` : "/messages"}
+            className={`rounded-full px-4 py-1.5 text-sm font-medium transition ${
+              provider === p.value
+                ? "bg-ink text-paper-soft"
+                : "bg-paper-soft text-ink-mute hover:bg-paper-deep"
+            }`}
+          >
+            {p.label}
+          </Link>
+        ))}
+      </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <MetricCard label="Inbound (total)"  value={num(inTotal.count ?? 0)}   sub={`${num(inToday.count ?? 0)} today`} />
@@ -58,13 +105,14 @@ export default async function MessagesPage() {
         <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">Latest 50 messages</h2>
         {!recent || recent.length === 0 ? (
           <EmptyState
-            title="No SMS traffic yet"
-            hint="Enable Twilio and point the inbound webhook at /api/twilio/inbound to see traffic here."
+            title="No messages yet"
+            hint="Send PRAY via SMS or WhatsApp to see traffic here."
           />
         ) : (
           <Table>
             <THead>
               <TH>Time</TH>
+              <TH>Channel</TH>
               <TH>Dir</TH>
               <TH>Cmd</TH>
               <TH>From → To</TH>
@@ -76,6 +124,11 @@ export default async function MessagesPage() {
               {recent.map(m => (
                 <TR key={m.id}>
                   <TD className="text-ink-mute text-xs">{relTime(m.created_at)}</TD>
+                  <TD>
+                    <Badge tone={m.provider === "uzapi" ? "gold" : "neutral"}>
+                      {m.provider === "uzapi" ? "WhatsApp" : "SMS"}
+                    </Badge>
+                  </TD>
                   <TD><Badge tone={m.direction === "inbound" ? "blue" : "neutral"}>{m.direction}</Badge></TD>
                   <TD className="font-mono text-xs">{m.command ?? "—"}</TD>
                   <TD className="font-mono text-xs">
