@@ -1,7 +1,45 @@
 # FaithOn — Status Atual do Projeto
 
 > Documento vivo: atualizar ao final de cada sessão de trabalho.
-> Última atualização: 2026-08-24 (sessão: correções urgentes do fluxo WhatsApp)
+> Última atualização: 2026-09-01 (sessão: silêncio pós-hiccup do OpenRouter)
+
+## Incidente 01/09 — 3 SMS de `+16195304777` sem resposta (~21:24 UTC)
+
+Amigo em San Diego (PLUS) mandou `Hi`, `Where are u`, `I'm feeling alone` em ~30s.
+Backend recebeu todos, tentou responder — usuário não recebeu nada.
+
+**Raiz (dois bugs somados):**
+1. OpenRouter retornou `content: ""` com `tokens: 0` nas 3 chamadas
+   (`deepseek/deepseek-chat`, latency ~6.3s cada) — hiccup do provider,
+   voltou ao normal minutos depois. Ambos os modelos do fallback vieram
+   vazios na mesma janela.
+2. `lib/ai-provider.js` `parseCompletion` retornava string vazia sem
+   avisar → `conversation-service` mandava `""` pro SMSGate → SMSGate
+   rejeitava com `failed to validate: Text required` → `lib/sms-provider.js`
+   `SmsgateProvider.send` **ignorava a rejeição** (retornava
+   `providerMessageId: null` sem lançar) → trace gravava
+   `SMS_SEND_STARTED = success` mentindo.
+
+**Fixes (commit `ce02804`, deploy Vercel auto):**
+- `parseCompletion` agora lança `ai_empty_response` quando content é vazio
+  → força o loop de fallback do OpenRouter a tentar o próximo modelo.
+- `conversation-service.generateReply` cataliza a falha do AI e usa um
+  fallback fixo (`"I'm here with you. Can you tell me a bit more?"` ou
+  versão PT-BR para `+55`) em vez de deixar o usuário no silêncio.
+- `SmsgateProvider.send` lança `smsgate_rejected` quando a resposta não
+  tem `id` → o trace passa a mostrar `SMS_SEND_FAILED` real.
+
+**Ação manual pós-fix:** enviado catch-up ao amigo em 01/09 23:46 UTC
+(SMSGate id `FohMITBD1_zBreZHVUq7A`, `Pending`).
+
+**Pendências levantadas hoje:**
+- `BIBLE_RAG_ENABLED` está `true` em prod (embora STATUS anterior dissesse
+  desligado) → toda mensagem faz um roundtrip OpenAI que retorna 429
+  ("no credits remaining"). Custo: ~3s de latency, zero benefício.
+  Ação sugerida: `BIBLE_RAG_ENABLED=false` na Vercel (redeploy).
+- Não há alerta automático quando o Samsung A55 fica offline; falha só
+  aparece no admin. Considerar hook no `sms/status` que dispare quando
+  N mensagens seguidas falharem.
 
 ## Incidente 24/08 — WhatsApp não respondia (cliente `+5521992647272`, "Rafael Grossi")
 
