@@ -1,5 +1,6 @@
 import { getSupabaseAdmin } from "@/lib/supabase/admin";
 import { MetricCard } from "@/components/dashboard/metric-card";
+import { Table, TBody, TD, TH, THead, TR } from "@/components/ui/table";
 import { num, usdFromDollars } from "@/lib/format";
 
 export const dynamic = "force-dynamic";
@@ -76,11 +77,118 @@ export default async function DashboardPage() {
       </section>
 
       <section>
+        <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">Acquisition (last 14 days)</h2>
+        <AcquisitionBlock />
+      </section>
+
+      <section>
         <h2 className="text-xs uppercase tracking-widest text-ink-mute mb-3">System health</h2>
         <HealthGrid />
       </section>
     </div>
   );
+}
+
+// Launch cutoff: pre-launch data is test noise, ignore it in acquisition totals.
+const LAUNCH_DATE = new Date("2026-08-20T00:00:00");
+
+async function AcquisitionBlock() {
+  const admin = getSupabaseAdmin();
+  const days = 14;
+  const since = new Date();
+  since.setHours(0, 0, 0, 0);
+  since.setDate(since.getDate() - (days - 1));
+  const tableSince = since < LAUNCH_DATE ? LAUNCH_DATE : since;
+
+  const [{ data: windowData }, { data: launchData }] = await Promise.all([
+    admin
+      .from("users")
+      .select("created_at, source")
+      .is("deleted_at", null)
+      .gte("created_at", tableSince.toISOString())
+      .order("created_at", { ascending: false }),
+    admin
+      .from("users")
+      .select("created_at, source")
+      .is("deleted_at", null)
+      .gte("created_at", LAUNCH_DATE.toISOString()),
+  ]);
+
+  // Bucket per local day (only from launch onward)
+  const buckets = new Map<string, { total: number; pray: number; other: number; bySource: Record<string, number> }>();
+  const startDate = new Date(tableSince);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  for (let d = new Date(startDate); d <= today; d.setDate(d.getDate() + 1)) {
+    buckets.set(dayKey(d), { total: 0, pray: 0, other: 0, bySource: {} });
+  }
+  for (const u of windowData ?? []) {
+    const key = dayKey(new Date(u.created_at));
+    const b = buckets.get(key);
+    if (!b) continue;
+    b.total += 1;
+    const src = (u.source ?? "").toString();
+    if (src.endsWith(":pray")) b.pray += 1;
+    else b.other += 1;
+    b.bySource[src || "(none)"] = (b.bySource[src || "(none)"] ?? 0) + 1;
+  }
+
+  const rows = Array.from(buckets.entries())
+    .sort((a, b) => (a[0] < b[0] ? 1 : -1))
+    .map(([day, v]) => ({ day, ...v }));
+
+  const totalWindow = rows.reduce((s, r) => s + r.total, 0);
+  const prayWindow = rows.reduce((s, r) => s + r.pray, 0);
+  const total7 = rows.slice(0, 7).reduce((s, r) => s + r.total, 0);
+  const todayRow = rows[0];
+  const totalSinceLaunch = (launchData ?? []).length;
+  const praySinceLaunch = (launchData ?? []).filter((u) => (u.source ?? "").toString().endsWith(":pray")).length;
+
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <MetricCard label="New users today"        value={num(todayRow?.total ?? 0)} sub={`${num(todayRow?.pray ?? 0)} via PRAY`} />
+        <MetricCard label="Last 7 days"             value={num(total7)} />
+        <MetricCard label="Window (14d clean)"      value={num(totalWindow)} sub={`${num(prayWindow)} via PRAY`} />
+        <MetricCard label="Since launch (08/20)"    value={num(totalSinceLaunch)} sub={`${num(praySinceLaunch)} via PRAY`} />
+      </div>
+
+      <Table>
+        <THead>
+          <TH>Day</TH>
+          <TH className="text-right">New users</TH>
+          <TH className="text-right">via PRAY (CTA)</TH>
+          <TH className="text-right">Other</TH>
+          <TH>Breakdown by source</TH>
+        </THead>
+        <TBody>
+          {rows.map((r) => (
+            <TR key={r.day}>
+              <TD className="font-mono text-xs">{r.day}</TD>
+              <TD className="text-right font-medium">{num(r.total)}</TD>
+              <TD className="text-right">{num(r.pray)}</TD>
+              <TD className="text-right text-ink-mute">{num(r.other)}</TD>
+              <TD className="text-xs text-ink-mute">
+                {Object.entries(r.bySource).length === 0
+                  ? "—"
+                  : Object.entries(r.bySource)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([s, n]) => `${s}:${n}`)
+                      .join("  ·  ")}
+              </TD>
+            </TR>
+          ))}
+        </TBody>
+      </Table>
+    </div>
+  );
+}
+
+function dayKey(d: Date) {
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const dd = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${dd}`;
 }
 
 async function HealthGrid() {
