@@ -8,7 +8,9 @@ Thumbs.db
 .vercel
 supabase/.temp/
 .tools/
-data/
+data/bible-*/
+# raw Spotify dump from the sync script — regenerable, kept local
+data/music/_spotify-raw.json
 server.pid
 
 # WhatsApp session pairing QR (sensitive — do NOT commit)
